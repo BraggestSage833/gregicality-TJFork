@@ -54,7 +54,7 @@ public class ZirconChain {
         // ZrSiO4 + 8Cl = ZrHfCl4 + SiCl4?
         CHEMICAL_RECIPES.recipeBuilder().duration(120).EUt(120)
                 .input(dust, Zircon, 6)
-                .fluidInputs(Chlorine.getFluid(4000))
+                .fluidInputs(Chlorine.getFluid(8000))
                 .fluidOutputs(ZrHfChloride.getFluid(1000))
                 .fluidOutputs(ZirconChlorinatingResidue.getFluid(1000))
                 .buildAndRegister();

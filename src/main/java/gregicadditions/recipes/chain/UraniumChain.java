@@ -72,7 +72,7 @@ public class UraniumChain {
         LARGE_CHEMICAL_RECIPES.recipeBuilder().duration(160).EUt(120)
                 .fluidInputs(UraniumDiuranate.getFluid(1000))
                 .inputs(PotassiumCarbonate.getItemStack(12))
-                .outputs(PotassiumUranylTricarbonate.getItemStack(5))
+                .outputs(PotassiumUranylTricarbonate.getItemStack(10))
                 .fluidOutputs(Ammonia.getFluid(2000))
                 .fluidOutputs(Water.getFluid(1000))
                 .output(dust, Potash, 6)

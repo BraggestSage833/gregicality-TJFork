@@ -272,7 +272,7 @@ public class ZincChain {
         // H4GeO4 + 4HCl = [GeCl4 + 4H2O]
         CHEMICAL_RECIPES.recipeBuilder().duration(130).EUt(120)
                 .fluidInputs(GermanicAcidSolution.getFluid(1000))
-                .fluidInputs(HydrochloricAcid.getFluid(1000))
+                .fluidInputs(HydrochloricAcid.getFluid(4000))
                 .fluidOutputs(GermaniumChloride.getFluid(1000))
                 .buildAndRegister();
 

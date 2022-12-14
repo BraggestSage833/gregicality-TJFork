@@ -60,7 +60,7 @@ public class AluminiumChain {
 
         // [4TiO2 + 16Al(OH)3 + 24NaOH + 5 H2O] + 9 H2O = 8 Red Mud [Contains Total: 4TiO2 + 24NaOH + 6 H2O] + 8 [2 Al(OH)3 + H2O]
         CHEMICAL_RECIPES.recipeBuilder().duration(230).EUt(120)
-                .fluidInputs(Water.getFluid(9000))
+                .fluidInputs(Water.getFluid(5000))
                 .fluidInputs(ImpureAluminiumHydroxideSolution.getFluid(24000))
                 .fluidOutputs(RedMud.getFluid(8000))
                 .fluidOutputs(PureAluminiumHydroxideSolution.getFluid(16000))
@@ -81,19 +81,19 @@ public class AluminiumChain {
                 .outputs(AluminiumHydroxide.getItemStack(56))
                 .buildAndRegister();
 
-        // 8 Red Mud [Contains Total: 4TiO2 + 24 NaOH + 6 H2O] + 36 HCl = 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12HCl]
+        // 8 Red Mud [Contains Total: 4TiO2 + 24 NaOH + 6 H2O] + 32 HCl = 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12HCl]
         MIXER_RECIPES.recipeBuilder().duration(100).EUt(120)
                 .fluidInputs(RedMud.getFluid(1000))
-                .fluidInputs(HydrochloricAcid.getFluid(4500))
+                .fluidInputs(HydrochloricAcid.getFluid(4000))
                 .fluidOutputs(NeutralisedRedMud.getFluid(2000))
                 .buildAndRegister();
 
-        // 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12 HCl] = 4 Red Slurry [Contains Total: 4TiO2] + 4 Ferric REE Chloride [Contains Total: 12 HCl + 6 H2O] + 24 [NaCl + H2O]
+        // 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12 HCl] = 4 Red Slurry [Contains Total: 4TiO2] + 4 Ferric REE Chloride [Contains Total: 12 HCl + 6 H2O] + 16 [NaCl + H2O]
         CENTRIFUGE_RECIPES.recipeBuilder().duration(100).EUt(120)
                 .fluidInputs(NeutralisedRedMud.getFluid(2000))
                 .fluidOutputs(RedSlurry.getFluid(1000))
                 .fluidOutputs(FerricREEChloride.getFluid(1000))
-                .fluidOutputs(SaltWater.getFluid(6000))
+                .fluidOutputs(SaltWater.getFluid(4000))
                 .buildAndRegister();
 
         // 4 Ferric REE Chloride [Contains Total: 12 HCl + 6 H2O] = 2 Rare Earth Chlorides [Contains Total: REECl3 + 3 H2O] + 2 Iron III Chloride [Contains Total: FeCl3] + 6 H2O
@@ -117,7 +117,7 @@ public class AluminiumChain {
                 .fluidInputs(TitanylSulfate.getFluid(1000))
                 .fluidInputs(HydrochloricAcid.getFluid(4000))
                 .fluidOutputs(TitaniumTetrachloride.getFluid(1000))
-                .fluidOutputs(SulfuricAcid.getFluid(2100))
+                .fluidOutputs(SulfuricAcid.getFluid(1000))
                 .buildAndRegister();
     }
 }

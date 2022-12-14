@@ -388,8 +388,8 @@ public class PlatinumSludgeGroupChain {
         // Na2O4Ru + 2Cl -> (NaCl)2RuO4
         CHEMICAL_RECIPES.recipeBuilder()
                 .input(dust, SodiumRuthenate, 14)
-                .fluidInputs(Chlorine.getFluid(2000))
-                .fluidOutputs(RutheniumTetroxideSolution.getFluid(1000))
+                .fluidInputs(Chlorine.getFluid(4000))
+                .fluidOutputs(RutheniumTetroxideSolution.getFluid(2000))
                 .EUt(30)
                 .duration(100)
                 .buildAndRegister();
