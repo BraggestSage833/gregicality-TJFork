@@ -59,11 +59,10 @@ public class SeleniumChain {
                 .fluidInputs(SeleniteTelluriteMix.getFluid(1000))
                 .fluidInputs(SulfuricAcid.getFluid(1000))
                 .outputs(TelluriumOxide.getItemStack(3))
-                .fluidOutputs(Water.getFluid(2000))
+                .fluidOutputs(Water.getFluid(1000))
                 .fluidOutputs(SulfurTrioxide.getFluid(1000))
                 .fluidOutputs(CarbonDioxide.getFluid(1000))
                 .fluidOutputs(SeleniteSolution.getFluid(1000))
-                .fluidOutputs(Water.getFluid(1000))
                 .buildAndRegister();
 
         // Na2SeO3 + 2HCl -> 2NaCl + SeO2 + H2O
