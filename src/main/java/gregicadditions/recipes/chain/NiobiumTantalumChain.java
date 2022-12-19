@@ -259,7 +259,7 @@ public class NiobiumTantalumChain {
         // K2NbF7 + 5Na -> 5NaF + 2KF + Nb
         ELECTROLYZER_RECIPES.recipeBuilder().duration(120).EUt(120)
                 .inputs(PotasssiumFluoroNiobate.getItemStack(10))
-                .fluidInputs(Sodium.getFluid(5000))
+                .fluidInputs(Sodium.getFluid(720)) // kekw sodium is an ingot
                 .output(dust, SodiumFluoride, 10)
                 .output(dust, PotassiumFluoride, 4)
                 .output(dust, Niobium)
@@ -268,7 +268,7 @@ public class NiobiumTantalumChain {
         // K2TaF7 + 5Na -> 5NaF + 2KF + Ta
         ELECTROLYZER_RECIPES.recipeBuilder().duration(170).EUt(120)
                 .inputs(PotasssiumFluoroTantalate.getItemStack(10))
-                .fluidInputs(Sodium.getFluid(5000))
+                .fluidInputs(Sodium.getFluid(720))
                 .output(dust, SodiumFluoride, 10)
                 .output(dust, PotassiumFluoride, 4)
                 .output(dust, Tantalum)

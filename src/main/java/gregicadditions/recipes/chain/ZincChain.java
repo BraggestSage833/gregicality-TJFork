@@ -88,7 +88,7 @@ public class ZincChain {
         // 3 H3PO4 + 6 NaOH + H2O = 3 Na2HPO4 + 7 H2O
         CHEMICAL_RECIPES.recipeBuilder().duration(150).EUt(30)
                 .fluidInputs(SeparatedMetalSlurry.getFluid(1000))
-                .input(dust, SodiumHydroxide, 6)
+                .input(dust, SodiumHydroxide, 18)
                 .fluidOutputs(MetalHydroxideMix.getFluid(1000))
                 .fluidOutputs(Water.getFluid(7000))
                 .outputs(DisodiumPhosphate.getItemStack(24))
