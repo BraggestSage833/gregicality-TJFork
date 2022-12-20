@@ -45,7 +45,7 @@ public class TileEntityLargeBrewery extends MultiRecipeMapMultiblockController {
 
     public TileEntityLargeBrewery(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap, GAConfig.multis.largeBrewery.euPercentage, GAConfig.multis.largeBrewery.durationPercentage, GAConfig.multis.largeBrewery.chancedBoostPercentage, GAConfig.multis.largeBrewery.stack,
-                new RecipeMap[]{RecipeMaps.BREWING_RECIPES, RecipeMaps.FERMENTING_RECIPES, GARecipeMaps.CHEMICAL_DEHYDRATOR_RECIPES}, true, true, true);
+                new RecipeMap[]{RecipeMaps.BREWING_RECIPES, RecipeMaps.FERMENTING_RECIPES, GARecipeMaps.CHEMICAL_DEHYDRATOR_RECIPES,RecipeMaps.CRACKING_RECIPES}, true, true, true);
     }
 
     @Override
@@ -111,6 +111,8 @@ public class TileEntityLargeBrewery extends MultiRecipeMapMultiblockController {
                 return Textures.FERMENTER_OVERLAY;
             case 2:
                 return Textures.SIFTER_OVERLAY;
+            case 3:
+                return Textures.CRACKING_UNIT_OVERLAY;
             default:
                 return Textures.BREWERY_OVERLAY;
         }
@@ -124,6 +126,8 @@ public class TileEntityLargeBrewery extends MultiRecipeMapMultiblockController {
                 return Textures.FERMENTER_OVERLAY;
             case 2:
                 return Textures.SIFTER_OVERLAY;
+            case 3:
+                return Textures.CRACKING_UNIT_OVERLAY;
             default:
                 return Textures.BREWERY_OVERLAY;
         }

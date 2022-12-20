@@ -60,6 +60,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static gregicadditions.GAMaterials.DrillingMud;
+import static gregicadditions.GAMaterials.Pyrotheum;
 import static gregicadditions.client.ClientHandler.*;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 import static gregtech.api.unification.material.Materials.*;
@@ -113,7 +115,14 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
 
     public boolean drainEnergy() {
         long energyDrain = GAValues.V[Math.max(GAValues.EV, GAUtility.getTierByVoltage(energyContainer.getInputVoltage()))];
-        FluidStack drillingFluid = DrillingFluid.getFluid(type.drillingFluidConsumePerTick);
+
+        FluidStack drillingFluid;
+        if (this.type != Type.CREATIVE) {
+            drillingFluid = DrillingFluid.getFluid(type.drillingFluidConsumePerTick);
+        }
+        else {
+            drillingFluid = Pyrotheum.getFluid(type.drillingFluidConsumePerTick);
+        }
         FluidStack canDrain = importFluidHandler.drain(drillingFluid, false);
         if (energyContainer.getEnergyStored() >= energyDrain && canDrain != null && canDrain.amount == type.drillingFluidConsumePerTick) {
             energyContainer.removeEnergy(energyContainer.getInputVoltage());
@@ -182,7 +191,9 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
                 }
                 if (addItemsToItemHandler(outputInventory, true, itemStacks)) {
                     addItemsToItemHandler(outputInventory, false, itemStacks);
-                    world.setBlockState(blockPos1, Blocks.COBBLESTONE.getDefaultState());
+                    if (this.getType() != Type.CREATIVE ){
+                        world.setBlockState(blockPos1, Blocks.COBBLESTONE.getDefaultState());
+                    }
                 }
             });
 
@@ -242,8 +253,16 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        tooltip.add(I18n.format("gtadditions.machine.miner.multi.description", type.chunk, type.chunk, type.fortuneString));
-        tooltip.add(I18n.format("gtadditions.machine.miner.fluid_usage", type.drillingFluidConsumePerTick, I18n.format(DrillingFluid.getFluid(0).getUnlocalizedName())));
+        if (this.type != Type.CREATIVE) {
+            tooltip.add(I18n.format("gtadditions.machine.miner.multi.description", type.chunk, type.chunk, type.fortuneString));
+
+            tooltip.add(I18n.format("gtadditions.machine.miner.fluid_usage", type.drillingFluidConsumePerTick, I18n.format(DrillingFluid.getFluid(0).getUnlocalizedName())));
+        }
+      else {
+                tooltip.add(I18n.format("gtadditions.machine.miner.multi.description2", type.chunk, type.chunk, type.fortuneString));
+
+                tooltip.add(I18n.format("gtadditions.machine.miner.fluid_usage", type.drillingFluidConsumePerTick, I18n.format(Pyrotheum.getFluid(0).getUnlocalizedName())));
+      }
     }
 
     @Override
@@ -256,8 +275,11 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
             textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.chunk", currentChunk.get()));
             textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.nb_chunk", chunks.size()));
             textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.block_per_tick", getNbBlock()));
-            textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.silktouch", silktouch));
-            textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.mode"));
+            if (this.type != Type.CREATIVE) {
+                textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.silktouch", silktouch));
+                textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.mode"));
+            }
+
             if (done)
                 textList.add(new TextComponentTranslation("gregtech.multiblock.large_miner.done", getNbBlock()).setStyle(new Style().setColor(TextFormatting.GREEN)));
         }
@@ -281,8 +303,11 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
 
     @Override
     public boolean onScrewdriverClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing, CuboidRayTraceResult hitResult) {
-        this.silktouch = !silktouch;
-        return true;
+        if (this.type != Type.CREATIVE) {
+            this.silktouch = !silktouch;
+            return true;
+        }
+        return false;
     }
 
     @Override

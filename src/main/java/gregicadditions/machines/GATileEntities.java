@@ -137,6 +137,7 @@ public class GATileEntities {
     public static MetaTileEntityLargeMiner BASIC_LARGE_MINER;
     public static MetaTileEntityLargeMiner2 LARGE_MINER;
     public static MetaTileEntityLargeMiner3 ADVANCED_LARGE_MINER;
+    public static MetaTileEntityLargeMiner4 CREATIVE_LARGE_MINER;
     public static MetaTileEntityVoidMiner[] VOID_MINER = new MetaTileEntityVoidMiner[3];
     public static TileEntityLargeTransformer LARGE_TRANSFORMER;
     public static MetaTileEntityIndustrialPrimitiveBlastFurnace INDUSTRIAL_PRIMITIVE_BLAST_FURNACE;
@@ -1187,6 +1188,7 @@ public class GATileEntities {
         FLUID_DRILLING_PLANT[1] = GregTechAPI.registerMetaTileEntity(4240, new MetaTileEntityFluidDrillingPlant(location("fluid_drilling_plant_hv"), 3));
         FLUID_DRILLING_PLANT[2] = GregTechAPI.registerMetaTileEntity(4241, new MetaTileEntityFluidDrillingPlant(location("fluid_drilling_plant_ev"), 4));
         EXTREME_DIESEL_ENGINE = GregTechAPI.registerMetaTileEntity(4242, new MetaTileEntityExtremeDieselEngine(location("extreme_diesel_engine")));
+        CREATIVE_LARGE_MINER = GregTechAPI.registerMetaTileEntity(4243, new MetaTileEntityLargeMiner4(location("miner.void"), Miner.Type.CREATIVE));
     }
 
     public static <T extends MetaTileEntity & ITieredMetaTileEntity> MTE<T> create(int id, T sampleMetaTileEntity) {

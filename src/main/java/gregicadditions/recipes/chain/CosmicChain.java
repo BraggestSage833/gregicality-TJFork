@@ -36,11 +36,11 @@ public class CosmicChain { // TODO
                 .buildAndRegister();
 
         LARGE_CENTRIFUGE_RECIPES.recipeBuilder().duration(200).EUt(1200000)
-                .fluidInputs(QuarkGluonPlasma.getFluid(1000))
+                .fluidInputs(QuarkGluonPlasma.getFluid(1000 * 5))
                 .notConsumable(SEPARATION_ELECTROMAGNET.getStackForm())
-                .fluidOutputs(HeavyQuarks.getFluid(750))
-                .fluidOutputs(Gluons.getFluid(500))
-                .fluidOutputs(LightQuarks.getFluid(250))
+                .fluidOutputs(HeavyQuarks.getFluid(750 * 5))
+                .fluidOutputs(Gluons.getFluid(500 * 5))
+                .fluidOutputs(LightQuarks.getFluid(250 * 5))
                 .buildAndRegister();
 
         LARGE_MIXER_RECIPES.recipeBuilder().duration(100).EUt(2400000)
@@ -77,9 +77,9 @@ public class CosmicChain { // TODO
                 .buildAndRegister();
 
         ADV_FUSION_RECIPES.recipeBuilder().duration(100).EUt(1100000).coilTier(3).euStart(5000000000L).euReturn(50)
-                .fluidInputs(DeuteriumSuperheavyMix.getFluid(144))
-                .fluidInputs(HeavyQuarkEnrichedMix.getFluid(144))
-                .fluidOutputs(HeavyQuarkDegenerateMatter.getFluid(144))
+                .fluidInputs(DeuteriumSuperheavyMix.getFluid(720))
+                .fluidInputs(HeavyQuarkEnrichedMix.getFluid(720))
+                .fluidOutputs(HeavyQuarkDegenerateMatter.getFluid(720))
                 .buildAndRegister();
 
         // 3HCl + Fl -> FlCl3 + 3H

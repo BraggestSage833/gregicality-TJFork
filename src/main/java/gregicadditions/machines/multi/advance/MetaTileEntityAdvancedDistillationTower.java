@@ -153,7 +153,7 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
             if (mode == 0) { // Distillation tower = 2 parallel/oc, max 8
                 maxItemsLimit *= 4;
                 maxItemsLimit = Math.max(1, maxItemsLimit);
-                maxItemsLimit = Math.min(8, maxItemsLimit);
+                maxItemsLimit = Math.min(16, maxItemsLimit);
             } else { // Others = 8 parallel/oc, max 64
                 maxItemsLimit *= 8;
                 maxItemsLimit = Math.max(1, maxItemsLimit);

@@ -1,6 +1,9 @@
 package gregicadditions.recipes.chain;
 
+import gregicadditions.GAValues;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
+import net.minecraft.item.ItemStack;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
@@ -317,11 +320,19 @@ public class TaraniumChain {
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(TaraniumRichHelium4.getFluid(400))
-                .output(dustSmall, Taranium,10)
+                .output(dustSmall, Taranium,14)
                 .fluidOutputs(TaraniumPoorLiquidHelium.getFluid(400))
                 .duration(20)
                 .EUt(8000)
                 .buildAndRegister();
+
+        CENTRIFUGE_RECIPES.recipeBuilder()
+                .input(dust, Stone)
+                .chancedOutput(OreDictUnifier.get(dustSmall,Taranium),1000,0)
+                .EUt(GAValues.VA[GAValues.UXV])
+                .duration(10)
+                .buildAndRegister();
+
 
         MIXER_RECIPES.recipeBuilder()
                 .fluidInputs(TaraniumPoorLiquidHelium.getFluid(1000))

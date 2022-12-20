@@ -871,6 +871,26 @@ public class MultiblockCraftingRecipes {
                 .inputs(HIGH_POWER_INTEGRATED_CIRCUIT.getStackForm(64))
                 .outputs(MEGA_DISTILLATION_TOWER.getStackForm())
                 .buildAndRegister();
+
+        //Void large Miner
+        ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(500).EUt(GAValues.VA[UV])
+                .input(gear, TitanSteel,16)
+                .input(round, Tritanium, 64)
+                .input(round, Tritanium, 64)
+                .input(round, Tritanium, 64)
+                .input(plate,Seaborgium,64)
+                .input(screw, TitanSteel,64)
+                .inputs(EMITTER_LUV.getStackForm(16))
+                .inputs(ELECTRIC_MOTOR_UV.getStackForm(4))
+                .input(circuit, Infinite,2)
+                .inputs(COMPONENT_GRINDER_TUNGSTEN.getStackForm(2))
+                .inputs(HULL[UV].getStackForm())
+                .fluidInputs(Seaborgium.getFluid(144 * 9))
+                .outputs(CREATIVE_LARGE_MINER.getStackForm())
+                .buildAndRegister();
+
+
+
     }
 
     private static void multiblockOverride() {

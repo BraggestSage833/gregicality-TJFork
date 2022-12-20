@@ -24,7 +24,8 @@ public interface Miner {
         HV(1, 1, 0, "", 4),
         BASIC(1, GAConfig.multis.largeMiner.basicMinerDiameter, GAConfig.multis.largeMiner.basicMinerFortune, fortuneString(GAConfig.multis.largeMiner.basicMinerFortune), 8),
         LARGE(1, GAConfig.multis.largeMiner.largeMinerDiameter, GAConfig.multis.largeMiner.largeMinerFortune, fortuneString(GAConfig.multis.largeMiner.largeMinerFortune), 16),
-        ADVANCE(1, GAConfig.multis.largeMiner.advancedMinerDiameter, GAConfig.multis.largeMiner.advancedMinerFortune, fortuneString(GAConfig.multis.largeMiner.advancedMinerFortune), 32);
+        ADVANCE(1, GAConfig.multis.largeMiner.advancedMinerDiameter, GAConfig.multis.largeMiner.advancedMinerFortune, fortuneString(GAConfig.multis.largeMiner.advancedMinerFortune), 32),
+        CREATIVE(1,GAConfig.multis.largeMiner.basicMinerDiameter,12, fortuneString(12),75);
 
         public final int tick;
         public final int chunk;
