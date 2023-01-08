@@ -70,7 +70,7 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
     public final Miner.Type type;
-    private AtomicLong x = new AtomicLong(Long.MAX_VALUE), y = new AtomicLong(Long.MAX_VALUE), z = new AtomicLong(Long.MAX_VALUE);
+    private AtomicLong x = new AtomicLong(0), y = new AtomicLong(0), z = new AtomicLong(0);
     private AtomicInteger currentChunk = new AtomicInteger(0);
     private IEnergyContainer energyContainer;
     private IMultipleTankHandler importFluidHandler;
