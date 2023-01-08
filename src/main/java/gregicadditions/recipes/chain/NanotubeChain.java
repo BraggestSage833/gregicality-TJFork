@@ -81,6 +81,7 @@ public class NanotubeChain {
         // CH2O + 2C2H4O + NH3 -> C5H5N + 3H2O + 2H
         LARGE_CHEMICAL_RECIPES.recipeBuilder().duration(240).EUt(1920)
                 .notConsumable(ThalliumChloride.getItemStack())
+                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
                 .fluidInputs(Formaldehyde.getFluid(1000))
                 .fluidInputs(Acetaldehyde.getFluid(2000))
                 .fluidInputs(Ammonia.getFluid(1000))

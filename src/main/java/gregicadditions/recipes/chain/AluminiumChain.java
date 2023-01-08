@@ -7,6 +7,7 @@ import static gregicadditions.recipes.GARecipeMaps.*;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
+import static gregtech.api.unification.ore.OrePrefix.dustSmall;
 
 public class AluminiumChain {
     public static void init() {
@@ -74,11 +75,12 @@ public class AluminiumChain {
                 .buildAndRegister();
 
         // [2 Al(OH)3 + H2O] = 2 Al(OH)3 + H2O
-        CHEMICAL_DEHYDRATOR_RECIPES.recipeBuilder().duration(240).EUt(240)
+        CHEMICAL_DEHYDRATOR_RECIPES.recipeBuilder().duration(240).EUt(1920)
                 .fluidInputs(PureAluminiumHydroxideSolution.getFluid(4000))
                 .notConsumable(AluminiumHydroxide.getItemStack())
                 .notConsumable(new IntCircuitIngredient(1))
                 .outputs(AluminiumHydroxide.getItemStack(56))
+                .output(dustSmall, Gallium, 3)
                 .buildAndRegister();
 
         // 8 Red Mud [Contains Total: 4TiO2 + 24 NaOH + 6 H2O] + 32 HCl = 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12HCl]

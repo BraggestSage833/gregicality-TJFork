@@ -1482,6 +1482,10 @@ public class GAConfig {
             @Config.Name("Advanced Miner casing material")
             public String advancedMinerCasingMaterial = "hss_s";
 
+            @Config.RequiresMcRestart
+            @Config.Name("Void large miner chunk diameter")
+            public int voidLargeMinerDiameter = 1;
+
         }
 
         public static class LargePackager {

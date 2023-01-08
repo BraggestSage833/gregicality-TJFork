@@ -71,7 +71,7 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
     public final Miner.Type type;
-    private AtomicLong x = new AtomicLong(Long.MAX_VALUE), y = new AtomicLong(Long.MAX_VALUE), z = new AtomicLong(Long.MAX_VALUE);
+    private AtomicLong x = new AtomicLong(0), y = new AtomicLong(0), z = new AtomicLong(0);
     private AtomicInteger currentChunk = new AtomicInteger(0);
     private IEnergyContainer energyContainer;
     private IMultipleTankHandler importFluidHandler;
@@ -162,6 +162,10 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
                     }
                 }
             }
+            else if(chunks.size() == 0 && type.chunk == 1) {
+                origin = world.getChunk(chunkMiner.x, chunkMiner.z);
+                chunks.add(origin);
+            }
 
             if (currentChunk.intValue() == chunks.size()) {
                 setActive(false);
@@ -198,10 +202,17 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
             });
 
             if (y.get() < 0) {
-                currentChunk.incrementAndGet();
-                if (currentChunk.get() >= chunks.size()) {
-                    done = true;
-                } else {
+                if(type != Type.CREATIVE){
+                    currentChunk.incrementAndGet();
+                    if (currentChunk.get() >= chunks.size()) {
+                        done = true;
+                    } else {
+                        x.set(chunks.get(currentChunk.intValue()).getPos().getXStart());
+                        z.set(chunks.get(currentChunk.intValue()).getPos().getZStart());
+                        y.set(getPos().getY());
+                    }
+                }
+                else {
                     x.set(chunks.get(currentChunk.intValue()).getPos().getXStart());
                     z.set(chunks.get(currentChunk.intValue()).getPos().getZStart());
                     y.set(getPos().getY());
@@ -219,16 +230,17 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("F###F", "F###F", "PPPPP", "#####", "#####", "#####", "#####", "#####", "#####", "#####")
-                .aisle("#####", "#####", "PPPPP", "#CCC#", "#####", "#####", "#####", "#####", "#####", "#####")
-                .aisle("#####", "#####", "PPPPP", "#CPC#", "#FFF#", "#FFF#", "#FFF#", "##F##", "##F##", "##F##")
-                .aisle("#####", "#####", "PPPPP", "#CSC#", "#####", "#####", "#####", "#####", "#####", "#####")
-                .aisle("F###F", "F###F", "PPPPP", "#####", "#####", "#####", "#####", "#####", "#####", "#####")
+                .aisle("F###F", "F###F", "PQQQP", "#####", "#####", "#####", "#####", "#####", "#####", "#####")
+                .aisle("#####", "#####", "QPPPQ", "#CCC#", "#####", "#####", "#####", "#####", "#####", "#####")
+                .aisle("#####", "#####", "QPPPQ", "#CPC#", "#FFF#", "#FFF#", "#FFF#", "##F##", "##F##", "##F##")
+                .aisle("#####", "#####", "CPPPQ", "#CSC#", "#####", "#####", "#####", "#####", "#####", "#####")
+                .aisle("F###F", "F###F", "PQQQP", "#####", "#####", "#####", "#####", "#####", "#####", "#####")
                 .setAmountAtLeast('L', 3)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
                 .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('P', statePredicate(getCasingState()))
+                .where('Q', statePredicate(getCasingState()).or(abilityPartPredicate(MultiblockAbility.EXPORT_ITEMS)))
                 .where('F', statePredicate(getFrameState()))
                 .where('#', blockWorldState -> true)
                 .build();
