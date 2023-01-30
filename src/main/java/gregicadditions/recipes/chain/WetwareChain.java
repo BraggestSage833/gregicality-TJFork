@@ -76,7 +76,7 @@ public class WetwareChain { // TODO
         // C3H4O + HCl -> C3H3Cl + H2O
         CHEMICAL_RECIPES.recipeBuilder()
                 .fluidInputs(PropargylAlcohol.getFluid(1000))
-                .fluidInputs(HydrochloricAcid.getFluid(2000))
+                .fluidInputs(HydrochloricAcid.getFluid(1000))
                 .fluidOutputs(PropargylChloride.getFluid(1000))
                 .fluidOutputs(Water.getFluid(1000))
                 .EUt(120)

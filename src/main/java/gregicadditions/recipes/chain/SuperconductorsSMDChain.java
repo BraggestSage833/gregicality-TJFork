@@ -182,7 +182,7 @@ public class SuperconductorsSMDChain {
                 .fluidOutputs(Diethoxythiophene.getFluid(1000))
                 .fluidOutputs(HydrobromicAcid.getFluid(2000))
                 .fluidOutputs(CarbonDioxide.getFluid(1000))
-                .outputs(SodiumBromide.getItemStack(8))
+                .outputs(SodiumBromide.getItemStack(4))
                 .buildAndRegister();
 
         // C2H6O2 + C6H8S -> C6H6O2S + 2CH4

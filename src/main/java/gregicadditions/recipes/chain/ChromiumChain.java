@@ -72,7 +72,7 @@ public class ChromiumChain {
                 .buildAndRegister();
 
         // Combined Step - Chromite
-        CHEMICAL_BATH_RECIPES.recipeBuilder().EUt(1920).duration(200)
+        CHEMICAL_BATH_RECIPES.recipeBuilder().EUt(30720).duration(200)
                 .input(dust, Chromite, 7)
                 .fluidInputs(SulfuricAcid.getFluid(3000))
                 .output(dust, BandedIron, 5)
