@@ -13,10 +13,7 @@ import gregicadditions.machines.energyconverter.MetaTileEntityEnergyConverter;
 import gregicadditions.machines.energyconverter.utils.ConverterType;
 import gregicadditions.machines.energyconverter.utils.EnergyConverterType;
 import gregicadditions.machines.multi.*;
-import gregicadditions.machines.multi.advance.MetaTileEntityAdvFusionReactor;
-import gregicadditions.machines.multi.advance.MetaTileEntityAdvancedDistillationTower;
-import gregicadditions.machines.multi.advance.MetaTileEntityLargeNaquadahReactor;
-import gregicadditions.machines.multi.advance.MetaTileEntityLargeRocketEngine;
+import gregicadditions.machines.multi.advance.*;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorI;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorII;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorIII;
@@ -262,6 +259,8 @@ public class GATileEntities {
     public static MetaTileEntityMegaVacuumFreezer MEGA_VACUUM_FREEZER;
 
     public static MetaTileEntityMaintenanceHatch[] MAINTENANCE_HATCH = new MetaTileEntityMaintenanceHatch[3];
+    public static MetaTileEntityVolcanus VOLCANUS;
+    public static MetaTileEntityCryogenicFreezer CRYOGENIC_FREEZER;
 
     public static void init() {
 
@@ -1189,6 +1188,9 @@ public class GATileEntities {
         FLUID_DRILLING_PLANT[2] = GregTechAPI.registerMetaTileEntity(4241, new MetaTileEntityFluidDrillingPlant(location("fluid_drilling_plant_ev"), 4));
         EXTREME_DIESEL_ENGINE = GregTechAPI.registerMetaTileEntity(4242, new MetaTileEntityExtremeDieselEngine(location("extreme_diesel_engine")));
         CREATIVE_LARGE_MINER = GregTechAPI.registerMetaTileEntity(4243, new MetaTileEntityLargeMiner4(location("miner.void"), Miner.Type.CREATIVE));
+        VOLCANUS = GregTechAPI.registerMetaTileEntity(4244, new MetaTileEntityVolcanus(location("volcanus")));
+        CRYOGENIC_FREEZER = GregTechAPI.registerMetaTileEntity(4245, new MetaTileEntityCryogenicFreezer(location("cryogenic_freezer")));
+
     }
 
     public static <T extends MetaTileEntity & ITieredMetaTileEntity> MTE<T> create(int id, T sampleMetaTileEntity) {

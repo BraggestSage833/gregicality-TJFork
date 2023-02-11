@@ -117,6 +117,8 @@ public class GAMultiblockInfoCategory implements IRecipeCategory<MultiblockInfoR
                     .put("large_brewery", new MultiblockInfoRecipeWrapper(new LargeBreweryInfo()))
                     .put("large_electromagnet", new MultiblockInfoRecipeWrapper(new LargeElectromagnetInfo()))
                     .put("large_extractor", new MultiblockInfoRecipeWrapper(new LargeExtractorInfo()))
+                    .put("volcanus", new MultiblockInfoRecipeWrapper(new VolcanusInfo()))
+                    .put("cryogenic_freezer", new MultiblockInfoRecipeWrapper(new CryogenicFreezerInfo()))
                     .build();
         }
 

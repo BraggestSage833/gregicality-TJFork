@@ -236,6 +236,8 @@ public class MachineCraftingRecipes {
         ASSEMBLER_RECIPES.recipeBuilder().EUt(1920).duration(100).inputs(MetaTileEntities.HULL[IV].getStackForm()).input(pipeLarge, TungstenSteel, 9).circuitMeta(0).outputs(GATileEntities.INPUT_HATCH_MULTI.get(1).getStackForm()).buildAndRegister();
         ASSEMBLER_RECIPES.recipeBuilder().EUt(1920).duration(100).inputs(MetaTileEntities.HULL[IV].getStackForm()).input(pipeLarge, TungstenSteel, 9).circuitMeta(1).outputs(GATileEntities.OUTPUT_HATCH_MULTI.get(1).getStackForm()).buildAndRegister();
 
+        ModHandler.addShapedRecipe("ga_volcanus", GATileEntities.VOLCANUS.getStackForm(), "GCG", "IHI", "PCP", 'H', GATileEntities.ELECTRIC_BLAST_FURNACE.getStackForm(), 'C', new UnificationEntry(circuit, Elite), 'P', new UnificationEntry(plateDense, HastelloyN), 'G', new UnificationEntry(gear, HastelloyN), 'I', MetaItems.ROBOT_ARM_IV);
+        ModHandler.addShapedRecipe("ga_cryogenic_freezer", GATileEntities.CRYOGENIC_FREEZER.getStackForm(), "GCG", "IHI", "PCP", 'H', GATileEntities.VACUUM_FREEZER.getStackForm(), 'C', new UnificationEntry(circuit, Elite), 'P', new UnificationEntry(plateDense, HG1223), 'G', new UnificationEntry(gear, IncoloyMA956), 'I', MetaItems.ELECTRIC_PISTON_IV);
 
     }
 }

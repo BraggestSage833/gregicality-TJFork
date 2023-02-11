@@ -245,8 +245,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 					resultDuration /= 2.8;
 				}
 
-				if (resultDuration < 3)
-					resultDuration = 3;
+
 
 				previousRecipeDuration = (int) resultDuration;
 				return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};

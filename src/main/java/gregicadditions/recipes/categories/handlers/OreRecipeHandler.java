@@ -273,7 +273,7 @@ public class OreRecipeHandler {
             THERMAL_CENTRIFUGE_RECIPES.recipeBuilder()
                     .input(purifiedPrefix, material)
                     .outputs(GTUtility.copyAmount(2, crushedCentrifugedStack))
-                    .chancedOutput(OreDictUnifier.get(dustTiny, byproductMaterial, 6), 5000, 500)
+                    .chancedOutput(OreDictUnifier.get(dust, byproductMaterial, 6), 5000, 0)
                     .duration((int) (material.getAverageMass() * 24))
                     .EUt(60)
                     .buildAndRegister();

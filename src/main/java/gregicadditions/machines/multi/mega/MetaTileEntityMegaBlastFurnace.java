@@ -63,8 +63,8 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
     };
 
     public MetaTileEntityMegaBlastFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, BLAST_RECIPES, 100, 100, 100, 0, true, true, true);
-        this.recipeMapWorkable = new MegaBlastFurnaceRecipeLogic(this, 100, 100, 100);
+        super(metaTileEntityId, BLAST_RECIPES, 100, 70, 100, 0, true, true, true);
+        this.recipeMapWorkable = new MegaBlastFurnaceRecipeLogic(this, 100, 70, 100);
     }
 
     @Override
@@ -321,8 +321,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
                 duration /= 2.8;
             }
 
-            if (duration < 3)
-                duration = 3;
+
 
             List<CountableIngredient> newRecipeInputs = new ArrayList<>();
             List<FluidStack> newFluidInputs = new ArrayList<>();
