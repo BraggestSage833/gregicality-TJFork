@@ -25,10 +25,12 @@ import gregtech.common.items.behaviors.TurbineRotorBehavior;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemLilyPad;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.oredict.DyeUtils;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -1267,6 +1269,7 @@ public class RecipeHandler {
                 Item.getItemFromBlock(Blocks.RED_MUSHROOM),
                 Items.BEETROOT);
 
+
         // Create Recipes for Vanilla crops
         for (int i = 0; i < fertilizers.size() / 2; i++) {
 
@@ -1282,6 +1285,13 @@ public class RecipeHandler {
                     .notConsumable(new ItemStack(Items.POTATO))
                     .outputs(new ItemStack(Items.POTATO, i))
                     .chancedOutput(new ItemStack(Items.POISONOUS_POTATO, 1), 100, 50));
+
+
+            GREEN_HOUSE_RECIPES.recipeBuilder().duration(duration)
+                    .circuitMeta(i)
+                    .fluidInputs(Water.getFluid(2000))
+                    .notConsumable(new ItemStack(Items.DYE, 1, 12))
+                    .outputs(new ItemStack(Items.DYE, 2, 12));
 
             // Melon
             GREEN_HOUSE_RECIPES.recipeBuilder().duration(1000)
