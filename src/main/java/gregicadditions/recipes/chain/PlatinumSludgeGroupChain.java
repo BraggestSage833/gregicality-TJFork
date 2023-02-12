@@ -97,8 +97,8 @@ public class PlatinumSludgeGroupChain {
         // loses 1 Oxygen
         CHEMICAL_RECIPES.recipeBuilder()
                 .fluidInputs(AcidicIridiumSolution.getFluid(1000))
-                .fluidInputs(AmmoniumChloride.getFluid(3000))
-                .fluidOutputs(Ammonia.getFluid(3000))
+                .fluidInputs(AmmoniumChloride.getFluid(4000))
+                .fluidOutputs(Ammonia.getFluid(4000))
                 .fluidOutputs(Water.getFluid(3000))
                 .output(dust, IridiumChloride, 8)
                 .duration(300)
