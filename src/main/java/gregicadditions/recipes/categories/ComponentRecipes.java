@@ -353,7 +353,7 @@ public class ComponentRecipes {
                     .input(dust, EnderPearl)
                     .input(dust, EnderPearl)
                     .input(dust, EnderPearl)
-                    .fluidInputs(Osmium.getFluid(L * 2))
+                    .fluidInputs(SolderingAlloy.getFluid(L * 2))
                     .outputs(FIELD_GENERATOR_LV.getStackForm(16))
                     .buildAndRegister();
 
@@ -366,7 +366,7 @@ public class ComponentRecipes {
                     .input(dust, EnderEye)
                     .input(dust, EnderEye)
                     .input(dust, EnderEye)
-                    .fluidInputs(Osmium.getFluid(L * 4))
+                    .fluidInputs(MVSuperconductorBase.getFluid(L * 4))
                     .outputs(FIELD_GENERATOR_MV.getStackForm(16))
                     .buildAndRegister();
 
@@ -379,7 +379,7 @@ public class ComponentRecipes {
                     .inputs(QUANTUM_EYE.getStackForm())
                     .inputs(QUANTUM_EYE.getStackForm())
                     .inputs(QUANTUM_EYE.getStackForm())
-                    .fluidInputs(Osmium.getFluid(L * 8))
+                    .fluidInputs(HVSuperconductorBase.getFluid(L * 8))
                     .outputs(FIELD_GENERATOR_HV.getStackForm(16))
                     .buildAndRegister();
 
@@ -392,7 +392,7 @@ public class ComponentRecipes {
                     .input(dust, NetherStar)
                     .input(dust, NetherStar)
                     .input(dust, NetherStar)
-                    .fluidInputs(Osmium.getFluid(L * 16))
+                    .fluidInputs(EVSuperconductorBase.getFluid(L * 16))
                     .outputs(FIELD_GENERATOR_EV.getStackForm(16))
                     .buildAndRegister();
 
@@ -405,7 +405,7 @@ public class ComponentRecipes {
                     .inputs(QUANTUM_STAR.getStackForm())
                     .inputs(QUANTUM_STAR.getStackForm())
                     .inputs(QUANTUM_STAR.getStackForm())
-                    .fluidInputs(Osmium.getFluid(L * 32))
+                    .fluidInputs(IVSuperconductorBase.getFluid(L * 32))
                     .outputs(FIELD_GENERATOR_IV.getStackForm(16))
                     .buildAndRegister();
         }
@@ -413,7 +413,7 @@ public class ComponentRecipes {
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(30720)
                 .input(frameGt, HSSG)
                 .inputs(QUANTUM_STAR.getStackForm())
-                .input(wireFine, Osmium, 16)
+                .input(wireGtQuadruple, LuVSuperconductorBase, 8)
                 .input(cableGtOctal, YttriumBariumCuprate, 4)
                 .input(circuit, Master, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L))
@@ -423,7 +423,7 @@ public class ComponentRecipes {
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(122880)
                 .input(frameGt, HSSE)
                 .inputs(QUANTUM_STAR.getStackForm())
-                .input(wireFine, Osmium, 16)
+                .input(wireGtQuadruple, ZPMSuperconductorBase, 8)
                 .input(cableGtOctal, Naquadah, 4)
                 .input(circuit, Ultimate, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L))
@@ -433,7 +433,7 @@ public class ComponentRecipes {
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(491520)
                 .input(frameGt, Tritanium)
                 .inputs(GRAVI_STAR.getStackForm())
-                .input(wireFine, Osmium, 64)
+                .input(wireGtQuadruple, UVSuperconductorBase, 8)
                 .input(cableGtOctal, Duranium, 4)
                 .input(circuit, Superconductor, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L))
@@ -443,7 +443,7 @@ public class ComponentRecipes {
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(1966080)
                 .input(frameGt, Seaborgium)
                 .inputs(GRAVI_STAR.getStackForm())
-                .input(wireFine, Osmium, 64)
+                .input(wireGtQuadruple, UHVSuperconductorBase, 8)
                 .input(cableGtSingle, TungstenTitaniumCarbide, 4)
                 .input(circuit, Infinite, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L * 2))
@@ -453,7 +453,7 @@ public class ComponentRecipes {
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(600).EUt(7864320)
                 .input(frameGt, Bohrium)
                 .inputs(UNSTABLE_STAR.getStackForm())
-                .input(wireFine, Osmium, 64)
+                .input(cableGtQuadruple, UEVSuperconductorBase, 8)
                 .input(wireFine, Osmium, 64)
                 .input(cableGtSingle, Pikyonium, 4)
                 .input(circuit, UEV, 2)
@@ -465,7 +465,7 @@ public class ComponentRecipes {
                 .input(frameGt, Trinium)
                 .inputs(UNSTABLE_STAR.getStackForm())
                 .input(wireFine, Trinium, 64)
-                .input(wireFine, Trinium, 64)
+                .input(wireGtQuadruple, UIVSuperconductorBase, 8)
                 .input(cableGtSingle, BlackTitanium, 4)
                 .input(circuit, UIV, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L * 6))
@@ -476,7 +476,7 @@ public class ComponentRecipes {
                 .input(frameGt, Adamantium)
                 .inputs(UNSTABLE_STAR.getStackForm())
                 .input(wireFine, Adamantium, 64)
-                .input(wireFine, Adamantium, 64)
+                .input(wireGtQuadruple, UMVSuperconductorBase, 8)
                 .input(cableGtSingle, NaquadriaticTaranium, 4)
                 .input(circuit, UMV, 2)
                 .fluidInputs(SolderingAlloy.getFluid(L * 6))
