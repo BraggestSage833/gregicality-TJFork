@@ -236,7 +236,6 @@ public class MiscRecipes {
 
 
 
-
         if (STEAM_OUTPUT_BUS != null && STEAM_INPUT_BUS != null) {
                 //Steam
                 ModHandler.addShapedRecipe("steam_bus_output_to_input_" + STEAM_OUTPUT_BUS.getTier(), STEAM_OUTPUT_BUS.getStackForm(),

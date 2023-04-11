@@ -332,6 +332,7 @@ public class TaraniumChain {
                 .chancedOutput(OreDictUnifier.get(dust,Taranium),1000,0)
                 .chancedOutput(OreDictUnifier.get(dust,Taranium),1000,0)
                 .duration(50)
+                .EUt(GAValues.VA[GAValues.UXV])
                 .buildAndRegister();
 
 

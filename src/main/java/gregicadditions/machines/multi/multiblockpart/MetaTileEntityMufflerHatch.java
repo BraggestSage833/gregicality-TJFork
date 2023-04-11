@@ -211,7 +211,7 @@ public class MetaTileEntityMufflerHatch extends MetaTileEntityMultiblockPart imp
         MultiblockControllerBase controllerBase = getController();
         if (controllerBase instanceof GARecipeMapMultiblockController) {
             GARecipeMapMultiblockController controller = (GARecipeMapMultiblockController) controllerBase;
-            controller.runMufflerEffect(xPos, yPos, zPos, xSpd, ySpd, zSpd);
+            controller.runMufflerEffect(xPos + 0.5F * XSTR_RAND.nextFloat(), yPos + 0.5F * XSTR_RAND.nextFloat(), zPos + 0.5F * XSTR_RAND.nextFloat(), xSpd, ySpd, zSpd);
         }
     }
 }

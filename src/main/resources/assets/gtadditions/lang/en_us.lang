@@ -2664,6 +2664,7 @@ material.umv_superconductor=UMV Superconductor
 material.umv_superconductor_base=UMV Superconductor Base
 material.uxv_superconductor=UXV Superconductor
 material.uxv_superconductor_base=UXV Superconductor Base
+material.samarium_magnetic=Magnetic Samarium
 material.quantum=Quantum
 material.black_titanium=Black Titanium
 material.tungsten_titanium_carbide=Tungsten Titanium Carbide
