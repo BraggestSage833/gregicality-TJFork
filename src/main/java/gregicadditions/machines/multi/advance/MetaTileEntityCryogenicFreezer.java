@@ -41,7 +41,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
             MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.EXPORT_FLUIDS,
             MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
-    private static final int DURATION_DECREASE_FACTOR = 60;
+    private static final int DURATION_DECREASE_FACTOR = 35;
 
     private static final int ENERGY_DECREASE_FACTOR = 20;
 
@@ -49,7 +49,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
 
     public MetaTileEntityCryogenicFreezer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
-        this.recipeMapWorkable = new CryogenicFreezerRecipeLogic(this, ENERGY_DECREASE_FACTOR, DURATION_DECREASE_FACTOR, 100, 3);
+        this.recipeMapWorkable = new CryogenicFreezerRecipeLogic(this, ENERGY_DECREASE_FACTOR, DURATION_DECREASE_FACTOR, 100, 1);
         reinitializeStructurePattern();
     }
 
@@ -110,7 +110,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
 
         @Override
         protected boolean drawEnergy(int recipeEUt) {
-            int drain = (int) Math.pow(2, getOverclockingTier(getMaxVoltage()));
+            int drain = (int) Math.pow(4, getOverclockingTier(getMaxVoltage()));
             long resultEnergy = this.getEnergyStored() - (long) recipeEUt;
             Optional<IFluidTank> fluidTank =
                     getInputFluidInventory().getFluidTanks().stream()
