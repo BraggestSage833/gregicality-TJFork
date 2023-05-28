@@ -40,9 +40,9 @@ public class AdvFusionRecipeBuilder extends RecipeBuilder<AdvFusionRecipeBuilder
 
     static {
         COOLANTS.put(Steam.getFluid(570), SupercriticalSteam.fluid);
-        COOLANTS.put(Deuterium.getFluid(240), SupercriticalDeuterium.fluid);
+        //COOLANTS.put(Deuterium.getFluid(240), SupercriticalDeuterium.fluid);
         COOLANTS.put(SodiumPotassiumAlloy.getFluid(120), SupercriticalSodiumPotassiumAlloy.fluid);
-        COOLANTS.put(Sodium.getFluid(100), SupercriticalSodium.fluid);
+        //COOLANTS.put(Sodium.getFluid(100), SupercriticalSodium.fluid);
         COOLANTS.put(FLiNaK.getFluid(50), SupercriticalFLiNaK.fluid);
         COOLANTS.put(FLiBe.getFluid(55), SupercriticalFLiBe.fluid);
         COOLANTS.put(LeadBismuthEutectic.getFluid(60), SupercriticalLeadBismuthEutectic.fluid);

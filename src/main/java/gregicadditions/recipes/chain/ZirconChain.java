@@ -130,5 +130,12 @@ public class ZirconChain {
                 .output(dust, Hafnium)
                 .output(dust, MagnesiumChloride, 6)
                 .buildAndRegister();
+
+        // NH4Cl = NH3 + HCl
+        ELECTROLYZER_RECIPES.recipeBuilder().duration(160).EUt(120)
+                .fluidInputs(AmmoniumChloride.getFluid(1000))
+                .fluidOutputs(Ammonia.getFluid(1000))
+                .fluidOutputs(HydrochloricAcid.getFluid(1000))
+                .buildAndRegister();
     }
 }

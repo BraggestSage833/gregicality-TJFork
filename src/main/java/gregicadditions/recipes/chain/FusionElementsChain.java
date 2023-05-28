@@ -337,6 +337,12 @@ public class FusionElementsChain {
                 .fluidInputs(RadonRadiumMix.getFluid(144 * 4))
                 .fluidOutputs(MetastableHassium.getFluid(144 * 4))
                 .buildAndRegister();
+
+        ADV_FUSION_RECIPES.recipeBuilder().duration(64).EUt(32768).coilTier(1).euStart(640000000L).euReturn(100)
+                .fluidInputs(Deuterium.getFluid(250))
+                .fluidInputs(Tritium.getFluid(250))
+                .fluidOutputs(Helium.getPlasma(250))
+                .buildAndRegister();
     }
 
     public static void fusionRecipes() {
