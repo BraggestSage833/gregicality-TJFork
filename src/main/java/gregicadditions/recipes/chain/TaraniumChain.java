@@ -320,7 +320,7 @@ public class TaraniumChain {
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(TaraniumRichHelium4.getFluid(400))
-                .output(dustSmall, Taranium,14)
+                .output(dust, Taranium,4)
                 .fluidOutputs(TaraniumPoorLiquidHelium.getFluid(400))
                 .duration(20)
                 .EUt(8000)
