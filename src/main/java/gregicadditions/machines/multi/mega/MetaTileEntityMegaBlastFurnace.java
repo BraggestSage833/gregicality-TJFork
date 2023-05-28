@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregtech.api.recipes.RecipeMaps.BLAST_RECIPES;
+import static gregtech.api.recipes.RecipeMaps.getPrimitiveBlastFurnaceRecipes;
 import static gregtech.api.unification.material.Materials.BlackSteel;
 import static gregtech.api.unification.material.Materials.BlueSteel;
 
@@ -318,6 +319,9 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
                 duration /= 2.8;
+                if (duration <= 0){
+                    duration = 1;
+                }
             }
 
 

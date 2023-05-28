@@ -94,12 +94,12 @@ public class OpticalChain {
         MIXER_RECIPES.recipeBuilder().duration(140).EUt(30)
                 .fluidInputs(DistilledWater.getFluid(1000))
                 .inputs(AmmoniumBifluoride.getItemStack(8))
-                .fluidOutputs(AmmoniumBifluorideSolution.getFluid(1000))
+                .fluidOutputs(AmmoniumBifluorideSolution.getFluid(2000))
                 .buildAndRegister();
 
         // [NH4HF2 + H2O] -> NH3 + 2HF + H2O
         CENTRIFUGE_RECIPES.recipeBuilder().duration(260).EUt(120)
-                .fluidInputs(AmmoniumBifluorideSolution.getFluid(1000))
+                .fluidInputs(AmmoniumBifluorideSolution.getFluid(2000))
                 .fluidOutputs(Ammonia.getFluid(1000))
                 .fluidOutputs(HydrofluoricAcid.getFluid(2000))
                 .fluidOutputs(Water.getFluid(1000))
