@@ -299,9 +299,9 @@ public class HNIWChain {
 
         //BF3 + HF + NO2 -> NOBF4 + HNO3
         CHEMICAL_RECIPES.recipeBuilder()
-                .fluidInputs(BoronFluoride.getFluid(2000))
-                .fluidInputs(HydrofluoricAcid.getFluid(2000))
-                .fluidInputs(DinitrogenTetroxide.getFluid(2000))
+                .fluidInputs(BoronFluoride.getFluid(1000))
+                .fluidInputs(HydrofluoricAcid.getFluid(1000))
+                .fluidInputs(NitrogenDioxide.getFluid(2000))
                 .outputs(NitrosoniumTetrafluoroborate.getItemStack(7))
                 .fluidOutputs(NitricAcid.getFluid(1000))
                 .EUt(480)
