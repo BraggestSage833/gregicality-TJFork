@@ -328,7 +328,6 @@ public class SuperconductorsSMDChain {
                 .notConsumable(block, Copper)
                 .output(dust, Iodine, 10)
                 .chancedOutput(OreDictUnifier.get(dust, Iron, 1), 5000, 0)
-
                 .fluidOutputs(IronCarbonyl.getFluid(5000))
                 .buildAndRegister();
 
