@@ -7,6 +7,8 @@ import gregicadditions.materials.SimpleDustMaterial;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
 import net.minecraft.item.ItemStack;
+import gregtech.api.unification.OreDictUnifier;
+
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
@@ -325,7 +327,8 @@ public class SuperconductorsSMDChain {
                 .fluidInputs(CarbonMonoxde.getFluid(25000))
                 .notConsumable(block, Copper)
                 .output(dust, Iodine, 10)
-                .output(dustSmall, Iron, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Iron, 1), 5000, 0)
+
                 .fluidOutputs(IronCarbonyl.getFluid(5000))
                 .buildAndRegister();
 

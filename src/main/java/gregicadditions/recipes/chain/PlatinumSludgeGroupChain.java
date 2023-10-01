@@ -235,7 +235,7 @@ public class PlatinumSludgeGroupChain {
 
         // full dust version
         LARGE_CHEMICAL_RECIPES.recipeBuilder()
-                .notConsumable(new IntCircuitIngredient(4))
+                .notConsumable(new IntCircuitIngredient(9))
                 .fluidInputs(PlatinumConcentrate.getFluid(8000))
                 .fluidInputs(AmmoniumChloride.getFluid(800))
                 .output(dust, PlatinumSalt, 10)

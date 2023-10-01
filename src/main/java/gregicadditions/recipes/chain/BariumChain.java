@@ -102,9 +102,9 @@ public class BariumChain {
         CENTRIFUGE_RECIPES.recipeBuilder().duration(50).EUt(80)
                 .input(dust, Witherite, 5)
                 .outputs(BariumCarbonate.getItemStack(5))
-                .chancedOutput(OreDictUnifier.get(dustTiny, Calcite), 9000, 150)
-                .chancedOutput(OreDictUnifier.get(dustTiny, Galena), 7000, 120)
-                .chancedOutput(OreDictUnifier.get(dustTiny, Barite), 4000, 90)
+                .chancedOutput(OreDictUnifier.get(dust, Calcite), 1000, 16)
+                .chancedOutput(OreDictUnifier.get(dust, Galena), 777, 13)
+                .chancedOutput(OreDictUnifier.get(dust, Barite), 444, 10)
                 .buildAndRegister();
     }
 }

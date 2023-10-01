@@ -1,13 +1,13 @@
 package gregicadditions.recipes.chain;
 
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.recipes.GARecipeMaps.*;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
-import static gregtech.api.unification.ore.OrePrefix.dustSmall;
 
 public class AluminiumChain {
     public static void init() {
@@ -80,7 +80,7 @@ public class AluminiumChain {
                 .notConsumable(AluminiumHydroxide.getItemStack())
                 .notConsumable(new IntCircuitIngredient(1))
                 .outputs(AluminiumHydroxide.getItemStack(56))
-                .output(dustSmall, Gallium, 3)
+                .chancedOutput(OreDictUnifier.get(dust, Gallium, 1), 7500, 0)
                 .buildAndRegister();
 
         // 8 Red Mud [Contains Total: 4TiO2 + 24 NaOH + 6 H2O] + 32 HCl = 8 Neutralized Mud [Contains Total: 4TiO2 + 24NaCl + 30 H2O + 12HCl]

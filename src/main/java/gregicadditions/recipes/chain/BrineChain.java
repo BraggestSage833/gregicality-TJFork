@@ -421,7 +421,7 @@ public class BrineChain {
                 .input(dust, Carbon)
                 .input(dust, Sulfur, 2)
                 .fluidOutputs(CarbonSulfide.getFluid(1000))
-                .output(dustTiny, Ash)
+                .chancedOutput(OreDictUnifier.get(dust, Ash, 1), 1111, 0)
                 .buildAndRegister();
 
         // 3C + 2HCl + 2CH3NH2 + CS2 -> 2C3H6ClNS
@@ -587,7 +587,7 @@ public class BrineChain {
         CENTRIFUGE_RECIPES.recipeBuilder().duration(200).EUt(120)
                 .inputs(SodiumSalts.getItemStack(2))
                 .output(dust, Salt, 2)
-                .chancedOutput(OreDictUnifier.get(dustTiny, SodiumFluoride, 2), 400, 0)
+                .chancedOutput(OreDictUnifier.get(dust, SodiumFluoride, 1), 88, 0)
                 .buildAndRegister();
 
         // KCl, MgSO4, K2SO4
@@ -596,7 +596,7 @@ public class BrineChain {
                 .output(dust, RockSalt, 2)
                 .outputs(MagnesiumSulfate.getItemStack(6))
                 .outputs(PotassiumSulfate.getItemStack(7))
-                .chancedOutput(OreDictUnifier.get(dustTiny, PotassiumFluoride, 2), 400, 0)
+                .chancedOutput(OreDictUnifier.get(dust, PotassiumFluoride, 1), 88, 0)
                 .buildAndRegister();
 
         // CaCO3, CO2, MgO

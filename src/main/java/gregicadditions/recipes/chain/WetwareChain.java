@@ -1,6 +1,7 @@
 package gregicadditions.recipes.chain;
 
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -10,7 +11,6 @@ import static gregicadditions.recipes.GARecipeMaps.*;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
-import static gregtech.api.unification.ore.OrePrefix.dustSmall;
 import static gregtech.common.items.MetaItems.RUBBER_DROP;
 import static net.minecraft.init.Items.APPLE;
 
@@ -91,7 +91,7 @@ public class WetwareChain { // TODO
                 .buildAndRegister();
 
         DISTILLATION_RECIPES.recipeBuilder()
-                .output(dustSmall, RawRubber)
+                .chancedOutput(OreDictUnifier.get(dust, RawRubber, 1), 5000, 0)
                 .fluidInputs(Resin.getFluid(1000))
                 .fluidOutputs(Turpentine.getFluid(200))
                 .fluidOutputs(Isoprene.getFluid(20))

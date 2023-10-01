@@ -44,7 +44,7 @@ public class GoldChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .input(dust, GoldAlloy, 4)
                 .output(dust, Copper, 3)
-                .output(dustTiny, Gold, 4)
+                .chancedOutput(OreDictUnifier.get(dust, Gold, 1), 4444, 0)
                 .duration(500)
                 .EUt(30)
                 .buildAndRegister();
@@ -55,7 +55,7 @@ public class GoldChain {
                 .fluidInputs(Hydrogen.getFluid(1000))
                 .fluidOutputs(Water.getFluid(1000))
                 .output(dust, Copper, 3)
-                .output(dustTiny, Gold, 8)
+                .chancedOutput(OreDictUnifier.get(dust, Gold, 1), 8888, 0)
                 .duration(300)
                 .EUt(30)
                 .buildAndRegister();

@@ -11,8 +11,6 @@ import static gregicadditions.recipes.GARecipeMaps.*;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
-import static gregtech.api.unification.ore.OrePrefix.dustSmall;
-
 
 public class TaraniumChain {
     public static void init(){
@@ -44,7 +42,7 @@ public class TaraniumChain {
                 .inputs(StoneResidueDust.getItemStack(24))
                 .fluidInputs(SodiumHydroxideSolution.getFluid(1000))
                 .outputs(UncommonResidues.getItemStack())
-                .output(dustSmall, Magnetite)
+                .chancedOutput(OreDictUnifier.get(dust, Magnetite, 1), 2500, 0)
                 .fluidOutputs(SodiumHydroxideSolution.getFluid(925))
                 .fluidOutputs(RedMud.getFluid(75))
                 .duration(40)
@@ -137,56 +135,60 @@ public class TaraniumChain {
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(FerromagneticResidues.getItemStack(6))
-                .output(dustSmall, Iron)
-                .output(dustSmall, Nickel)
-                .output(dustSmall, Cobalt)
+                .chancedOutput(OreDictUnifier.get(dust, Iron, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Nickel, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Cobalt, 1), 2500, 0)
+
                 .duration(100)
                 .EUt(3000)
                 .buildAndRegister();
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(DiamagneticResidues.getItemStack(6))
-                .output(dustSmall, Calcium)
-                .output(dustSmall, Zinc)
-                .output(dustSmall, Copper)
-                .output(dustSmall, Gallium)
-                .output(dustSmall, Beryllium)
-                .output(dustSmall, Tin)
+                .chancedOutput(OreDictUnifier.get(dust, Calcium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Zinc, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Copper, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Gallium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Beryllium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Tin, 1), 2500, 0)
+
                 .duration(100)
                 .EUt(3000)
                 .buildAndRegister();
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(ParamagneticResidues.getItemStack(6))
-                .output(dustSmall, Sodium)
-                .output(dustSmall, Potassium)
-                .output(dustSmall, Magnesium)
-                .output(dustSmall, Titanium)
-                .output(dustSmall, Vanadium)
-                .output(dustSmall, Manganese)
+                .chancedOutput(OreDictUnifier.get(dust, Sodium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Potassium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Magnesium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Titanium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Vanadium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Manganese, 1), 2500, 0)
+
                 .duration(100)
                 .EUt(3000)
                 .buildAndRegister();
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(HeavyParamagneticResidues.getItemStack(6))
-                .output(dustSmall, ThoriumRadioactive.getMaterial())
-                .output(dustSmall, UraniumRadioactive.getMaterial())
-                .output(dustSmall, Tungsten)
-                .output(dustSmall, Hafnium)
-                .output(dustSmall, Tantalum)
-                .output(dustSmall, Thallium)
+                .chancedOutput(OreDictUnifier.get(dust, ThoriumRadioactive.getMaterial(), 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, UraniumRadioactive.getMaterial(), 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Tungsten, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Hafnium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Tantalum, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Thallium, 1), 2500, 0)
+
                 .duration(120)
                 .EUt(3000)
                 .buildAndRegister();
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(HeavyDiamagneticResidues.getItemStack(6))
-                .output(dustSmall, Lead)
-                .output(dustSmall, Cadmium)
-                .output(dustSmall, Indium)
-                .output(dustSmall, Gold)
-                .output(dustSmall, Bismuth)
+                .chancedOutput(OreDictUnifier.get(dust, Lead, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Cadmium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Indium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Gold, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Bismuth, 1), 2500, 0)
                 .fluidOutputs(Mercury.getFluid(36))
                 .duration(120)
                 .EUt(3000)
@@ -194,7 +196,8 @@ public class TaraniumChain {
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .inputs(HeavyFerromagneticResidues.getItemStack(6))
-                .output(dustSmall, Dysprosium)
+                .chancedOutput(OreDictUnifier.get(dust, Dysprosium, 1), 2500, 0)
+
                 .duration(120)
                 .EUt(3000)
                 .buildAndRegister();

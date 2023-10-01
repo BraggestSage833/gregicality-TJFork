@@ -1,6 +1,7 @@
 package gregicadditions.recipes.chain;
 
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.NANOTOME;
@@ -256,7 +257,7 @@ public class NanotubeChain {
 
         ELECTROMAGNETIC_SEPARATOR_RECIPES.recipeBuilder().duration(260).EUt(122880)
                 .inputs(GrapheneNanotubeMix.getItemStack())
-                .output(dustSmall, CarbonNanotubes, 3)
+                .chancedOutput(OreDictUnifier.get(dust, CarbonNanotubes, 1), 7500, 0)
                 .outputs(GrapheneAlignedCNT.getItemStack())
                 .buildAndRegister();
 

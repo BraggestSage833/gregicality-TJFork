@@ -175,9 +175,9 @@ public class TriniumChain {
                 .fluidInputs(ResidualTriniiteSolution.getFluid(2000))
                 .output(dust, Salt)
                 .output(dust, SodiumNitrate, 20)
-                .output(dustSmall, NaquadriaticCompound, 3)
-                .output(dustSmall, EnrichedNaquadricCompound, 2)
-                .output(dustTiny, NaquadriaticCompound, 4)
+                .chancedOutput(OreDictUnifier.get(dust, NaquadriaticCompound, 1), 7500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, EnrichedNaquadricCompound, 1), 5000, 0)
+                .chancedOutput(OreDictUnifier.get(dust, NaquadriaticCompound, 1), 4444, 0)
                 .buildAndRegister();
 
         // 6 KF + C6H6 + 6 Cl -> C6F6 + 6 KCl + 6 H
@@ -328,10 +328,10 @@ public class TriniumChain {
                 .notConsumable(TheonylTrifluoroacetate.getFluid(500))
                 .outputs(ActiniumNitrate.getItemStack(26))
                 .outputs(RadiumNitrate.getItemStack(27))
-                .output(dustSmall, Thorium)
-                .output(dustSmall, Protactinium.getMaterial())
-                .output(dustSmall, Francium)
-                .output(dustSmall, Radium)
+                .chancedOutput(OreDictUnifier.get(dust, Thorium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Protactinium.getMaterial(), 2), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Francium, 1), 2500, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Radium, 1), 2500, 0)
                 .fluidOutputs(Water.getFluid(13000))
                 .buildAndRegister();
 
