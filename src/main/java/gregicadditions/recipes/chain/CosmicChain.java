@@ -222,11 +222,11 @@ public class CosmicChain { // TODO
                 .buildAndRegister();
 
         // CsI + Tm + Tl -> CsITmTl
-        BLAST_RECIPES.recipeBuilder().duration(260).EUt(120).blastFurnaceTemp(2853)
+        BLAST_RECIPES.recipeBuilder().duration(520).EUt(120).blastFurnaceTemp(2853)
                 .inputs(CesiumIodide.getItemStack())
-                .input(dustSmall, Thulium, 2)
-                .input(dustSmall, Thallium, 2)
-                .outputs(TlTmCesiumIodide.getItemStack(2))
+                .input(dust, Thulium, 1)
+                .input(dust, Thallium, 1)
+                .outputs(TlTmCesiumIodide.getItemStack(4))
                 .buildAndRegister();
 
         MIXER_RECIPES.recipeBuilder().duration(240).EUt(7680)
