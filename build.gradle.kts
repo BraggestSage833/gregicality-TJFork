@@ -55,6 +55,10 @@ configure<UserBaseExtension> {
 
 repositories {
     maven {
+        name = "cursemaven"
+        setUrl("https://cursemaven.com")
+    }
+    maven {
         name = "JEI"
         setUrl("http://dvs1.progwml6.com/files/maven/")
     }
@@ -99,13 +103,13 @@ dependencies {
     "deobfCompile"("team.chisel.ctm:CTM:MC$mcVersion-${config["ctm.version"]}")
 
     // Change to "deobfCompile" to add one of these to game
-    "deobfProvided"("net.sengir.forestry:forestry_$mcVersion:${config["forestry.version"]}")
+    "deobfProvided"("curse.maven:forestry-59751:2684780")
     "provided"("slimeknights.mantle:Mantle:$shortVersion-${config["mantle.version"]}")
     "provided"("slimeknights:TConstruct:$mcVersion-${config["ticon.version"]}")
     "provided"("com.github.mcjty:xnet:$shortVersion-${config["xnet.version"]}")
     "provided"("com.github.mcjty:mcjtylib:$shortVersion-${config["mcjtylib.version"]}")
     "provided"("li.cil.oc:OpenComputers:MC$mcVersion-${config["oc.version"]}")
-    "provided"("binnie:binnie-mods-$mcVersion:${config["binnie.version"]}")
+    "provided"("curse.maven:binnie-223525:2636899")
     "provided"("exnihilocreatio:exnihilocreatio:$mcVersion-${config["exnihilo.version"]}") {
         isTransitive = false
     }

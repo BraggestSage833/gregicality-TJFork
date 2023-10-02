@@ -1,6 +1,7 @@
 package gregicadditions.recipes.compat.jei;
 
 import gregicadditions.Gregicality;
+import gregicadditions.integrations.jei.utils.render.FluidStackTextRenderer;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.BlankUIHolder;
 import gregtech.api.gui.IRenderContext;
@@ -109,11 +110,13 @@ public class GARecipeMapCategory implements IRecipeCategory<GARecipeWrapper> {
                         fluidAmount = inputsList.get(importIndex).get(0).amount;
                     //this is input tank widget, so add it to fluid group
                     fluidStackGroup.init(importIndex, true,
-                            tankWidget.getPosition().x + tankWidget.fluidRenderOffset,
-                            tankWidget.getPosition().y + tankWidget.fluidRenderOffset,
-                            tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
-                            tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset),
-                            fluidAmount, false, null);
+                        new FluidStackTextRenderer(fluidAmount, false,
+                                tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
+                                tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset), null),
+                        tankWidget.getPosition().x + tankWidget.fluidRenderOffset,
+                        tankWidget.getPosition().y + tankWidget.fluidRenderOffset,
+                        tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
+                        tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset), 0, 0);
 
                 } else if (exportFluids.getFluidTanks().contains(tankWidget.fluidTank)) {
                     int exportIndex = exportFluids.getFluidTanks().indexOf(tankWidget.fluidTank);
@@ -123,11 +126,13 @@ public class GARecipeMapCategory implements IRecipeCategory<GARecipeWrapper> {
                         fluidAmount = inputsList.get(exportIndex).get(0).amount;
                     //this is output tank widget, so add it to fluid group
                     fluidStackGroup.init(importFluids.getFluidTanks().size() + exportIndex, false,
-                            tankWidget.getPosition().x + tankWidget.fluidRenderOffset,
-                            tankWidget.getPosition().y + tankWidget.fluidRenderOffset,
-                            tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
-                            tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset),
-                            fluidAmount, false, null);
+                        new FluidStackTextRenderer(fluidAmount, false,
+                                tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
+                                tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset), null),
+                        tankWidget.getPosition().x + tankWidget.fluidRenderOffset,
+                        tankWidget.getPosition().y + tankWidget.fluidRenderOffset,
+                        tankWidget.getSize().width - (2 * tankWidget.fluidRenderOffset),
+                        tankWidget.getSize().height - (2 * tankWidget.fluidRenderOffset), 0, 0);
 
                 }
             }
