@@ -232,7 +232,6 @@ public class RecipeOverride {
                 .duration(62268)
                 .EUt(120)
                 .buildAndRegister();
-    }
 
     // Hot Thulium
     removeRecipesByInputs(BLAST_RECIPES, OreDictUnifier.get(dust, Thulium));
