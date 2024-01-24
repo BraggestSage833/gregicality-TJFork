@@ -356,7 +356,7 @@ public class VariousChains {
         CHEMICAL_RECIPES.recipeBuilder().duration(125).EUt(120)
                 .input(dust, Lithium)
                 .fluidInputs(Chlorine.getFluid(1000))
-                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                .notConsumable(new IntCircuitIngredient(1))
                 .outputs(LithiumChloride.getItemStack(2))
                 .buildAndRegister();
 
@@ -364,7 +364,7 @@ public class VariousChains {
         CHEMICAL_RECIPES.recipeBuilder().duration(100).EUt(30)
                 .input(dust, Aluminium)
                 .fluidInputs(Chlorine.getFluid(3000))
-                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                .notConsumable(new IntCircuitIngredient(1))
                 .outputs(AluminiumChloride.getItemStack(4))
                 .buildAndRegister();
     }

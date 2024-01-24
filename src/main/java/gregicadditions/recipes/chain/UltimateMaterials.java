@@ -307,14 +307,14 @@ public class UltimateMaterials {
 
         STELLAR_FORGE_RECIPES.recipeBuilder().duration(10).EUt(10000000)
                 .inputs(COSMIC_FABRIC.getStackForm())
-                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                .notConsumable(new IntCircuitIngredient(1))
                 .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE))
                 .fluidOutputs(CosmicMeshPlasma.getFluid(1000))
                 .buildAndRegister();
 
         STELLAR_FORGE_RECIPES.recipeBuilder().duration(10).EUt(10000000)
                 .inputs(COSMIC_MESH.getStackForm())
-                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                .notConsumable(new IntCircuitIngredient(1))
                 .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE))
                 .fluidOutputs(CosmicMeshPlasma.getFluid(1000))
                 .buildAndRegister();
