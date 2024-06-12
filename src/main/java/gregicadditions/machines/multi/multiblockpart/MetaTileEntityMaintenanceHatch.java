@@ -158,6 +158,10 @@ public class MetaTileEntityMaintenanceHatch extends MetaTileEntityMultiblockPart
             case 0: { // Manual
                 if (entityPlayer == null)
                     break;
+                if(entityPlayer.isCreative()){
+                    fixEverything();
+                    break;
+                }
 
                 // For every slot in the player's main inventory, try to duct tape fix
                 for (int i = 0; i < entityPlayer.inventory.mainInventory.size(); i++) {

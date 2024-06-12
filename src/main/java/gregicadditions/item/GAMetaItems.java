@@ -4,8 +4,6 @@ import gregicadditions.GAConfig;
 import gregtech.api.items.armor.ArmorMetaItem;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.unification.OreDictUnifier;
-import gregtech.api.unification.material.Materials;
-import gregtech.api.unification.ore.OrePrefix;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -446,7 +444,7 @@ public class GAMetaItems {
     public static MetaItem<?>.MetaValueItem GRATING_LITHOGRAPHY_MASK;
     public static MetaItem<?>.MetaValueItem DIFFRACTOR_GRATING_MIRROR;
     public static MetaItem<?>.MetaValueItem ULTRASHORT_PULSE_LASER;
-    public static MetaItem<?>.MetaValueItem COSMIC_PROCESSING_UNIT_CORE;
+    public static MetaItem<?>.MetaValueItem COSMIC_COMPUTE_UNIT;
     public static MetaItem<?>.MetaValueItem COSMIC_PROCESSING_CORE;
     public static MetaItem<?>.MetaValueItem GRAPHENE_IRON_PLATE;
 

@@ -13,9 +13,11 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.multiblock.BlockPattern;
+import gregtech.api.multiblock.BlockWorldState;
 import gregtech.api.multiblock.FactoryBlockPattern;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
+import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -30,6 +32,7 @@ import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static gregicadditions.client.ClientHandler.INCOLOY_MA956_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
@@ -39,9 +42,9 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
             MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.EXPORT_FLUIDS,
-            MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
+            GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
-    private static final int DURATION_DECREASE_FACTOR = 60;
+    private static final int DURATION_DECREASE_FACTOR = 35;
 
     private static final int ENERGY_DECREASE_FACTOR = 20;
 
@@ -67,11 +70,15 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
                 .setAmountAtLeast('L', 14)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES).or(energyHatchPredicate())))
                 .where('#', isAirPredicate())
                 .build();
     }
 
+    @Nonnull
+    private static Predicate<BlockWorldState> energyHatchPredicate() {
+        return tilePredicate((state, tile) -> tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[0].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[1].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[2].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[3].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[4].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[5].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[6].metaTileEntityId));
+    }
 
     @Override
     public IBlockState getCasingState() {
@@ -110,7 +117,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
 
         @Override
         protected boolean drawEnergy(int recipeEUt) {
-            int drain = (int) Math.pow(2, getOverclockingTier(getMaxVoltage()));
+            int drain = (int) Math.pow(3, getOverclockingTier(getMaxVoltage()));
             long resultEnergy = this.getEnergyStored() - (long) recipeEUt;
             Optional<IFluidTank> fluidTank =
                     getInputFluidInventory().getFluidTanks().stream()

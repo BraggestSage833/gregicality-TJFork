@@ -106,7 +106,7 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
     public static class MegaMultiblockRecipeLogic extends LargeSimpleMultiblockRecipeLogic {
 
         protected static final int OVERCLOCK_FACTOR = 2;
-        protected static final int MAX_ITEMS_LIMIT = 512;
+        protected static final int MAX_ITEMS_LIMIT = 6144;
 
         public MegaMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage) {
             super(tileEntity, EUtPercentage, durationPercentage, chancePercentage, 256);

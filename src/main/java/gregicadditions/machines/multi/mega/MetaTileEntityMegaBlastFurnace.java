@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregtech.api.recipes.RecipeMaps.BLAST_RECIPES;
+import static gregtech.api.recipes.RecipeMaps.getPrimitiveBlastFurnaceRecipes;
 import static gregtech.api.unification.material.Materials.BlackSteel;
 import static gregtech.api.unification.material.Materials.BlueSteel;
 
@@ -304,13 +305,13 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             bonusAmount = (int) Math.max(0, bonusAmount - Math.log(multiplier) / LOG_4 * 2);
 
             // Apply MEBF duration discount
-            duration *= 0.5;
+            duration *= 0.25;
 
             // Apply Super Overclocks for every 1800k above the base recipe temperature
             for (int i = bonusAmount; EUt <= GAValues.V[tier - 1] && duration >= 3 && i > 0; i--) {
                 if (i % 2 == 0) {
                     EUt *= 4;
-                    duration *= 0.25;
+                    duration *= 0.15;
                 }
             }
 
@@ -318,6 +319,9 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
                 duration /= 2.8;
+            }
+            if (duration <= 0){
+                duration = 1;
             }
 
 

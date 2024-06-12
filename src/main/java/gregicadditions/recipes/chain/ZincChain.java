@@ -44,7 +44,7 @@ public class ZincChain {
         CENTRIFUGE_RECIPES.recipeBuilder().duration(140).EUt(120)
                 .fluidInputs(ZincExhaustMixture.getFluid(1000))
                 .chancedOutput(ZincFlueDust.getItemStack(), 4500, 750)
-                .output(dustSmall, DarkAsh)
+                .chancedOutput(OreDictUnifier.get(dust, DarkAsh, 1), 2500, 0)
                 .fluidOutputs(CarbonDioxide.getFluid(1000))
                 .fluidOutputs(SulfurDioxide.getFluid(1000))
                 .buildAndRegister();
@@ -110,7 +110,7 @@ public class ZincChain {
         ELECTROLYZER_RECIPES.recipeBuilder().duration(130).EUt(120)
                 .fluidInputs(MetalHydroxideMix.getFluid(1000))
                 .notConsumable(wireFine, Zinc)
-                .output(dustSmall, Zinc, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Zinc, 1), 5000, 0)
                 .fluidOutputs(ZincPoorMix.getFluid(1000))
                 .buildAndRegister();
 
@@ -118,7 +118,7 @@ public class ZincChain {
         ELECTROLYZER_RECIPES.recipeBuilder().duration(130).EUt(120)
                 .fluidInputs(ZincPoorMix.getFluid(1000))
                 .notConsumable(wireFine, Iron)
-                .output(dustSmall, Iron, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Iron, 1), 5000, 0)
                 .fluidOutputs(IronPoorMix.getFluid(1000))
                 .buildAndRegister();
 
@@ -126,7 +126,7 @@ public class ZincChain {
         ELECTROLYZER_RECIPES.recipeBuilder().duration(50).EUt(480)
                 .fluidInputs(IronPoorMix.getFluid(1000))
                 .notConsumable(wireFine, Copper)
-                .output(dustSmall, Copper, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Copper, 1), 5000, 0)
                 .fluidOutputs(IndiumHydroxideConcentrate.getFluid(1000))
                 .buildAndRegister();
 

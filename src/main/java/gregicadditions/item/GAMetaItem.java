@@ -417,7 +417,7 @@ public class GAMetaItem extends MaterialMetaItem {
         SMD_DIODE_COSMIC = addItem(535,"smd_diode_cosmic");
         SMD_RESISTOR_COSMIC = addItem(536,"smd_resistor_cosmic");
         SMD_TRANSISTOR_COSMIC = addItem(537,"smd_transistor_cosmic");
-        COSMIC_PROCESSING_UNIT_CORE = addItem(538,"cosmic_processing_unit_core");
+        COSMIC_COMPUTE_UNIT = addItem(538,"cosmic_compute_unit");
         COSMIC_PROCESSING_CORE = addItem(539,"cosmic_processing_core");
         GRAPHENE_IRON_PLATE = addItem(540,"graphene_iron_plate");
         CUPRIVADUS_CULTURE = addItem(541, "cupriavidus.culture");

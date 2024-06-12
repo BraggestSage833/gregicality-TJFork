@@ -7,6 +7,8 @@ import gregicadditions.materials.SimpleDustMaterial;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
 import net.minecraft.item.ItemStack;
+import gregtech.api.unification.OreDictUnifier;
+
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
@@ -98,6 +100,7 @@ public class SuperconductorsSMDChain {
         // Na2O4Ru + 2H -> RuO2 + 2NaOH
         BLAST_RECIPES.recipeBuilder().duration(270).EUt(120).blastFurnaceTemp(1250)
                 .input(dust, SodiumRuthenate, 7)
+                .notConsumable(new IntCircuitIngredient(2))
                 .fluidInputs(Hydrogen.getFluid(2000))
                 .output(dust, RutheniumDioxide, 3)
                 .output(dust, SodiumHydroxide, 6)
@@ -324,7 +327,7 @@ public class SuperconductorsSMDChain {
                 .fluidInputs(CarbonMonoxde.getFluid(25000))
                 .notConsumable(block, Copper)
                 .output(dust, Iodine, 10)
-                .output(dustSmall, Iron, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Iron, 1), 5000, 0)
                 .fluidOutputs(IronCarbonyl.getFluid(5000))
                 .buildAndRegister();
 

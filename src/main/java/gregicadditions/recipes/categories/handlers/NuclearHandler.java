@@ -80,7 +80,7 @@ public class NuclearHandler {
         // Fuel2N3 = Waste + 3N
         ELECTROLYZER_RECIPES.recipeBuilder().EUt(30).duration(1000)
                 .inputs(isotopeMaterial.getItemStack(GAEnums.GAOrePrefix.depletedFuelNitride, 1))
-                .fluidOutputs(Nitrogen.getFluid(3000))
+                .fluidOutputs(Nitrogen.getFluid(1000))
                 .outputs(isotopeMaterial.getRadioactiveMaterial().waste.getStackForm())
                 .buildAndRegister();
 

@@ -316,7 +316,7 @@ public class VariousChains {
 
         // BaSO4 + H2O -> [BaSO4 + H2O]
         MIXER_RECIPES.recipeBuilder().duration(120).EUt(30)
-                .input(dust, Barite)
+                .input(dust, Barite, 6) // full mols
                 .fluidInputs(Water.getFluid(1000))
                 .fluidOutputs(BariumSulfateSolution.getFluid(1000))
                 .buildAndRegister();

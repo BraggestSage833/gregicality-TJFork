@@ -11,6 +11,7 @@ import java.util.List;
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
 import static gregicadditions.recipes.GARecipeMaps.ASSEMBLY_LINE_RECIPES;
+import static gregtech.api.GTValues.L;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
@@ -67,9 +68,9 @@ public class ExoticComponents{
                 .outputs(SMD_TRANSISTOR_EXOTIC.getStackForm(32))
                 .buildAndRegister();
 
-        LASER_ENGRAVER_RECIPES.recipeBuilder().duration(160).EUt(800000)
-                .inputs(WAFER_RUTHERFORDIUM.getStackForm())
-                .notConsumable(lens, Diamond)
+        ARC_FURNACE_RECIPES.recipeBuilder().duration(160).EUt(800000)
+                .inputs(WAFER_DUBNIUM.getStackForm())
+                .fluidInputs(FreeAlphaGas.getFluid(47))
                 .outputs(UNTREATED_EXOTIC_WAFER.getStackForm())
                 .buildAndRegister();
 
@@ -105,25 +106,29 @@ public class ExoticComponents{
                 .inputs(EXCITATION_MAINTAINER.getStackForm())
                 .inputs(EXOTIC_CHIP.getStackForm())
                 .inputs(X_RAY_WAVEGUIDE.getStackForm())
-                .fluidInputs(QuantumDots.getFluid(10))
+                .inputs(ELECTRON_SOURCE.getStackForm())
+                .fluidInputs(QuantumDots.getFluid(100))
                 .fluidInputs(Zylon.getFluid(144))
-                .fluidInputs(LiquidHydrogen.getFluid(10))
-                .notConsumable(Xenon.getFluid(1000))
-                .notConsumable(ELECTRON_SOURCE.getStackForm())
+                .fluidInputs(LiquidHydrogen.getFluid(250))
+                .fluidInputs(Xenon.getFluid(1000))
                 .outputs(RYDBERG_SPINORIAL_ASSEMBLY.getStackForm())
                 .buildAndRegister();
 
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(160).EUt(4000000)
-                .inputs(NON_LINEAR_OPTICAL_LENS.getStackForm())
-                .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm())
-                .input(foil, TriniumTitanium)
+                .inputs(NON_LINEAR_OPTICAL_LENS.getStackForm(4))
+                .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm(3))
+                .input(foil, TriniumTitanium, 8)
                 .inputs(RYDBERG_SPINORIAL_ASSEMBLY.getStackForm())
                 .inputs(X_RAY_LASER.getStackForm())
-                .inputs(SMD_CAPACITOR_EXOTIC.getStackForm(2))
-                .inputs(SMD_DIODE_EXOTIC.getStackForm(2))
-                .inputs(SMD_TRANSISTOR_EXOTIC.getStackForm(2))
-                .inputs(SMD_RESISTOR_EXOTIC.getStackForm(2))
-                .fluidInputs(QuantumDots.getFluid(10))
+                .inputs(SMD_CAPACITOR_EXOTIC.getStackForm(32))
+                .inputs(SMD_DIODE_EXOTIC.getStackForm(32))
+                .inputs(SMD_TRANSISTOR_EXOTIC.getStackForm(32))
+                .inputs(SMD_RESISTOR_EXOTIC.getStackForm(32))
+                .input(wireGtSingle, Pikyonium, 8)
+                .inputs(CLADDED_OPTICAL_FIBER_CORE.getStackForm(4))
+                .fluidInputs(QuantumDots.getFluid(100))
+                .fluidInputs(SolderingAlloy.getFluid(L * 9))
+                .fluidInputs(Polybenzimidazole.getFluid(L * 6))
                 .outputs(EXOTIC_PROCESSING_CORE.getStackForm(6))
                 .buildAndRegister();
 

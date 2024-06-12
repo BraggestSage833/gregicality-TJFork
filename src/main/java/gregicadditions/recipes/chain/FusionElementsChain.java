@@ -299,10 +299,10 @@ public class FusionElementsChain {
                 .buildAndRegister();
 
         // Flerovium Production
-        ADV_FUSION_RECIPES.recipeBuilder().duration(100).EUt(600000).coilTier(2).euStart(2500000000L).euReturn(50)
-                .fluidInputs(Uranium.getFluid(125 * 2))
-                .fluidInputs(Uranium.getFluid(125 * 2))
-                .fluidOutputs(QuassifissioningPlasma.getFluid(125 * 2))
+        ADV_FUSION_RECIPES.recipeBuilder().duration(75).EUt(600000).coilTier(2).euStart(2500000000L).euReturn(50)
+                .fluidInputs(Uranium.getFluid(125 * 4))
+                .fluidInputs(Uranium.getFluid(125 * 4))
+                .fluidOutputs(QuassifissioningPlasma.getFluid(125 * 4))
                 .buildAndRegister();
 
         // Carbon-Burning Process
@@ -336,6 +336,18 @@ public class FusionElementsChain {
                 .fluidInputs(ScandiumTitanium50Mix.getFluid(36 * 4))
                 .fluidInputs(RadonRadiumMix.getFluid(144 * 4))
                 .fluidOutputs(MetastableHassium.getFluid(144 * 4))
+                .buildAndRegister();
+
+        ADV_FUSION_RECIPES.recipeBuilder().duration(64).EUt(32768).coilTier(1).euStart(640000000L).euReturn(100)
+                .fluidInputs(Deuterium.getFluid(1000))
+                .fluidInputs(Tritium.getFluid(1000))
+                .fluidOutputs(Helium.getPlasma(1000))
+                .buildAndRegister();
+
+        ADV_FUSION_RECIPES.recipeBuilder().duration(10).EUt(16000000).coilTier(5).euStart(20000000000L).euReturn(75)
+                .fluidInputs(SuperheavyMix.getFluid(1000))
+                .fluidInputs(Taranium.getFluid(144))
+                .fluidOutputs(NeutronPlasma.getFluid(8000))
                 .buildAndRegister();
     }
 

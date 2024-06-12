@@ -1,6 +1,7 @@
 package gregicadditions.recipes.chain;
 
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.recipes.GARecipeMaps.*;
@@ -451,9 +452,9 @@ public class NaquadahChain {
                 .fluidOutputs(ClearNaquadahLiquid.getFluid(1000))
                 .fluidOutputs(Ammonia.getFluid(1000))
                 .fluidOutputs(NitricAcid.getFluid(1000))
-                .output(dustTiny, PlatinumRawPowder, 15)
-                .output(dustTiny, IridiumChloride, 12)
-                .output(dustTiny, Naquadah)
+                .chancedOutput(OreDictUnifier.get(dust, PlatinumRawPowder, 3), 3333, 0)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 2), 6666, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Naquadah, 1), 1111, 0)
                 .EUt(7680)
                 .duration(150)
                 .buildAndRegister();
@@ -471,7 +472,7 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedNaquadahGas.getFluid(2000))
                 .fluidOutputs(NaquadahGas.getFluid(1400))
-                .output(dustTiny, IridiumChloride, 4)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 4444, 0)
                 .EUt(7680)
                 .duration(200)
                 .buildAndRegister();
@@ -479,7 +480,7 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedHeavyNaquadah.getFluid(2000))
                 .fluidOutputs(HeavyNaquadah.getFluid(1000))
-                .output(dustTiny, IridiumChloride, 4)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 4444, 0)
                 .EUt(7680)
                 .duration(200)
                 .buildAndRegister();
@@ -487,7 +488,7 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedLightNaquadah.getFluid(2000))
                 .fluidOutputs(LightNaquadah.getFluid(1000))
-                .output(dustTiny, IridiumChloride, 4)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 4444, 0)
                 .EUt(7680)
                 .duration(200)
                 .buildAndRegister();
@@ -495,7 +496,7 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedMediumNaquadah.getFluid(2000))
                 .fluidOutputs(MediumNaquadah.getFluid(1000))
-                .output(dustTiny, IridiumChloride, 4)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 4444, 0)
                 .EUt(7680)
                 .duration(200)
                 .buildAndRegister();
@@ -578,9 +579,9 @@ public class NaquadahChain {
 
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ENaquadahSolution.getFluid(2000))
-                .output(dustTiny, PlatinumRawPowder, 3)
+                .chancedOutput(OreDictUnifier.get(dust, PlatinumRawPowder, 1), 3333, 0)
                 .fluidOutputs(OsmiumSolution.getFluid(350))
-                .output(dustTiny, NaquadahEnriched)
+                .chancedOutput(OreDictUnifier.get(dust, NaquadahEnriched, 1), 1111, 0)
                 .fluidOutputs(ClearENaquadahLiquid.getFluid(1000))
                 .EUt(7680)
                 .duration(200)
@@ -599,8 +600,8 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedHeavyENaquadah.getFluid(2000))
                 .fluidOutputs(HeavyENaquadah.getFluid(1000))
-                .output(dustTiny, Naquadria)
-                .output(dustTiny, IridiumChloride, 8)
+                .chancedOutput(OreDictUnifier.get(dust, Naquadria, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 8888, 0)
                 .fluidOutputs(OsmiumSolution.getFluid(350))
                 .EUt(7680)
                 .duration(200)
@@ -609,8 +610,8 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedLightENaquadah.getFluid(2000))
                 .fluidOutputs(LightENaquadah.getFluid(1000))
-                .output(dustTiny, Naquadria)
-                .output(dustTiny, IridiumChloride, 8)
+                .chancedOutput(OreDictUnifier.get(dust, Naquadria, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 8888, 0)
                 .fluidOutputs(OsmiumSolution.getFluid(350))
                 .EUt(7680)
                 .duration(200)
@@ -619,8 +620,8 @@ public class NaquadahChain {
         CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(ComplicatedMediumENaquadah.getFluid(2000))
                 .fluidOutputs(MediumENaquadah.getFluid(1000))
-                .output(dustTiny, Naquadria)
-                .output(dustTiny, IridiumChloride, 8)
+                .chancedOutput(OreDictUnifier.get(dust, Naquadria, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, IridiumChloride, 1), 8888, 0)
                 .fluidOutputs(OsmiumSolution.getFluid(350))
                 .EUt(7680)
                 .duration(200)
@@ -688,10 +689,10 @@ public class NaquadahChain {
                 .fluidInputs(NitrogenDioxide.getFluid(500))
                 .fluidInputs(SulfuricAcid.getFluid(500))
                 .fluidOutputs(NaquadriaSolution.getFluid(1000))
-                .output(dustTiny, Lutetium)
-                .output(dustTiny, Uranium)
-                .output(dustTiny, NaquadahEnriched)
-                .output(dustTiny, Plutonium)
+                .chancedOutput(OreDictUnifier.get(dust, Lutetium, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Uranium, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, NaquadahEnriched, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Plutonium, 1), 1111, 0)
                 .EUt(7680)
                 .duration(100)
                 .buildAndRegister();

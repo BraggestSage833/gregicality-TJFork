@@ -25,7 +25,7 @@ public class VanadiumChain {
         MACERATOR_RECIPES.recipeBuilder().duration(80).EUt(24)
                 .inputs(VanadiumSlag.getItemStack(5))
                 .output(dust, DarkAsh)
-                .output(dustSmall, Rutile)
+                .chancedOutput(OreDictUnifier.get(dust, Rutile, 1), 2500, 0)
                 .outputs(VanadiumSlagDust.getItemStack(2))
                 .buildAndRegister();
 

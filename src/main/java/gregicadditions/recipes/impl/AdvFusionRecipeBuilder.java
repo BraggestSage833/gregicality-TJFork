@@ -40,9 +40,9 @@ public class AdvFusionRecipeBuilder extends RecipeBuilder<AdvFusionRecipeBuilder
 
     static {
         COOLANTS.put(Steam.getFluid(570), SupercriticalSteam.fluid);
-        COOLANTS.put(Deuterium.getFluid(240), SupercriticalDeuterium.fluid);
+        //COOLANTS.put(Deuterium.getFluid(240), SupercriticalDeuterium.fluid);
         COOLANTS.put(SodiumPotassiumAlloy.getFluid(120), SupercriticalSodiumPotassiumAlloy.fluid);
-        COOLANTS.put(Sodium.getFluid(100), SupercriticalSodium.fluid);
+        //COOLANTS.put(Sodium.getFluid(100), SupercriticalSodium.fluid);
         COOLANTS.put(FLiNaK.getFluid(50), SupercriticalFLiNaK.fluid);
         COOLANTS.put(FLiBe.getFluid(55), SupercriticalFLiBe.fluid);
         COOLANTS.put(LeadBismuthEutectic.getFluid(60), SupercriticalLeadBismuthEutectic.fluid);
@@ -123,7 +123,7 @@ public class AdvFusionRecipeBuilder extends RecipeBuilder<AdvFusionRecipeBuilder
                 long eu = (euStart + ((long) EUt) * duration) * euReturn / 100;
                 for (FluidStack fluidStack : COOLANTS.keySet()) {
                     FluidStack fluidInput = fluidStack.copy();
-                    int amount = Math.max((int) ((eu / (2048 * 10000)) * fluidInput.amount), 0);
+                    int amount = Math.max((int) ((eu / (2048 * 10000)) * fluidInput.amount), 1);
                     fluidInput.amount = amount;
                     FluidStack fluidOutput = new FluidStack(COOLANTS.get(fluidStack), amount);
                     recipeMap.addRecipe(this.copy()

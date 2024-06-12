@@ -149,7 +149,7 @@ metaitem.uhasoc.name=UHASoC
 metaitem.hasoc.name=HASoC
 metaitem.optical_soc.name=Optical SoC
 metaitem.optical_processing_core.name=Optical Processing Core
-metaitem.cosmic_processing_unit_core.name=Cosmic Processing Unit Core
+metaitem.cosmic_compute_unit.name=Cosmic Compute Unit
 metaitem.cosmic_processing_core.name=Cosmic Processing Core
 
 metaitem.potassium_cyanide.name=Potassium Cyanide
@@ -2664,6 +2664,7 @@ material.umv_superconductor=UMV Superconductor
 material.umv_superconductor_base=UMV Superconductor Base
 material.uxv_superconductor=UXV Superconductor
 material.uxv_superconductor_base=UXV Superconductor Base
+material.samarium_magnetic=Magnetic Samarium
 material.quantum=Quantum
 material.black_titanium=Black Titanium
 material.tungsten_titanium_carbide=Tungsten Titanium Carbide
@@ -3007,7 +3008,7 @@ gregtech.multiblock.advanced_distillation_tower.description2=2 Modes:
 gregtech.multiblock.advanced_distillation_tower.description3=    Distillation Tower => Max 16 Parallel, 4 per overclock
 gregtech.multiblock.advanced_distillation_tower.description4=    Distillery & Fluid Heater => Max 64 Parallel, 8 per overclock
 gtadditions.multiblock.large_rocket_engine.tooltip.1=The Large Rocket Engine will produce large amounts of power.
-gtadditions.multiblock.large_rocket_engine.tooltip.2=It Consumes 37500mB of Air per Second.
+gtadditions.multiblock.large_rocket_engine.tooltip.2=It Consumes 37500mB of Air per Cycle.
 gtadditions.multiblock.large_rocket_engine.tooltip.3=Use Liquid Oxygen to boost the output energy by 3x.
 gtadditions.multiblock.alloy_blast_furnace.tooltip.1=Quicker than the Blast Furnace
 gtadditions.multiblock.large_naquadah_reactor.tooltip.1=Consumes 1000mb of Tritium every 20 fuel cycles'.
@@ -4638,7 +4639,7 @@ gregtech.multiblock.extreme_diesel_engine.description=The Diesel Engine is a mul
 gtadditions.multiblock.electric_blast_furnace.tooltip.1=For every §a900K§7 above the recipe temperature, a multiplicative §a95%%§7 energy multiplier is applied pre-overclocking.
 gtadditions.multiblock.electric_blast_furnace.tooltip.2=For every §a1800K§7 above the recipe temperature, one overclock becomes §a100%%§7 efficient.
 gtadditions.multiblock.electric_blast_furnace.tooltip.3=For every voltage tier above §aMV§7, temperature is increased by §a100K§7.
-gregtech.multiblock.volcanus.description=The Volcanus is built the same as the EBF, but with different casings. It consumes pyrotheum 2^ max voltage tier mB of pyrotheum per tick. Has a native 600K temperature increase.
+gregtech.multiblock.volcanus.description=The Volcanus is built the same as the EBF, but with different casings. It consumes pyrotheum 2^ max voltage tier mB of pyrotheum per tick.
 recipemap.volcanus.name=Volcanus
 gtadditions.machine.volcanus.name=Volcanus
 gregtech.multiblock.cryogenic_freezer.description=The Cryogenic Freezer is built the same as the Vacuum Freezer, but with different casings. It consumes cryothium 2^ max voltage tier mB of cryotheum per tick.

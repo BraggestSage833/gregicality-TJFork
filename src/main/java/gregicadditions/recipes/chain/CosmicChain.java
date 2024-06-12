@@ -2,6 +2,7 @@ package gregicadditions.recipes.chain;
 
 import gregicadditions.item.GAExplosive;
 import gregicadditions.item.GAMetaBlocks;
+import gregtech.api.recipes.ingredients.IntCircuitIngredient;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
@@ -17,12 +18,14 @@ public class CosmicChain { // TODO
         STELLAR_FORGE_RECIPES.recipeBuilder().duration(60).EUt(14000000)
                 .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE))
                 .inputs(DEGENERATE_RHENIUM_DUST.getStackForm())
+                .notConsumable(new IntCircuitIngredient(1))
                 .fluidOutputs(QuarkGluonPlasma.getFluid(4000))
                 .buildAndRegister();
 
         STELLAR_FORGE_RECIPES.recipeBuilder().duration(60).EUt(14000000)
                 .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE))
                 .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm())
+                .notConsumable(new IntCircuitIngredient(2))
                 .fluidOutputs(QuarkGluonPlasma.getFluid(2000))
                 .buildAndRegister();
 
@@ -219,11 +222,11 @@ public class CosmicChain { // TODO
                 .buildAndRegister();
 
         // CsI + Tm + Tl -> CsITmTl
-        BLAST_RECIPES.recipeBuilder().duration(260).EUt(120).blastFurnaceTemp(2853)
+        BLAST_RECIPES.recipeBuilder().duration(520).EUt(120).blastFurnaceTemp(2853)
                 .inputs(CesiumIodide.getItemStack())
-                .input(dustSmall, Thulium, 2)
-                .input(dustSmall, Thallium, 2)
-                .outputs(TlTmCesiumIodide.getItemStack(2))
+                .input(dust, Thulium, 1)
+                .input(dust, Thallium, 1)
+                .outputs(TlTmCesiumIodide.getItemStack(4))
                 .buildAndRegister();
 
         MIXER_RECIPES.recipeBuilder().duration(240).EUt(7680)

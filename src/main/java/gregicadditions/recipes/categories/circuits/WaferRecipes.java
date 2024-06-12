@@ -243,7 +243,7 @@ public class WaferRecipes {
         // Unprocessed Nd:YAG -> Unprocessed Nd:YAG Dust + CH2Cl2
         CHEMICAL_DEHYDRATOR_RECIPES.recipeBuilder().duration(220).EUt(7680)
                 .fluidInputs(UnprocessedNdYAGSolution.getFluid(1000))
-                .fluidOutputs(Dichloromethane.getFluid(1000))
+                .fluidOutputs(Dichloromethane.getFluid(500))
                 .outputs(UnprocessedNdYAGDust.getItemStack())
                 .buildAndRegister();
 

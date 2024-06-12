@@ -15,16 +15,16 @@ public class CosmicComponents {
 
         // SMD Diode
         ASSEMBLER_RECIPES.recipeBuilder().duration(250).EUt(6000000)
-                .input(wireFine, Cinobite, 8)
+                .input(wireFine, HastelloyX78, 8)
                 .input(plate, SuperheavyHAlloy, 4)
-                .input(plate, Vibranium, 4)
+                .input(plate, AbyssalAlloy, 4)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
                 .outputs(SMD_DIODE_COSMIC.getStackForm(32))
                 .buildAndRegister();
 
         // SMD Transistor
         ASSEMBLER_RECIPES.recipeBuilder().duration(250).EUt(6000000)
-                .input(wireFine, Cinobite, 8)
+                .input(wireFine, HastelloyX78, 8)
                 .input(plate, MetastableHassium)
                 .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm(4))
                 .fluidInputs(Zylon.getFluid(L))
@@ -33,16 +33,16 @@ public class CosmicComponents {
 
         // SMD Capacitor
         ASSEMBLER_RECIPES.recipeBuilder().duration(250).EUt(6000000)
-                .input(wireFine, Cinobite, 8)
-                .input(foil, Quantum, 4)
-                .input(foil, FullerenePolymerMatrix, 4)
+                .input(wireFine, HastelloyX78, 8)
+                .input(foil, Taranium)
+                .inputs(AEROGRAPHENE.getStackForm())
                 .fluidInputs(Zylon.getFluid(L))
                 .outputs(SMD_CAPACITOR_COSMIC.getStackForm(32))
                 .buildAndRegister();
 
         // SMD Resistor
         ASSEMBLER_RECIPES.recipeBuilder().duration(250).EUt(6000000)
-                .input(wireFine, Cinobite, 8)
+                .input(wireFine, HastelloyX78, 8)
                 .input(plate, SuperheavyLAlloy, 4)
                 .input(plate, TriniumTitanium, 4)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
@@ -51,11 +51,11 @@ public class CosmicComponents {
 
         // Cosmic Processing Core
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(320).EUt(11796480).qubit(2)
-                .inputs(COSMIC_PROCESSING_UNIT_CORE.getStackForm())
-                .inputs(SMD_DIODE_COSMIC.getStackForm(2))
-                .inputs(SMD_RESISTOR_COSMIC.getStackForm(2))
-                .inputs(SMD_TRANSISTOR_COSMIC.getStackForm(2))
-                .inputs(SMD_CAPACITOR_COSMIC.getStackForm(2))
+                .inputs(COSMIC_COMPUTE_UNIT.getStackForm())
+                .inputs(SMD_DIODE_COSMIC.getStackForm(48))
+                .inputs(SMD_RESISTOR_COSMIC.getStackForm(48))
+                .inputs(SMD_TRANSISTOR_COSMIC.getStackForm(48))
+                .inputs(SMD_CAPACITOR_COSMIC.getStackForm(48))
                 .input(foil, FullerenePolymerMatrix, 2)
                 .inputs(ULTRASHORT_PULSE_LASER.getStackForm())
                 .input(wireGtSingle, Cinobite, 8)
@@ -129,11 +129,14 @@ public class CosmicComponents {
                 .buildAndRegister();
 
         ASSEMBLER_RECIPES.recipeBuilder().duration(350).EUt(7500000)
-                .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm(3))
+                .inputs(DEGENERATE_RHENIUM_PLATE.getStackForm(1))
                 .input(wireFine, HeavyQuarkDegenerateMatter, 6)
-                .input(plate, HeavyQuarkDegenerateMatter, 2)
+                .inputs(EXOTIC_CHIP.getStackForm(4))
+                .inputs(EMPTY_LASER_COOLING_CONTAINER.getStackForm())
+                .input(gemFlawless, Vinteum, 2)
+                .input(gemFlawless, Tanzanite, 2)
                 .fluidInputs(CosmicComputingMix.getFluid(1000))
-                .outputs(COSMIC_PROCESSING_UNIT_CORE.getStackForm())
+                .outputs(COSMIC_COMPUTE_UNIT.getStackForm())
                 .buildAndRegister();
     }
 }

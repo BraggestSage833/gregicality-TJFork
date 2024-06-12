@@ -6,6 +6,8 @@ import static gregtech.api.recipes.RecipeMaps.*;
 import static gregicadditions.recipes.GARecipeMaps.LARGE_CHEMICAL_RECIPES;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
+import gregtech.api.unification.OreDictUnifier;
+
 
 public class SeleniumChain {
     public static void init() {
@@ -50,7 +52,7 @@ public class SeleniumChain {
                 .inputs(AnodicSlime.getItemStack())
                 .input(dust, SodaAsh, 12)
                 .fluidInputs(Oxygen.getFluid(4000))
-                .output(dustTiny, PreciousMetal, 5)
+                .chancedOutput(OreDictUnifier.get(dust, PreciousMetal, 1), 5555, 0)
                 .fluidOutputs(SeleniteTelluriteMix.getFluid(1000))
                 .buildAndRegister();
 

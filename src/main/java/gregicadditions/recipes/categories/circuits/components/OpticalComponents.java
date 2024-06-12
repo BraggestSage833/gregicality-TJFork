@@ -57,11 +57,11 @@ public class OpticalComponents {
 
         // Optical Processing Core
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(320).EUt(1474560)
-                .inputs(OPTICAL_SOC.getStackForm())
-                .inputs(SMD_DIODE_OPTICAL.getStackForm(2))
-                .inputs(SMD_RESISTOR_OPTICAL.getStackForm(2))
-                .inputs(SMD_TRANSISTOR_OPTICAL.getStackForm(2))
-                .inputs(SMD_CAPACITOR_OPTICAL.getStackForm(2))
+                .inputs(OPTICAL_SOC.getStackForm(6))
+                .inputs(SMD_DIODE_OPTICAL.getStackForm(16))
+                .inputs(SMD_RESISTOR_OPTICAL.getStackForm(16))
+                .inputs(SMD_TRANSISTOR_OPTICAL.getStackForm(16))
+                .inputs(SMD_CAPACITOR_OPTICAL.getStackForm(16))
                 .input(foil, Polyetheretherketone, 2)
                 .inputs(LOW_FREQUENCY_LASER.getStackForm())
                 .inputs(MEDIUM_FREQUENCY_LASER.getStackForm())

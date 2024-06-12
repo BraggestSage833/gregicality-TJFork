@@ -5,9 +5,9 @@ import static gregicadditions.recipes.GARecipeMaps.LARGE_CHEMICAL_RECIPES;
 import static gregtech.api.recipes.RecipeMaps.*;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
-import static gregtech.api.unification.ore.OrePrefix.dustTiny;
 import static gregicadditions.GAEnums.GAOrePrefix.oxide;
 import static gregicadditions.GAEnums.GAOrePrefix.dioxide;
+import gregtech.api.unification.OreDictUnifier;
 
 public class UraniumChain {
     public static void init() {
@@ -45,9 +45,9 @@ public class UraniumChain {
                 .fluidInputs(UraniumSulfateWasteSolution.getFluid(1000))
                 .fluidOutputs(SulfuricAcid.getFluid(1000))
                 .output(dust, Lead)
-                .output(dustTiny, Radium)
-                .output(dustTiny, Strontium)
-                .output(dustTiny, Barium)
+                .chancedOutput(OreDictUnifier.get(dust, Radium, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Strontium, 1), 1111, 0)
+                .chancedOutput(OreDictUnifier.get(dust, Barium, 1), 1111, 0)
                 .buildAndRegister();
 
         // 2[UO2(NO3)2 + H2O] + 4H2O + 8C -> (NH4)2U2O7 + 2HNO3 + 8CO

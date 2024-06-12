@@ -1,6 +1,7 @@
 package gregicadditions.recipes.chain;
 
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.OreDictUnifier;
 
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.NANOTOME;
@@ -81,6 +82,7 @@ public class NanotubeChain {
         // CH2O + 2C2H4O + NH3 -> C5H5N + 3H2O + 2H
         LARGE_CHEMICAL_RECIPES.recipeBuilder().duration(240).EUt(1920)
                 .notConsumable(ThalliumChloride.getItemStack())
+                .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
                 .fluidInputs(Formaldehyde.getFluid(1000))
                 .fluidInputs(Acetaldehyde.getFluid(2000))
                 .fluidInputs(Ammonia.getFluid(1000))
@@ -108,7 +110,7 @@ public class NanotubeChain {
         CHEMICAL_RECIPES.recipeBuilder().duration(270).EUt(480)
                 .notConsumable(dust, Barite)
                 .notConsumable(PdCCatalyst.getItemStack())
-                .fluidInputs(BenzoylChloride.getFluid(2000))
+                .fluidInputs(BenzoylChloride.getFluid(1000))
                 .fluidInputs(Hydrogen.getFluid(1000))
                 .fluidOutputs(Benzaldehyde.getFluid(1000))
                 .fluidOutputs(HydrochloricAcid.getFluid(1000))
@@ -197,8 +199,8 @@ public class NanotubeChain {
         CHEMICAL_PLANT_RECIPES.recipeBuilder().duration(460).EUt(491520)
                 .notConsumable(Bipyridine.getItemStack())
                 .notConsumable(PalladiumBisDibenzylidieneacetone.getItemStack())
-                .inputs(Diiodobiphenyl.getItemStack(4))
-                .inputs(Dichlorocycloctadieneplatinium.getItemStack(23))
+                .inputs(Diiodobiphenyl.getItemStack(44))
+                .inputs(Dichlorocycloctadieneplatinium.getItemStack(46))
                 .input(dust, Carbon, 8)
                 .fluidInputs(Silvertetrafluoroborate.getFluid(4000))
                 .fluidInputs(TrimethyltinChloride.getFluid(4000))
@@ -255,7 +257,7 @@ public class NanotubeChain {
 
         ELECTROMAGNETIC_SEPARATOR_RECIPES.recipeBuilder().duration(260).EUt(122880)
                 .inputs(GrapheneNanotubeMix.getItemStack())
-                .output(dustSmall, CarbonNanotubes, 3)
+                .chancedOutput(OreDictUnifier.get(dust, CarbonNanotubes, 1), 7500, 0)
                 .outputs(GrapheneAlignedCNT.getItemStack())
                 .buildAndRegister();
 

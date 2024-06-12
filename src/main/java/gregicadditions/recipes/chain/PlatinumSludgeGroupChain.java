@@ -117,13 +117,27 @@ public class PlatinumSludgeGroupChain {
                 .buildAndRegister();
 
         // Pt[REE] + [HNO3 + HCl] -> Pt[REE] + Ir2[REE]3
+        // tiny dust version
         CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(1))
                 .input(dust, PlatinumMetallicPowder, 2)
                 .fluidInputs(AquaRegia.getFluid(1000))
                 .fluidOutputs(PlatinumConcentrate.getFluid(1000))
                 .output(dustTiny, PlatinumResidue, 5)
                 .EUt(30)
                 .duration(250)
+                .buildAndRegister();
+
+        // Pt[REE] + [HNO3 + HCl] -> Pt[REE] + Ir2[REE]3
+        // full dust version
+        CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(9))
+                .input(dust, PlatinumMetallicPowder, 18)
+                .fluidInputs(AquaRegia.getFluid(9000))
+                .fluidOutputs(PlatinumConcentrate.getFluid(9000))
+                .output(dust, PlatinumResidue, 5)
+                .EUt(30)
+                .duration(2250)
                 .buildAndRegister();
 
         // HNO3 + HCl -> [HNO3 + HCl]
@@ -205,7 +219,9 @@ public class PlatinumSludgeGroupChain {
 
         // This recipe is "good", but its formula is pretty dumb so I'm not gonna bother with it
         // could use a rework eventually
+        // tiny dust version
         LARGE_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(1))
                 .fluidInputs(PlatinumConcentrate.getFluid(2000))
                 .fluidInputs(AmmoniumChloride.getFluid(200))
                 .output(dustSmall, PlatinumSalt, 10)
@@ -215,6 +231,20 @@ public class PlatinumSludgeGroupChain {
                 .fluidOutputs(Hydrogen.getFluid(1200))
                 .EUt(30)
                 .duration(1200)
+                .buildAndRegister();
+
+        // full dust version
+        LARGE_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(9))
+                .fluidInputs(PlatinumConcentrate.getFluid(8000))
+                .fluidInputs(AmmoniumChloride.getFluid(800))
+                .output(dust, PlatinumSalt, 10)
+                .output(dust, PlatinumRawPowder, 8)
+                .fluidOutputs(PalladiumAmmonia.getFluid(800))
+                .fluidOutputs(NitricAcid.getFluid(4000))
+                .fluidOutputs(Hydrogen.getFluid(4800))
+                .EUt(30)
+                .duration(4800)
                 .buildAndRegister();
 
         SIFTER_RECIPES.recipeBuilder()
@@ -273,6 +303,7 @@ public class PlatinumSludgeGroupChain {
                 .buildAndRegister();
 
         // NH3Pd? + Pd? ->
+        // tiny dust version
         LARGE_CHEMICAL_RECIPES.recipeBuilder()
                 .notConsumable(new IntCircuitIngredient(0))
                 .fluidInputs(PalladiumAmmonia.getFluid(1000))
@@ -281,6 +312,18 @@ public class PlatinumSludgeGroupChain {
                 .output(dustTiny, PalladiumRawPowder, 12)
                 .EUt(30)
                 .duration(250)
+                .buildAndRegister();
+
+        // NH3Pd? + Pd? ->
+        // full dust version
+        LARGE_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(9))
+                .fluidInputs(PalladiumAmmonia.getFluid(6000))
+                .input(dust, PalladiumMetallicPowder, 12)
+                .output(dust, PalladiumSalt, 15)
+                .output(dust, PalladiumRawPowder, 8)
+                .EUt(30)
+                .duration(1500)
                 .buildAndRegister();
 
         CHEMICAL_RECIPES.recipeBuilder()
@@ -296,13 +339,26 @@ public class PlatinumSludgeGroupChain {
 
     public static void rhodiumInit() {
 
+        // tiny dust version
         CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(1))
                 .fluidInputs(RhodiumSulfate.getFluid(3000))
                 .fluidInputs(Water.getFluid(1000))
                 .fluidOutputs(RhodiumSulfateSolution.getFluid(3000))
                 .output(dustTiny, LeachResidue, 4)
                 .EUt(30)
                 .duration(400)
+                .buildAndRegister();
+
+        // full dust version
+        CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(new IntCircuitIngredient(9))
+                .fluidInputs(RhodiumSulfate.getFluid(27000))
+                .fluidInputs(Water.getFluid(9000))
+                .fluidOutputs(RhodiumSulfateSolution.getFluid(27000))
+                .output(dust, LeachResidue, 4)
+                .EUt(30)
+                .duration(3600)
                 .buildAndRegister();
 
         CHEMICAL_DEHYDRATOR_RECIPES.recipeBuilder()

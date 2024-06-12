@@ -22,8 +22,8 @@ public class SupracausalComponents {
         // SMD Capacitor
         ASSEMBLER_RECIPES.recipeBuilder().duration(400).EUt(134217728)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
-                .input(plate, ProtoAdamantium)
-                .inputs(MICA_INSULATOR_FOIL.getStackForm(8))
+                .input(plateDense, ProtoAdamantium)
+                .inputs(MICA_INSULATOR_FOIL.getStackForm(64))
                 .notConsumable(MICROWORMHOLE_GENERATOR.getStackForm())
                 .outputs(SMD_CAPACITOR_SUPRACAUSAL.getStackForm(32))
                 .buildAndRegister();
@@ -31,8 +31,8 @@ public class SupracausalComponents {
         // SMD Diode
         ASSEMBLER_RECIPES.recipeBuilder().duration(400).EUt(134217728)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
-                .input(plate, Vibranium)
-                .inputs(Tetracene.getItemStack())
+                .input(plateDense, Vibranium)
+                .inputs(Tetracene.getItemStack(8))
                 .notConsumable(MICROWORMHOLE_GENERATOR.getStackForm())
                 .outputs(SMD_DIODE_SUPRACAUSAL.getStackForm(32))
                 .buildAndRegister();
@@ -41,7 +41,7 @@ public class SupracausalComponents {
         ASSEMBLER_RECIPES.recipeBuilder().duration(400).EUt(134217728)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
                 .input(plate, Neutronium)
-                .inputs(Tetracene.getItemStack())
+                .inputs(Tetracene.getItemStack(64))
                 .notConsumable(MICROWORMHOLE_GENERATOR.getStackForm())
                 .outputs(SMD_TRANSISTOR_SUPRACAUSAL.getStackForm(32))
                 .buildAndRegister();
@@ -49,8 +49,8 @@ public class SupracausalComponents {
         // SMD Resistor
         ASSEMBLER_RECIPES.recipeBuilder().duration(400).EUt(134217728)
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L))
-                .input(foil, TitanSteel)
-                .inputs(ChargedCesiumCeriumCobaltIndium.getItemStack())
+                .input(foil, TitanSteel, 16)
+                .inputs(ChargedCesiumCeriumCobaltIndium.getItemStack(16))
                 .notConsumable(MICROWORMHOLE_GENERATOR.getStackForm())
                 .outputs(SMD_RESISTOR_SUPRACAUSAL.getStackForm(32))
                 .buildAndRegister();
@@ -64,10 +64,10 @@ public class SupracausalComponents {
                 .inputs(QCD_PROTECTIVE_PLATING.getStackForm(3))
                 .input(plate, Neutronium)
                 .input(wireGtSingle, UMVSuperconductor, 2)
-                .inputs(SMD_CAPACITOR_SUPRACAUSAL.getStackForm(16))
-                .inputs(SMD_DIODE_SUPRACAUSAL.getStackForm(16))
-                .inputs(SMD_TRANSISTOR_SUPRACAUSAL.getStackForm(16))
-                .inputs(SMD_RESISTOR_SUPRACAUSAL.getStackForm(16))
+                .inputs(SMD_CAPACITOR_SUPRACAUSAL.getStackForm(64))
+                .inputs(SMD_DIODE_SUPRACAUSAL.getStackForm(64))
+                .inputs(SMD_TRANSISTOR_SUPRACAUSAL.getStackForm(64))
+                .inputs(SMD_RESISTOR_SUPRACAUSAL.getStackForm(64))
                 .fluidInputs(FullerenePolymerMatrix.getFluid(L * 9))
                 .outputs(SUPRACAUSAL_PROCESSING_CORE.getStackForm(8))
                 .buildAndRegister();
@@ -118,7 +118,7 @@ public class SupracausalComponents {
 
         // Nuclear Clock
         ASSEMBLY_LINE_RECIPES.recipeBuilder().duration(160).EUt(33550000)
-                .inputs(SENSOR_UIV.getStackForm(2))
+                .inputs(SENSOR_UEV.getStackForm(2))
                 .inputs(SCINTILLATOR.getStackForm())
                 .inputs(ULTRASHORT_PULSE_LASER.getStackForm(2))
                 .inputs(BOSE_EINSTEIN_COOLING_CONTAINER.getStackForm())

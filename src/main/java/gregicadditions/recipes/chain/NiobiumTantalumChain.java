@@ -214,7 +214,7 @@ public class NiobiumTantalumChain {
                 .output(dust, Barite, 3)
                 .output(dust, Gypsum, 8)
                 .output(dust, Celestine, 6)
-                .output(dustSmall, Radium, 2)
+                .chancedOutput(OreDictUnifier.get(dust, Radium, 1), 5000, 0)
                 .buildAndRegister();
 
         LARGE_CHEMICAL_RECIPES.recipeBuilder().duration(125).EUt(7680)

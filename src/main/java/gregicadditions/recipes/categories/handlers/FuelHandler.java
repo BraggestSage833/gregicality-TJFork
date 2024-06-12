@@ -2,6 +2,9 @@ package gregicadditions.recipes.categories.handlers;
 
 import forestry.core.fluids.Fluids;
 import gregicadditions.GAConfig;
+import gregtech.api.GTValues;
+import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.recipes.recipes.FuelRecipe;
 import gregtech.api.unification.material.Materials;
 import net.minecraftforge.fml.common.Loader;
 
@@ -82,7 +85,7 @@ public class FuelHandler {
         registerDieselGeneratorFuel(LightFuel         .getFluid(32),  305, LV);
         registerDieselGeneratorFuel(Gasoline          .getFluid( 8),  60, HV);
         registerDieselGeneratorFuel(HighOctaneGasoline.getFluid( 7),  80, EV);
-        registerDieselGeneratorFuel(Octane            .getFluid(20),   45, LV);
+        //registerDieselGeneratorFuel(Octane            .getFluid(20),   45, LV);
         registerDieselGeneratorFuel(Ethanol           .getFluid( 2),   12, LV);
 
 
@@ -124,19 +127,18 @@ public class FuelHandler {
         registerRocketFuel(RocketFuel               .getFluid(15),  20, EV);
 
         // Naquadah Reactor
-        registerNaquadahReactorFuel(HeavyENaquadahFuel .getFluid(1), 25000, EV);
-        registerNaquadahReactorFuel(MediumENaquadahFuel.getFluid(1), 17500, EV);
-        registerNaquadahReactorFuel(LightENaquadahFuel    .getFluid( 1), 10000, EV);
-        registerNaquadahReactorFuel(HeavyNaquadahFuel  .getFluid(1), 17500, EV);
-        registerNaquadahReactorFuel(MediumNaquadahFuel .getFluid(1),  7500, EV);
-        registerNaquadahReactorFuel(LightNaquadahFuel     .getFluid( 1),  4000, EV);
-
+        registerNaquadahReactorFuel(HeavyENaquadahFuel .getFluid(1), 381, LuV);
+        registerNaquadahReactorFuel(MediumENaquadahFuel.getFluid(1), 350, LuV);
+        registerNaquadahReactorFuel(LightENaquadahFuel .getFluid( 1), 243, LuV);
+        registerNaquadahReactorFuel(HeavyNaquadahFuel  .getFluid(1), 320, LuV);
+        registerNaquadahReactorFuel(MediumNaquadahFuel .getFluid(1),  182, LuV);
+        registerNaquadahReactorFuel(LightNaquadahFuel  .getFluid( 1),  97, LuV);
 
         // Hyper Reactor Fuels
-        registerHyperReactorFuel(HyperFuelI  .getFluid(1),  300, IV);
-        registerHyperReactorFuel(HyperFuelII .getFluid(1),  500, IV);
-        registerHyperReactorFuel(HyperFuelIII.getFluid(1),  700, IV);
-        registerHyperReactorFuel(HyperFuelIV .getFluid(1), 6000, UV);
+        registerHyperReactorFuel(HyperFuelI  .getFluid(1),  24, UV);
+        registerHyperReactorFuel(HyperFuelII .getFluid(1),  50, UV);
+        registerHyperReactorFuel(HyperFuelIII.getFluid(1),  100, UV);
+        registerHyperReactorFuel(HyperFuelIV .getFluid(1),  650, UV);
 
         // Qubit Generator
         registerQubitGeneratorFuel(circuit, Elite,          100, UV, 1);
@@ -149,5 +151,7 @@ public class FuelHandler {
         registerQubitGeneratorFuel(circuit, UMV,            19_200, UV, 16);
         registerQubitGeneratorFuel(circuit, UXV,            25_600, UV, 32);
         registerQubitGeneratorFuel(circuit, MAX,            51_200, UV, 64);
+        //removals
+        RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
     }
 }
