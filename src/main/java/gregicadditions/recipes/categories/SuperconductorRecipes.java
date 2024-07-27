@@ -68,7 +68,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, MVSuperconductorBase, 3)
                     .input(pipeTiny, StainlessSteel, 2)
                     .inputs(ELECTRIC_PUMP_MV.getStackForm(2))
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(Nitrogen.getFluid(2000))
                     .output(wireGtSingle, MVSuperconductor, 3)
                     .buildAndRegister();
@@ -77,7 +77,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, HVSuperconductorBase, 3)
                     .input(pipeTiny, Titanium, 2)
                     .inputs(ELECTRIC_PUMP_HV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(Nitrogen.getFluid(2000))
                     .output(wireGtSingle, HVSuperconductor, 3)
                     .buildAndRegister();
@@ -86,7 +86,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, EVSuperconductorBase, 9)
                     .input(pipeTiny, TungstenSteel, 6)
                     .inputs(ELECTRIC_PUMP_EV.getStackForm(2))
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidNitrogen.getFluid(6000))
                     .output(wireGtSingle, EVSuperconductor, 9)
                     .buildAndRegister();
@@ -95,7 +95,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, IVSuperconductorBase, 6)
                     .input(pipeTiny, NiobiumTitanium, 4)
                     .inputs(ELECTRIC_PUMP_IV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidNitrogen.getFluid(6000))
                     .output(wireGtSingle, IVSuperconductor, 6)
                     .buildAndRegister();
@@ -104,7 +104,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, LuVSuperconductorBase, 8)
                     .input(pipeTiny, Enderium, 5)
                     .inputs(ELECTRIC_PUMP_LUV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidNitrogen.getFluid(6000))
                     .output(wireGtSingle, LuVSuperconductor, 8)
                     .buildAndRegister();
@@ -113,7 +113,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, ZPMSuperconductorBase, 16)
                     .input(pipeTiny, Naquadah, 6)
                     .inputs(ELECTRIC_PUMP_ZPM.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidHelium.getFluid(8000))
                     .output(wireGtSingle, ZPMSuperconductor, 16)
                     .buildAndRegister();
@@ -122,7 +122,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UVSuperconductorBase, 32)
                     .input(pipeTiny, Ultimet, 7)
                     .inputs(ELECTRIC_PUMP_UV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidHelium.getFluid(10000))
                     .output(wireGtSingle, UVSuperconductor, 32)
                     .buildAndRegister();
@@ -131,7 +131,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UHVSuperconductorBase, 32)
                     .input(pipeTiny, Zeron100, 8)
                     .inputs(ELECTRIC_PUMP_UHV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(LiquidHelium.getFluid(12000))
                     .output(wireGtSingle, UHVSuperconductor, 32)
                     .buildAndRegister();
@@ -140,7 +140,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UEVSuperconductorBase, 32)
                     .input(pipeTiny, Lafium, 9)
                     .inputs(ELECTRIC_PUMP_UEV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(MicrocrystallizingHydrogen.getFluid(14000))
                     .output(wireGtSingle, UEVSuperconductor, 32)
                     .buildAndRegister();
@@ -149,7 +149,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UIVSuperconductorBase, 32)
                     .input(pipeTiny, TantalumHafniumSeaborgiumCarbide, 10)
                     .inputs(ELECTRIC_PUMP_UIV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(MicrocrystallizingHydrogen.getFluid(16000))
                     .output(wireGtSingle, UIVSuperconductor, 32)
                     .buildAndRegister();
@@ -158,7 +158,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UMVSuperconductorBase, 32)
                     .input(pipeTiny, Neutronium, 11)
                     .inputs(ELECTRIC_PUMP_UMV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(MicrocrystallizingHydrogen.getFluid(18000))
                     .output(wireGtSingle, UMVSuperconductor, 32)
                     .buildAndRegister();
@@ -167,7 +167,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UXVSuperconductorBase, 32)
                     .input(pipeTiny, Neutronium, 12)
                     .inputs(ELECTRIC_PUMP_UXV.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(1))
+                    .notConsumable(new IntCircuitIngredient(1))
                     .fluidInputs(FreeElectronGas.getFluid(20000))
                     .output(wireGtSingle, UXVSuperconductor, 32)
                     .buildAndRegister();
@@ -176,7 +176,7 @@ public class SuperconductorRecipes {
                     .input(wireGtSingle, UXVSuperconductorBase, 64)
                     .input(pipeTiny, Neutronium, 13)
                     .inputs(ELECTRIC_PUMP_MAX.getStackForm())
-                    .notConsumable(IntCircuitIngredient.getIntegratedCircuit(2))
+                    .notConsumable(new IntCircuitIngredient(2))
                     .fluidInputs(FreeElectronGas.getFluid(22000))
                     .output(wireGtSingle, Superconductor, 64)
                     .buildAndRegister();

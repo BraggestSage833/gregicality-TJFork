@@ -6,6 +6,7 @@ import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.stack.UnificationEntry;
+import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -197,8 +198,9 @@ public class MiscRecipes {
         ModHandler.addShapelessRecipe("drum_nbt_stainless_steel", GATileEntities.STAINLESS_STEEL_DRUM.getStackForm(), GATileEntities.STAINLESS_STEEL_DRUM.getStackForm());
         ModHandler.addShapelessRecipe("drum_nbt_titanium", GATileEntities.TITANIUM_DRUM.getStackForm(), GATileEntities.TITANIUM_DRUM.getStackForm());
         ModHandler.addShapelessRecipe("drum_nbt_Tungsten_steel", GATileEntities.TUNGSTENSTEEL_DRUM.getStackForm(), GATileEntities.TUNGSTENSTEEL_DRUM.getStackForm());
-
-
+        ModHandler.addShapelessRecipe("cell_nbt_clear", MetaItems.FLUID_CELL.getStackForm(),MetaItems.FLUID_CELL.getStackForm());
+        ModHandler.addShapelessRecipe("steel_cell_nbt_clear", MetaItems.LARGE_FLUID_CELL_STEEL.getStackForm(),MetaItems.LARGE_FLUID_CELL_STEEL.getStackForm());
+        ModHandler.addShapelessRecipe("tungsteel_cell_nbt_clear", MetaItems.LARGE_FLUID_CELL_TUNGSTEN_STEEL.getStackForm(),MetaItems.LARGE_FLUID_CELL_TUNGSTEN_STEEL.getStackForm());
 
 
 

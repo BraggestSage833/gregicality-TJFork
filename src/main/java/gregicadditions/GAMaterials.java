@@ -819,7 +819,7 @@ public class GAMaterials implements IMaterialHandler {
     public static final SimpleFluidMaterial Tributylamine = new SimpleFluidMaterial("tributylamine",0x801a80, "(C4H9)3N");
     public static final SimpleFluidMaterial CrudeAluminaSolution = new SimpleFluidMaterial("crude_alumina_solution", (Aluminium.materialRGB-30), "(Al(NO3)3)2(CH2Cl2)(C12H27N)");
     public static final SimpleFluidMaterial AluminaSolution = new SimpleFluidMaterial("alumina_solution", (Aluminium.materialRGB-15), "(Al2O3)(CH2Cl2)(C12H27N)2");
-    public static final SimpleFluidMaterial UnprocessedNdYAGSolution = new SimpleFluidMaterial("unprocessed_ndyag_solution",0x6f20af, "Nd:YAG");
+    public static final SimpleFluidMaterial UnprocessedNdYAGSolution = new SimpleFluidMaterial("unprocessed_ndyag_solution",0xcf8acf, "Nd:YAG");
     public static final SimpleFluidMaterial AmmoniumCyanate = new SimpleFluidMaterial("ammonium_cyanate",0x3a5dcf, "NH4CNO");
     public static final SimpleFluidMaterial Ethylenediamine = new SimpleFluidMaterial("ethylenediamine", Ethanolamine.rgb, "C2H4(NH2)2");
     public static final SimpleFluidMaterial EDTASolution = new SimpleFluidMaterial("edta_solution",0x0026d9, "(C10H16N2O8)3(C2H8N2)O2");
@@ -1262,7 +1262,7 @@ public class GAMaterials implements IMaterialHandler {
     public static final SimpleDustMaterial SeaborgiumCarbide = new SimpleDustMaterial("seaborgium_carbide",0x2c2c2c,(short) 266,MaterialIconSet.SHINY, "SgC");
     public static final SimpleDustMaterial AluminiumNitrate = new SimpleDustMaterial("aluminium_nitrate",Alumina.rgb,(short) 267,MaterialIconSet.SHINY, "Al(NO3)3");
     public static final SimpleDustMaterial NeodymiumDopedYttrium = new SimpleDustMaterial("neodymium_doped_yttrium",YttriumOxide.materialRGB,(short) 268,MaterialIconSet.DULL, "Nd:Y?");
-    public static final SimpleDustMaterial NdYAGNanoparticles = new SimpleDustMaterial("nd_yag_nanoparticles",0x6f20af,(short) 269,MaterialIconSet.SHINY, "Nd:YAG");
+    public static final SimpleDustMaterial NdYAGNanoparticles = new SimpleDustMaterial("nd_yag_nanoparticles",0xcf8acf,(short) 269,MaterialIconSet.SHINY, "Nd:YAG");
     public static final SimpleDustMaterial PotassiumPermanganate = new SimpleDustMaterial("potassium_permanganate",PotassiumManganate.rgb-15,(short) 270,MaterialIconSet.ROUGH, "KMnO4");
     public static final SimpleDustMaterial Urea = new SimpleDustMaterial("urea",0x30cf20,(short) 271,MaterialIconSet.ROUGH, "CH4N2O");
     //FREE IDs 272-274
@@ -1270,13 +1270,13 @@ public class GAMaterials implements IMaterialHandler {
     public static final SimpleDustMaterial ApatiteSolidResidue = new SimpleDustMaterial("apatite_solid_residue",0x3cb290,(short) 319,MaterialIconSet.FINE, "Ca6PO4SiO3");
     public static final SimpleDustMaterial AmmoniumBifluoride = new SimpleDustMaterial("ammonium_bifluoride",0x20cfcf,(short) 276,MaterialIconSet.ROUGH, "NH4HF2");
     public static final SimpleDustMaterial SodiumArsenate = new SimpleDustMaterial("sodium_arsenate",0xbffabf,(short) 277,MaterialIconSet.METALLIC, "Na3AsO4");
-    public static final SimpleDustMaterial PrHoYLFNanoparticles = new SimpleDustMaterial("prho_ylf_nanoparticles",0xcf8acf,(short) 278,MaterialIconSet.SHINY, "Pr/Ho:YLF");
+    public static final SimpleDustMaterial PrHoYLFNanoparticles = new SimpleDustMaterial("prho_ylf_nanoparticles",0x6f20af,(short) 278,MaterialIconSet.SHINY, "Pr/Ho:YLF");
     public static final SimpleDustMaterial LuTmYVONanoparticles = new SimpleDustMaterial("lutm_yvo_nanoparticles",0x206faf,(short) 279,MaterialIconSet.SHINY, "Lu/Tm:YVO");
     public static final SimpleDustMaterial PureSodiumVanadate = new SimpleDustMaterial("pure_sodium_vanadate", SodiumVanadate.rgb, (short) 280,MaterialIconSet.SHINY, "Na3VO4");
     public static final SimpleDustMaterial AmmoniumCarbonate = new SimpleDustMaterial("ammonium_carbonate", AmmoniumSulfate.rgb, (short) 281,MaterialIconSet.DULL, "(NH4)2CO3");
     public static final SimpleDustMaterial CadmiumSulfide = new SimpleDustMaterial("cadmium_sulfide",0xffff00,(short) 282,MaterialIconSet.ROUGH, "CdS");
-    public static final SimpleDustMaterial UnprocessedNdYAGDust = new SimpleDustMaterial("unprocessed_ndyag_dust",0x6f20af,(short) 283,MaterialIconSet.DULL, "Nd:YAG?");
-    public static final SimpleDustMaterial LuTmYVOPrecipitate = new SimpleDustMaterial("lutm_yvo_precipitate",0xcf8acf,(short) 318,MaterialIconSet.DULL, "Lu/Tm:YVO?");
+    public static final SimpleDustMaterial UnprocessedNdYAGDust = new SimpleDustMaterial("unprocessed_ndyag_dust",0xcf8acf,(short) 283,MaterialIconSet.DULL, "Nd:YAG?");
+    public static final SimpleDustMaterial LuTmYVOPrecipitate = new SimpleDustMaterial("lutm_yvo_precipitate",0x6f20af,(short) 318,MaterialIconSet.DULL, "Lu/Tm:YVO?");
     public static final SimpleDustMaterial RawSienna = new SimpleDustMaterial("raw_siena",0x663300,(short) 284,MaterialIconSet.ROUGH, "SiO2(MnO2)(FeO2)");
     public static final SimpleDustMaterial BurnedSienna = new SimpleDustMaterial("burned_siena",0xff0000,(short) 285,MaterialIconSet.DULL, "SiO2(MnO2)(FeO2)");
     public static final SimpleDustMaterial BismuthVanadate = new SimpleDustMaterial("bismuth_vanadate",0xffff00,(short) 286,MaterialIconSet.SHINY, "BiVO4");

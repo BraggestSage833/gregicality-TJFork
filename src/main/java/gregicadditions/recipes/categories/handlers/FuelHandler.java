@@ -152,6 +152,6 @@ public class FuelHandler {
         registerQubitGeneratorFuel(circuit, UXV,            25_600, UV, 32);
         registerQubitGeneratorFuel(circuit, MAX,            51_200, UV, 64);
         //removals
-        RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
+        //RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
     }
 }

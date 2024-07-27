@@ -1,5 +1,7 @@
 package gregicadditions.recipes.chain;
 
+import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.recipes.GARecipeMaps.LARGE_CHEMICAL_RECIPES;
 import static gregtech.api.recipes.RecipeMaps.*;
@@ -151,6 +153,7 @@ public class PEEKChain {
                 .fluidInputs(Propene.getFluid(1000))
                 .fluidInputs(Benzene.getFluid(1000))
                 .fluidInputs(Oxygen.getFluid(3000))
+                .notConsumable(new IntCircuitIngredient(1))
                 .fluidOutputs(Acetone.getFluid(1000))
                 .fluidOutputs(Hydroquinone.getFluid(1000))
                 .fluidOutputs(Resorcinol.getFluid(1000))

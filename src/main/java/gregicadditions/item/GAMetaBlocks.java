@@ -273,7 +273,7 @@ public class GAMetaBlocks {
     private static void createOreBlock(DustMaterial material, StoneType[] stoneTypes, int index) {
         String[] orePrefixes = {"Rich", "Poor", "Pure"};
         for (String orePrefix : orePrefixes) {
-            GABlockOre block = new GABlockOre(material, stoneTypes, OrePrefix.valueOf("ore" + orePrefix));
+            GABlockOre block = new GABlockOre(material, OrePrefix.valueOf("ore" + orePrefix), stoneTypes);
             block.setRegistryName("gregtech:" + orePrefix.toLowerCase() + "_ore_" + material + "_" + index);
             block.setTranslationKey(orePrefix.toLowerCase() + "_ore_block");
             GA_ORES.add(block);

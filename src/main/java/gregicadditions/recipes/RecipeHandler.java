@@ -105,7 +105,7 @@ public class RecipeHandler {
         springSmall.addProcessingHandler(IngotMaterial.class, RecipeHandler::processSpringSmall);
         gearSmall.addProcessingHandler(IngotMaterial.class, RecipeHandler::processGearSmall);
         gear.addProcessingHandler(IngotMaterial.class, RecipeHandler::processGear);
-        ingotHot.addProcessingHandler(IngotMaterial.class, RecipeHandler::processIngotHot);
+        //ingotHot.addProcessingHandler(IngotMaterial.class, RecipeHandler::processIngotHot);
 
         pipeTiny.addProcessingHandler(IngotMaterial.class, RecipeHandler::processTinyPipe);
         pipeSmall.addProcessingHandler(IngotMaterial.class, RecipeHandler::processSmallPipe);
@@ -1240,6 +1240,21 @@ public class RecipeHandler {
             FluidStack fluidOutput = FermentationBase.getFluid(recipe.getFluidOutputs().get(0).amount * 10);
 
             MIXER_RECIPES.recipeBuilder()
+                    .EUt(recipe.getEUt() * 10)
+                    .duration(recipe.getDuration() * 10)
+                    .fluidInputs(fluidInput)
+                    .inputsIngredients(Collections.singleton(itemInput))
+                    .notConsumable(new IntCircuitIngredient(1))
+                    .fluidOutputs(fluidOutput)
+                    .buildAndRegister();
+        });
+        BREWING_RECIPES.getRecipeList().forEach(recipe -> {
+            FluidStack fluidInput = recipe.getFluidInputs().get(0).copy();
+            fluidInput.amount = (fluidInput.amount * 10 * 125 / 100);
+            CountableIngredient itemInput = new CountableIngredient(recipe.getInputs().get(0).getIngredient(), recipe.getInputs().get(0).getCount() * 10);
+            FluidStack fluidOutput = FermentationBase.getFluid(recipe.getFluidOutputs().get(0).amount * 10);
+
+            LARGE_MIXER_RECIPES.recipeBuilder()
                     .EUt(recipe.getEUt() * 10)
                     .duration(recipe.getDuration() * 10)
                     .fluidInputs(fluidInput)

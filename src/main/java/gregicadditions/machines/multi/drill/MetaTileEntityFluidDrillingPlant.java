@@ -135,7 +135,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     }
 
     public int getVoltageTier() {
-        int voltageCap = this.rigTier == 2 ? 5 : this.rigTier == 3 ? 8 : 9;
+        int voltageCap = this.rigTier == 2 ? 5 : this.rigTier == 3 ? 8 : 14;
         // adjust voltage for hatch amperage
         int inputVoltage = GAUtility.getTierByVoltage(energyContainer.getInputVoltage());
 
@@ -198,8 +198,11 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
                 // Produce the fluid
                 exportFluidHandler.fill(out, true);
 
+                //exclude tier 3 rigs from  depleting
+                     if (this.rigTier !=4 ) {
                 // Deplete the vein's fluid
                 depleteFluid(depleted);
+                     }
             }
         }
     }
@@ -330,7 +333,12 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.no_fluid").setStyle(new Style().setColor(TextFormatting.RED)));
             } else {
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.rig_production", getAvailableFluidAmount() <= 0 ? getResidualFluidAmount() * this.rigTier : overclockFluidProduction()));
-                textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid_drain", getFluidAmountToDrain(getFluidAmountForUse(getAvailableFluidAmount()))));
+
+                if( this.rigTier !=4 ) {
+
+                    textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid_drain", getFluidAmountToDrain(getFluidAmountForUse(getAvailableFluidAmount()))));
+
+                }
 
                 ITextComponent fluidName = new TextComponentTranslation(oilWorldInfo.getType().getFluid().getUnlocalizedName());
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid", fluidName));
@@ -345,10 +353,19 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.1"));
-        tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.2", GAValues.VN[this.rigTier], GAValues.VN[this.rigTier == 2 ? 5 : this.rigTier == 3 ? 8 : 9]));
-        tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.3"));
+        if (this.rigTier !=4 ) {
+            tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.2", GAValues.VN[this.rigTier], GAValues.VN[this.rigTier == 2 ? 5 : this.rigTier == 3 ? 8 : 9]));
+            tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.3"));
+        }
+
+        else {
+            tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.void"));
+            tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.void.2"));
+        }
         tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.4", overclockFluidProduction(), GAValues.VN[this.rigTier]));
-        tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.5", getTieredFluidMultiplier()));
+        if (this.rigTier !=4 ) {
+            tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.5", getTieredFluidMultiplier()));
+        }
     }
 
     @Override

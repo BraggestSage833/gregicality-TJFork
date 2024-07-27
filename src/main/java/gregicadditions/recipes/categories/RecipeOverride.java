@@ -232,7 +232,15 @@ public class RecipeOverride {
                 .duration(62268)
                 .EUt(120)
                 .buildAndRegister();
-    }
+
+    // Hot Thulium
+    removeRecipesByInputs(BLAST_RECIPES, OreDictUnifier.get(dust, Thulium));
+        BLAST_RECIPES.recipeBuilder().EUt(120).duration(6108).blastFurnaceTemp(1818)
+                .input(dust, Thulium)
+                .notConsumable(new IntCircuitIngredient(1))
+            .output(ingotHot, Thulium)
+                .buildAndRegister();
+}
 
     private static void brewingOverride() {
 
