@@ -17,10 +17,12 @@ import java.util.stream.Collectors;
 
 public class GABlockOre extends BlockOre {
 
+    private OrePrefix orePrefix;
     public DustMaterial material;
 
     public GABlockOre(DustMaterial material, OrePrefix orePrefix, StoneType[] allowedValues) {
-        super(material, orePrefix, allowedValues);
+        super(material, allowedValues);
+        this.orePrefix = orePrefix;
         this.material = material;
     }
 

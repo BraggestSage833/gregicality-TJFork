@@ -255,7 +255,10 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
         public RecipeMap<?> recipeMap;
 
         public LargeSimpleMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
-            super(tileEntity);
+            this(tileEntity, EUtPercentage, durationPercentage, chancePercentage, stack, 16);
+        }
+        public LargeSimpleMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, int recipeCacheSize) {
+            super(tileEntity, recipeCacheSize);
             this.EUtPercentage = EUtPercentage;
             this.durationPercentage = durationPercentage;
             this.chancePercentage = chancePercentage;
@@ -309,11 +312,14 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
                 //else, try searching new recipe for given inputs
                 currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
                 if (currentRecipe != null) {
-                    this.previousRecipe = currentRecipe;
+                    this.previousRecipe.put(currentRecipe);
                 }
-            } else if (previousRecipe != null && previousRecipe.matches(false, importInventory, importFluids)) {
+            } else {
+                Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
                 //if previous recipe still matches inputs, try to use it
-                currentRecipe = previousRecipe;
+                if (foundRecipe != null) {
+                    currentRecipe = foundRecipe;
+                }
             }
             if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
                 setupRecipe(currentRecipe);

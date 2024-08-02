@@ -40,10 +40,13 @@ public class SteamMultiWorkable extends SteamMultiblockRecipeLogic {
 
             currentRecipe = findRecipe(maxVoltage, importInventory, null);
             if (currentRecipe != null) {
-                this.previousRecipe = currentRecipe;
+                this.previousRecipe.put(currentRecipe);
             }
-        } else if (previousRecipe != null && previousRecipe.matches(false, importInventory, new FluidTankList(false))) {
-            currentRecipe = previousRecipe;
+        } else {
+            Recipe foundRecipe = this.previousRecipe.get(importInventory, new FluidTankList(false));
+            if (foundRecipe != null) {
+                currentRecipe = foundRecipe;
+            }
         }
 
         if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {

@@ -28,10 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -356,6 +353,8 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
                     .setStyle(new Style().setColor(TextFormatting.RED)
                             .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))));
         }
+        textList.add(new TextComponentString("Cache (size) " + recipeMapWorkable.previousRecipe.getCachedRecipeCount() + " hit(" + recipeMapWorkable.previousRecipe.getCacheHit() + ") miss (" + recipeMapWorkable.previousRecipe.getCacheMiss() + ")")
+                .setStyle(new Style().setColor(TextFormatting.GREEN)));
     }
 
     @Override

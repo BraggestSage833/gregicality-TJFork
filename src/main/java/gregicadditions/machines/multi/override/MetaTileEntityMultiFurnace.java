@@ -172,11 +172,15 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
                 //else, try searching new recipe for given inputs
                 currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
                 if (currentRecipe != null) {
-                    this.previousRecipe = currentRecipe;
+                    this.previousRecipe.put(currentRecipe);
                 }
-            } else if (previousRecipe != null && previousRecipe.matches(false, importInventory, importFluids)) {
+            } else {
+                Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
+
                 //if previous recipe still matches inputs, try to use it
-                currentRecipe = previousRecipe;
+                if (foundRecipe != null) {
+                    currentRecipe = foundRecipe;
+                }
             }
             if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
                 setupRecipe(currentRecipe);

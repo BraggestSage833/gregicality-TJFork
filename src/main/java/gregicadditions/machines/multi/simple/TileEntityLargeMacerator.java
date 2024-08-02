@@ -7,6 +7,7 @@ import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.components.PistonCasing;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.multi.CasingUtils;
+import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -34,6 +35,7 @@ public class TileEntityLargeMacerator extends LargeSimpleRecipeMapMultiblockCont
 
 	public TileEntityLargeMacerator(ResourceLocation metaTileEntityId) {
 		super(metaTileEntityId, RecipeMaps.MACERATOR_RECIPES, GAConfig.multis.largeMacerator.euPercentage, GAConfig.multis.largeMacerator.durationPercentage, GAConfig.multis.largeMacerator.chancedBoostPercentage, GAConfig.multis.largeMacerator.stack);
+		this.recipeMapWorkable = new LargeSimpleMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack, 64);
 	}
 
 	@Override

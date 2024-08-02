@@ -27,7 +27,10 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
     protected ItemStack[][] lastItemInputsMatrix;
 
     public GAMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity) {
-        super(tileEntity);
+        this(tileEntity, 16);
+    }
+    public GAMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int recipeCacheSize) {
+        super(tileEntity, recipeCacheSize);
     }
 
     /**
@@ -119,8 +122,9 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
 
         // Our caching implementation
         // This guarantees that if we get a recipe cache hit, our efficiency is no different from other machines
-        if (previousRecipe != null && previousRecipe.matches(false, importInventory.get(lastRecipeIndex), importFluids)) {
-            currentRecipe = previousRecipe;
+        Recipe foundRecipe = this.previousRecipe.get(importInventory.get(lastRecipeIndex), importFluids);
+        if (foundRecipe != null) {
+            currentRecipe = foundRecipe;
             if (setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
                 setupRecipe(currentRecipe);
                 return true;
@@ -136,7 +140,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
                 this.forceRecipeRecheck = false;
                 currentRecipe = findRecipe(maxVoltage, bus, importFluids);
                 if (currentRecipe != null) {
-                    this.previousRecipe = currentRecipe;
+                    this.previousRecipe.put(currentRecipe);
                 }
             }
             if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe, i)) {
