@@ -353,8 +353,7 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
                     .setStyle(new Style().setColor(TextFormatting.RED)
                             .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))));
         }
-        textList.add(new TextComponentString("Cache (size) " + recipeMapWorkable.previousRecipe.getCachedRecipeCount() + " hit(" + recipeMapWorkable.previousRecipe.getCacheHit() + ") miss (" + recipeMapWorkable.previousRecipe.getCacheMiss() + ")")
-                .setStyle(new Style().setColor(TextFormatting.GREEN)));
+        textList.add((new TextComponentString(String.format("Cache size (%s) hit (%s) miss (%s)", this.recipeMapWorkable.previousRecipe.getCachedRecipeCount(), this.recipeMapWorkable.previousRecipe.getCacheHit(), this.recipeMapWorkable.previousRecipe.getCacheMiss()))).setStyle((new Style()).setColor(TextFormatting.WHITE)));
     }
 
     @Override

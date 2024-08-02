@@ -28,33 +28,33 @@ public class SteamMultiWorkable extends SteamMultiblockRecipeLogic {
         MAX_PROCESSES = maxProcesses;
     }
 
-    @Override
-    protected boolean trySearchNewRecipe() {
-        long maxVoltage = getMaxVoltage(); // Will always be LV voltage
-        Recipe currentRecipe = null;
-        IItemHandlerModifiable importInventory = getInputInventory();
-        boolean dirty = checkRecipeInputsDirty(importInventory, null);
-
-        if(dirty || forceRecipeRecheck) {
-            this.forceRecipeRecheck = false;
-
-            currentRecipe = findRecipe(maxVoltage, importInventory, null);
-            if (currentRecipe != null) {
-                this.previousRecipe.put(currentRecipe);
-            }
-        } else {
-            Recipe foundRecipe = this.previousRecipe.get(importInventory, new FluidTankList(false));
-            if (foundRecipe != null) {
-                currentRecipe = foundRecipe;
-            }
-        }
-
-        if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
-            setupRecipe(currentRecipe);
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    protected boolean trySearchNewRecipe() {
+//        long maxVoltage = getMaxVoltage(); // Will always be LV voltage
+//        Recipe currentRecipe = null;
+//        IItemHandlerModifiable importInventory = getInputInventory();
+//        boolean dirty = checkRecipeInputsDirty(importInventory, null);
+//
+//        if(dirty || forceRecipeRecheck) {
+//            this.forceRecipeRecheck = false;
+//
+//            currentRecipe = findRecipe(maxVoltage, importInventory, null);
+//            if (currentRecipe != null) {
+//                this.previousRecipe.put(currentRecipe);
+//            }
+//        } else {
+//            Recipe foundRecipe = this.previousRecipe.get(importInventory, new FluidTankList(false));
+//            if (foundRecipe != null) {
+//                currentRecipe = foundRecipe;
+//            }
+//        }
+//
+//        if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
+//            setupRecipe(currentRecipe);
+//            return true;
+//        }
+//        return false;
+//    }
 
     @Override
     protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {

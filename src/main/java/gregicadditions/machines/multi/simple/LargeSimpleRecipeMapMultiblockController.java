@@ -294,39 +294,39 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
             lastRecipeIndex = 0;
         }
 
-        @Override
-        protected boolean trySearchNewRecipeCombined() {
-            long maxVoltage = getMaxVoltage();
-            if (metaTileEntity instanceof LargeSimpleRecipeMapMultiblockController)
-                maxVoltage = ((LargeSimpleRecipeMapMultiblockController) metaTileEntity).maxVoltage;
-            Recipe currentRecipe = null;
-            IItemHandlerModifiable importInventory = getInputInventory();
-            IMultipleTankHandler importFluids = getInputTank();
-            boolean dirty = checkRecipeInputsDirty(importInventory, importFluids);
-            //inverse of logic in normal AbstractRecipeLogic
-            //for MultiSmelter, we can reuse previous recipe if inputs didn't change
-            //otherwise, we need to recompute it for new ingredients
-            //but technically, it means we can cache multi smelter recipe, but changing inputs have more priority
-            if (dirty || forceRecipeRecheck) {
-                this.forceRecipeRecheck = false;
-                //else, try searching new recipe for given inputs
-                currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
-                if (currentRecipe != null) {
-                    this.previousRecipe.put(currentRecipe);
-                }
-            } else {
-                Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
-                //if previous recipe still matches inputs, try to use it
-                if (foundRecipe != null) {
-                    currentRecipe = foundRecipe;
-                }
-            }
-            if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
-                setupRecipe(currentRecipe);
-                return true;
-            }
-            return false;
-        }
+//        @Override
+//        protected boolean trySearchNewRecipeCombined() {
+//            long maxVoltage = getMaxVoltage();
+//            if (metaTileEntity instanceof LargeSimpleRecipeMapMultiblockController)
+//                maxVoltage = ((LargeSimpleRecipeMapMultiblockController) metaTileEntity).maxVoltage;
+//            Recipe currentRecipe = null;
+//            IItemHandlerModifiable importInventory = getInputInventory();
+//            IMultipleTankHandler importFluids = getInputTank();
+//            boolean dirty = checkRecipeInputsDirty(importInventory, importFluids);
+//            //inverse of logic in normal AbstractRecipeLogic
+//            //for MultiSmelter, we can reuse previous recipe if inputs didn't change
+//            //otherwise, we need to recompute it for new ingredients
+//            //but technically, it means we can cache multi smelter recipe, but changing inputs have more priority
+//            if (dirty || forceRecipeRecheck) {
+//                this.forceRecipeRecheck = false;
+//                //else, try searching new recipe for given inputs
+//                currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
+//                if (currentRecipe != null) {
+//                    this.previousRecipe.put(currentRecipe);
+//                }
+//            } else {
+//                Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
+//                //if previous recipe still matches inputs, try to use it
+//                if (foundRecipe != null) {
+//                    currentRecipe = foundRecipe;
+//                }
+//            }
+//            if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe)) {
+//                setupRecipe(currentRecipe);
+//                return true;
+//            }
+//            return false;
+//        }
 
         @Override
         protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
