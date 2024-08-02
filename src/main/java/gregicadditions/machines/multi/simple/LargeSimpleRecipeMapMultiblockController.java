@@ -49,8 +49,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     DecimalFormat formatter = new DecimalFormat("#0.00");
 
     /**
-     * @deprecated
-     * use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
+     * @deprecated use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
      */
     public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
         super(metaTileEntityId, recipeMap, false, true, true);
@@ -78,7 +77,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
      * @param hasMuffler
      * @param hasMaintenance
      */
-    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, boolean hasMuffler , boolean hasMaintenance, boolean canDistinct ) {
+    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct) {
         super(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct);
         this.recipeMapWorkable = new LargeSimpleMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack);
 
@@ -89,8 +88,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     }
 
     /**
-     * @deprecated
-     * use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
+     * @deprecated use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
      */
     public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, boolean hasMuffler) {
         this(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack, hasMuffler, true, false);
@@ -257,6 +255,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
         public LargeSimpleMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
             this(tileEntity, EUtPercentage, durationPercentage, chancePercentage, stack, 16);
         }
+
         public LargeSimpleMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, int recipeCacheSize) {
             super(tileEntity, recipeCacheSize);
             this.EUtPercentage = EUtPercentage;
@@ -329,11 +328,95 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
 //        }
 
         @Override
+        protected boolean trySearchNewRecipeCombined() {
+            long maxVoltage = getMaxVoltage();
+            if (metaTileEntity instanceof LargeSimpleRecipeMapMultiblockController)
+                maxVoltage = ((LargeSimpleRecipeMapMultiblockController) metaTileEntity).maxVoltage;
+            Recipe currentRecipe = null;
+            IItemHandlerModifiable importInventory = getInputInventory();
+            IMultipleTankHandler importFluids = getInputTank();
+            Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
+            if (foundRecipe != null) {
+                currentRecipe = foundRecipe;
+            } else {
+                boolean dirty = this.checkRecipeInputsDirty(importInventory, importFluids);
+                if (dirty || this.forceRecipeRecheck) {
+                    this.forceRecipeRecheck = false;
+                    currentRecipe = this.findRecipe(maxVoltage, importInventory, importFluids);
+                    if (currentRecipe != null) {
+                        this.previousRecipe.put(currentRecipe);
+                        this.previousRecipe.cacheUnutilized();
+                    }
+                }
+            }
+
+            if (currentRecipe == null) {
+                return false;
+            }
+            currentRecipe = createRecipe(maxVoltage, importInventory, importFluids, currentRecipe);
+            if (!this.setupAndConsumeRecipeInputs(currentRecipe)) {
+                return false;
+            }
+            if (foundRecipe != null) {
+                this.previousRecipe.cacheUtilized();
+            }
+            this.setupRecipe(currentRecipe);
+            return true;
+        }
+
+        @Override
+        protected boolean trySearchNewRecipeDistinct() {
+            long maxVoltage = getMaxVoltage();
+            Recipe currentRecipe = null;
+            List<IItemHandlerModifiable> importInventory = getInputBuses();
+            IMultipleTankHandler importFluids = getInputTank();
+
+            // Our caching implementation
+            // This guarantees that if we get a recipe cache hit, our efficiency is no different from other machines
+            Recipe foundRecipe = this.previousRecipe.get(importInventory.get(lastRecipeIndex), importFluids);
+            if (foundRecipe != null) {
+                currentRecipe = foundRecipe;
+                currentRecipe = createRecipe(maxVoltage, importInventory.get(lastRecipeIndex), importFluids, currentRecipe);
+                if (this.setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
+                    this.previousRecipe.cacheUtilized();
+                    this.setupRecipe(currentRecipe);
+                    return true;
+                }
+            }
+
+            // On a cache miss, our efficiency is much worse, as it will check
+            // each bus individually instead of the combined inventory all at once.
+            for (int i = 0; i < importInventory.size(); i++) {
+                IItemHandlerModifiable bus = importInventory.get(i);
+                boolean dirty = checkRecipeInputsDirty(bus, importFluids, i);
+                if (!dirty && !forceRecipeRecheck) {
+                    continue;
+                }
+                this.forceRecipeRecheck = false;
+                currentRecipe = findRecipe(maxVoltage, bus, importFluids);
+                if (currentRecipe == null) {
+                    continue;
+                }
+                this.previousRecipe.put(currentRecipe);
+                this.previousRecipe.cacheUnutilized();
+                currentRecipe = createRecipe(maxVoltage, bus, importFluids, currentRecipe);
+                if (!this.setupAndConsumeRecipeInputs(currentRecipe, i)) {
+                    continue;
+                }
+                lastRecipeIndex = i;
+                this.setupRecipe(currentRecipe);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
         protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
             Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs);
-            if (recipe != null)
-                return createRecipe(maxVoltage, inputs, fluidInputs, recipe);
-            return null;
+            return recipe;
+//            if (recipe != null)
+//                return createRecipe(maxVoltage, inputs, fluidInputs, recipe);
+//            return null;
         }
 
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {

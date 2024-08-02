@@ -256,7 +256,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs);
             int currentTemp = ((MetaTileEntityMegaBlastFurnace) metaTileEntity).getBlastFurnaceTemperature();
             if (recipe != null && recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0) <= currentTemp)
-                return createRecipe(maxVoltage, inputs, fluidInputs, recipe);
+                return recipe;
             return null;
         }
 

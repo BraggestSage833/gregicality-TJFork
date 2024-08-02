@@ -62,16 +62,15 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
             return new int[]{EUt, durationModified};
         if (negativeEU)
             EUt = -EUt;
-            int resultEUt = EUt;
-            double resultDuration = durationModified;
-            //do not overclock further if duration is already too small
-            while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
-                resultEUt *= 4;
-                resultDuration /= 2.8;
-            }
-            previousRecipeDuration = (int) resultDuration;
-            return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
-
+        int resultEUt = EUt;
+        double resultDuration = durationModified;
+        //do not overclock further if duration is already too small
+        while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
+            resultEUt *= 4;
+            resultDuration /= 2.8;
+        }
+        previousRecipeDuration = (int) resultDuration;
+        return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
     }
 
     @Override
@@ -114,7 +113,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
         return super.trySearchNewRecipe();
     }
 
-    private boolean trySearchNewRecipeDistinct() {
+    protected boolean trySearchNewRecipeDistinct() {
         long maxVoltage = getMaxVoltage();
         Recipe currentRecipe = null;
         List<IItemHandlerModifiable> importInventory = getInputBuses();
@@ -125,6 +124,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
         Recipe foundRecipe = this.previousRecipe.get(importInventory.get(lastRecipeIndex), importFluids);
         if (foundRecipe != null) {
             currentRecipe = foundRecipe;
+            this.previousRecipe.cacheUtilized();
             if (setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
                 setupRecipe(currentRecipe);
                 return true;
@@ -141,6 +141,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
                 currentRecipe = findRecipe(maxVoltage, bus, importFluids);
                 if (currentRecipe != null) {
                     this.previousRecipe.put(currentRecipe);
+                    this.previousRecipe.cacheUnutilized();
                 }
             }
             if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe, i)) {

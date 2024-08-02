@@ -9,6 +9,7 @@ import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregicadditions.item.GAHeatingCoil;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -190,10 +191,43 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
 //        }
 
         @Override
+        protected boolean trySearchNewRecipe() {
+            long maxVoltage = getMaxVoltage();
+            Recipe currentRecipe = null;
+            IItemHandlerModifiable importInventory = getInputInventory();
+            IMultipleTankHandler importFluids = getInputTank();
+//            Recipe foundRecipe = this.previousRecipe.get(importInventory, importFluids);
+//            if (foundRecipe != null) {
+//                currentRecipe = foundRecipe;
+//            } else {
+            boolean dirty = this.checkRecipeInputsDirty(importInventory, importFluids);
+            if (dirty || this.forceRecipeRecheck) {
+                this.forceRecipeRecheck = false;
+                currentRecipe = this.findRecipe(maxVoltage, importInventory, importFluids);
+//                    if (currentRecipe != null) {
+//                        this.previousRecipe.put(currentRecipe);
+//                        this.previousRecipe.cacheUnutilized();
+//                    }
+            }
+//            }
+
+            if (currentRecipe == null) {
+                return false;
+            }
+            if (!this.setupAndConsumeRecipeInputs(currentRecipe)) {
+                return false;
+            }
+//            if (foundRecipe != null) {
+//                this.previousRecipe.cacheUtilized();
+//            }
+            this.setupRecipe(currentRecipe);
+            return true;
+        }
+
+        @Override
         protected Recipe findRecipe(long maxVoltage,
                                     IItemHandlerModifiable inputs,
-                                    IMultipleTankHandler fluidInputs)
-        {
+                                    IMultipleTankHandler fluidInputs) {
             int currentItemsEngaged = 0;
             final int maxItemsLimit = 32 * heatingCoilLevel;
             final ArrayList<CountableIngredient> recipeInputs = new ArrayList<>();
@@ -202,11 +236,11 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
             /* Iterate over the input items looking for more things to add until we run either out of input items
              * or we have exceeded the number of items permissible from the smelting bonus
              */
-            for(int index = 0; index < inputs.getSlots() && currentItemsEngaged < maxItemsLimit; index++) {
+            for (int index = 0; index < inputs.getSlots() && currentItemsEngaged < maxItemsLimit; index++) {
 
                 // Skip this slot if it is empty.
                 final ItemStack currentInputItem = inputs.getStackInSlot(index);
-                if(currentInputItem.isEmpty())
+                if (currentInputItem.isEmpty())
                     continue;
 
                 // Determine if there is a valid recipe for this item. If not, skip it.
@@ -214,19 +248,19 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
                         Collections.singletonList(currentInputItem),
                         Collections.emptyList(), 0);
                 CountableIngredient inputIngredient;
-                if(matchingRecipe != null)
+                if (matchingRecipe != null)
                     inputIngredient = matchingRecipe.getInputs().get(0);
                 else
                     continue;
 
                 // There's something not right with this recipe if the ingredient is null.
-                if(inputIngredient == null)
+                if (inputIngredient == null)
                     throw new IllegalStateException(
                             String.format("Got recipe with null ingredient %s", matchingRecipe));
 
                 // If there are enough slots left to smelt this item stack
                 int itemsLeftUntilMax = (maxItemsLimit - currentItemsEngaged);
-                if(itemsLeftUntilMax >= inputIngredient.getCount()) {
+                if (itemsLeftUntilMax >= inputIngredient.getCount()) {
 
                     /* Choose the lesser of the number of possible crafts in this ingredient's stack, or the number of
                      * items remaining to reach the coil bonus's max smelted items.
@@ -245,7 +279,7 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
                     boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(temp, this.getOutputInventory());
 
                     // if there isn't, we can't process this recipe.
-                    if(!canFitOutputs)
+                    if (!canFitOutputs)
                         break;
 
                     // otherwise, let's add the new output items and keep going
@@ -261,7 +295,7 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
             }
 
             // If there were no accepted ingredients, then there is no recipe to process.
-            if(recipeInputs.isEmpty()) {
+            if (recipeInputs.isEmpty()) {
                 //Set here to prevent recipe deadlock on world load with full output bus
                 forceRecipeRecheck = true;
                 return null;
@@ -286,9 +320,8 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
          */
         private void computeOutputItemStacks(Collection<ItemStack> recipeOutputs,
                                              ItemStack outputStack,
-                                             int overclockAmount)
-        {
-            if(!outputStack.isEmpty()) {
+                                             int overclockAmount) {
+            if (!outputStack.isEmpty()) {
                 // number of output items we're generating
                 int finalAmount = outputStack.getCount() * overclockAmount;
 
@@ -302,14 +335,14 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
                 int remainder = finalAmount % maxCount;
 
                 // Add full stacks of the output item
-                for(int fullStacks = numStacks; fullStacks > 0; fullStacks--) {
+                for (int fullStacks = numStacks; fullStacks > 0; fullStacks--) {
                     ItemStack full = outputStack.copy();
                     full.setCount(maxCount);
                     recipeOutputs.add(full);
                 }
 
                 // if there is a partial stack, add it too
-                if(remainder > 0) {
+                if (remainder > 0) {
                     ItemStack partial = outputStack.copy();
                     partial.setCount(remainder);
                     recipeOutputs.add(partial);
