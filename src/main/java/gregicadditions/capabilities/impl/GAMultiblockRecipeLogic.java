@@ -14,6 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -29,6 +30,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
     public GAMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity) {
         this(tileEntity, 16);
     }
+
     public GAMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int recipeCacheSize) {
         super(tileEntity, recipeCacheSize);
     }
@@ -101,7 +103,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
                 return false;
 
             if (controller.canDistinct && controller.isDistinct) {
-               return trySearchNewRecipeDistinct();
+                return trySearchNewRecipeDistinct();
             }
         }
         return trySearchNewRecipeCombined();
@@ -122,33 +124,57 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
         // Our caching implementation
         // This guarantees that if we get a recipe cache hit, our efficiency is no different from other machines
         Recipe foundRecipe = this.previousRecipe.get(importInventory.get(lastRecipeIndex), importFluids);
+        HashSet<Integer> foundRecipeIndex = new HashSet<>();
         if (foundRecipe != null) {
             currentRecipe = foundRecipe;
-            this.previousRecipe.cacheUtilized();
             if (setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
+                this.previousRecipe.cacheUtilized();
                 setupRecipe(currentRecipe);
                 return true;
+            }
+            foundRecipeIndex.add(lastRecipeIndex);
+        }
+
+        for (int i = 0; i < importInventory.size(); i++) {
+            if (i == lastRecipeIndex) {
+                continue;
+            }
+            foundRecipe = this.previousRecipe.get(importInventory.get(i), importFluids);
+            if (foundRecipe != null) {
+                currentRecipe = foundRecipe;
+                if (setupAndConsumeRecipeInputs(currentRecipe, i)) {
+                    this.previousRecipe.cacheUtilized();
+                    setupRecipe(currentRecipe);
+                    return true;
+                }
+                foundRecipeIndex.add(i);
             }
         }
 
         // On a cache miss, our efficiency is much worse, as it will check
         // each bus individually instead of the combined inventory all at once.
         for (int i = 0; i < importInventory.size(); i++) {
+            if (foundRecipeIndex.contains(i)) {
+                continue;
+            }
             IItemHandlerModifiable bus = importInventory.get(i);
             boolean dirty = checkRecipeInputsDirty(bus, importFluids, i);
-            if (dirty || forceRecipeRecheck) {
-                this.forceRecipeRecheck = false;
-                currentRecipe = findRecipe(maxVoltage, bus, importFluids);
-                if (currentRecipe != null) {
-                    this.previousRecipe.put(currentRecipe);
-                    this.previousRecipe.cacheUnutilized();
-                }
+            if (!dirty && !forceRecipeRecheck) {
+                continue;
             }
-            if (currentRecipe != null && setupAndConsumeRecipeInputs(currentRecipe, i)) {
-                lastRecipeIndex = i;
-                setupRecipe(currentRecipe);
-              return true;
+            this.forceRecipeRecheck = false;
+            currentRecipe = findRecipe(maxVoltage, bus, importFluids);
+            if (currentRecipe == null){
+                continue;
             }
+            this.previousRecipe.put(currentRecipe);
+            this.previousRecipe.cacheUnutilized();
+            if(!setupAndConsumeRecipeInputs(currentRecipe, i)) {
+                continue;
+            }
+            lastRecipeIndex = i;
+            setupRecipe(currentRecipe);
+            return true;
         }
         return false;
     }

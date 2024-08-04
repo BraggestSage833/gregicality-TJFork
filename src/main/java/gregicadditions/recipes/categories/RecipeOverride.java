@@ -233,14 +233,22 @@ public class RecipeOverride {
                 .EUt(120)
                 .buildAndRegister();
 
-    // Hot Thulium
-    removeRecipesByInputs(BLAST_RECIPES, OreDictUnifier.get(dust, Thulium));
+        // Hot Thulium
+        removeRecipesByInputs(BLAST_RECIPES, OreDictUnifier.get(dust, Thulium));
         BLAST_RECIPES.recipeBuilder().EUt(120).duration(6108).blastFurnaceTemp(1818)
                 .input(dust, Thulium)
                 .notConsumable(new IntCircuitIngredient(1))
-            .output(ingotHot, Thulium)
+                .output(ingotHot, Thulium)
                 .buildAndRegister();
-}
+
+        removeRecipesByInputs(MIXER_RECIPES, OreDictUnifier.get(dust, Nickel, 4), OreDictUnifier.get(dust, Chrome, 1));
+        MIXER_RECIPES.recipeBuilder().EUt(30).duration(280)
+                .input(dust, Nickel, 4)
+                .input(dust, Chrome, 1)
+                .notConsumable(new IntCircuitIngredient(7))
+                .output(dust, Nichrome, 5)
+                .buildAndRegister();
+    }
 
     private static void brewingOverride() {
 
@@ -747,12 +755,12 @@ public class RecipeOverride {
         removeRecipesByInputs(CENTRIFUGE_RECIPES, Lava.getFluid(100));
         CENTRIFUGE_RECIPES.recipeBuilder().duration(80).EUt(80)
                 .fluidInputs(Lava.getFluid(100))
-                .chancedOutput(OreDictUnifier.get(dustSmall, SiliconDioxide),5000, 500)
-                .chancedOutput(OreDictUnifier.get(dustSmall, Magnesia),1000, 100)
-                .chancedOutput(OreDictUnifier.get(dustSmall, Quicklime),1000, 100)
-                .chancedOutput(OreDictUnifier.get(dustSmall, PreciousMetal),250, 90)
-                .chancedOutput(OreDictUnifier.get(dustSmall, Sapphire),1250, 150)
-                .chancedOutput(OreDictUnifier.get(dustSmall, Tantalite),500, 90)
+                .chancedOutput(OreDictUnifier.get(dustSmall, SiliconDioxide), 5000, 500)
+                .chancedOutput(OreDictUnifier.get(dustSmall, Magnesia), 1000, 100)
+                .chancedOutput(OreDictUnifier.get(dustSmall, Quicklime), 1000, 100)
+                .chancedOutput(OreDictUnifier.get(dustSmall, PreciousMetal), 250, 90)
+                .chancedOutput(OreDictUnifier.get(dustSmall, Sapphire), 1250, 150)
+                .chancedOutput(OreDictUnifier.get(dustSmall, Tantalite), 500, 90)
                 .buildAndRegister();
 
         // Quartz Plates
@@ -977,7 +985,7 @@ public class RecipeOverride {
 
         // remove neutron reflector
         removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{
-                OreDictUnifier.get(plate, Beryllium, 32),
+                        OreDictUnifier.get(plate, Beryllium, 32),
                         OreDictUnifier.get(plate, TungstenCarbide, 4),
                         PLATE_IRIDIUM_ALLOY.getStackForm()
                 },
@@ -1149,9 +1157,9 @@ public class RecipeOverride {
         // TODO Ignores Forestry wood
         if (GAConfig.GT5U.DisableLogToCharcoalSmelting) {
             List<ItemStack> allWoodLogs = OreDictionary.getOres("logWood")
-                                                       .stream()
-                                                       .flatMap(stack -> ModHandler.getAllSubItems(stack).stream())
-                                                       .collect(Collectors.toList());
+                    .stream()
+                    .flatMap(stack -> ModHandler.getAllSubItems(stack).stream())
+                    .collect(Collectors.toList());
 
             for (ItemStack stack : allWoodLogs) {
                 ItemStack smeltingOutput = ModHandler.getSmeltingOutput(stack);
@@ -1171,8 +1179,8 @@ public class RecipeOverride {
 
         // Remove MAX-Superconductor Wire Recipes
         removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{OreDictUnifier.get(wireGtSingle, YttriumBariumCuprate, 3), OreDictUnifier.get(plate, TungstenSteel, 3), ELECTRIC_PUMP_LV.getStackForm()}, new FluidStack[]{Nitrogen.getFluid(2000)});
-        removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{OreDictUnifier.get(wireGtSingle, NiobiumTitanium, 3),      OreDictUnifier.get(plate, TungstenSteel, 3), ELECTRIC_PUMP_LV.getStackForm()}, new FluidStack[]{Nitrogen.getFluid(2000)});
-        removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{OreDictUnifier.get(wireGtSingle, VanadiumGallium, 3),      OreDictUnifier.get(plate, TungstenSteel, 3), ELECTRIC_PUMP_LV.getStackForm()}, new FluidStack[]{Nitrogen.getFluid(2000)});
+        removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{OreDictUnifier.get(wireGtSingle, NiobiumTitanium, 3), OreDictUnifier.get(plate, TungstenSteel, 3), ELECTRIC_PUMP_LV.getStackForm()}, new FluidStack[]{Nitrogen.getFluid(2000)});
+        removeRecipesByInputs(ASSEMBLER_RECIPES, new ItemStack[]{OreDictUnifier.get(wireGtSingle, VanadiumGallium, 3), OreDictUnifier.get(plate, TungstenSteel, 3), ELECTRIC_PUMP_LV.getStackForm()}, new FluidStack[]{Nitrogen.getFluid(2000)});
 
         // Remove Nuclear Processing
         removeRecipesByInputs(CENTRIFUGE_RECIPES, OreDictUnifier.get(dust, Uranium));
@@ -1192,10 +1200,10 @@ public class RecipeOverride {
         removeRecipesByInputs(MIXER_RECIPES, DinitrogenTetroxide.getFluid(1000), Dimethylhydrazine.getFluid(1000));
 
         // QCD Matter progression skipping
-        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_INGOT.getStackForm()},  new FluidStack[]{QCDMatter.getFluid(L)});
+        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_INGOT.getStackForm()}, new FluidStack[]{QCDMatter.getFluid(L)});
         removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_NUGGET.getStackForm()}, new FluidStack[]{QCDMatter.getFluid(L)});
-        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_PLATE.getStackForm()},  new FluidStack[]{QCDMatter.getFluid(L)});
-        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_BLOCK.getStackForm()},  new FluidStack[]{QCDMatter.getFluid(L * 9)});
+        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_PLATE.getStackForm()}, new FluidStack[]{QCDMatter.getFluid(L)});
+        removeRecipesByInputs(FLUID_SOLIDFICATION_RECIPES, new ItemStack[]{SHAPE_MOLD_BLOCK.getStackForm()}, new FluidStack[]{QCDMatter.getFluid(L * 9)});
 
         // Remove Yttrium Barium Cuprate Recipes
         removeRecipesByInputs(MIXER_RECIPES, new ItemStack[]{OreDictUnifier.get(dust, Copper, 3), OreDictUnifier.get(dust, Barium, 2), OreDictUnifier.get(dust, Yttrium)}, new FluidStack[]{Oxygen.getFluid(7000)});

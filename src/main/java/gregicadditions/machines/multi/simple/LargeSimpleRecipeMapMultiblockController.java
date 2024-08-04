@@ -339,10 +339,10 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
             if (foundRecipe != null) {
                 currentRecipe = foundRecipe;
             } else {
-                boolean dirty = this.checkRecipeInputsDirty(importInventory, importFluids);
+                boolean dirty = checkRecipeInputsDirty(importInventory, importFluids);
                 if (dirty || this.forceRecipeRecheck) {
                     this.forceRecipeRecheck = false;
-                    currentRecipe = this.findRecipe(maxVoltage, importInventory, importFluids);
+                    currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
                     if (currentRecipe != null) {
                         this.previousRecipe.put(currentRecipe);
                         this.previousRecipe.cacheUnutilized();
@@ -354,13 +354,13 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
                 return false;
             }
             currentRecipe = createRecipe(maxVoltage, importInventory, importFluids, currentRecipe);
-            if (!this.setupAndConsumeRecipeInputs(currentRecipe)) {
+            if (!setupAndConsumeRecipeInputs(currentRecipe)) {
                 return false;
             }
             if (foundRecipe != null) {
                 this.previousRecipe.cacheUtilized();
             }
-            this.setupRecipe(currentRecipe);
+            setupRecipe(currentRecipe);
             return true;
         }
 
@@ -374,19 +374,41 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
             // Our caching implementation
             // This guarantees that if we get a recipe cache hit, our efficiency is no different from other machines
             Recipe foundRecipe = this.previousRecipe.get(importInventory.get(lastRecipeIndex), importFluids);
+            HashSet<Integer> foundRecipeIndex = new HashSet<>();
             if (foundRecipe != null) {
                 currentRecipe = foundRecipe;
                 currentRecipe = createRecipe(maxVoltage, importInventory.get(lastRecipeIndex), importFluids, currentRecipe);
-                if (this.setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
+                if (setupAndConsumeRecipeInputs(currentRecipe, lastRecipeIndex)) {
                     this.previousRecipe.cacheUtilized();
-                    this.setupRecipe(currentRecipe);
+                    setupRecipe(currentRecipe);
                     return true;
+                }
+                foundRecipeIndex.add(lastRecipeIndex);
+            }
+
+            for (int i = 0; i < importInventory.size(); i++) {
+                if (i == lastRecipeIndex) {
+                    continue;
+                }
+                foundRecipe = this.previousRecipe.get(importInventory.get(i), importFluids);
+                if (foundRecipe != null) {
+                    currentRecipe = foundRecipe;
+                    currentRecipe = createRecipe(maxVoltage, importInventory.get(i), importFluids, currentRecipe);
+                    if (setupAndConsumeRecipeInputs(currentRecipe, i)) {
+                        this.previousRecipe.cacheUtilized();
+                        setupRecipe(currentRecipe);
+                        return true;
+                    }
+                    foundRecipeIndex.add(i);
                 }
             }
 
             // On a cache miss, our efficiency is much worse, as it will check
             // each bus individually instead of the combined inventory all at once.
             for (int i = 0; i < importInventory.size(); i++) {
+                if (foundRecipeIndex.contains(i)) {
+                    continue;
+                }
                 IItemHandlerModifiable bus = importInventory.get(i);
                 boolean dirty = checkRecipeInputsDirty(bus, importFluids, i);
                 if (!dirty && !forceRecipeRecheck) {
@@ -400,11 +422,11 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
                 this.previousRecipe.put(currentRecipe);
                 this.previousRecipe.cacheUnutilized();
                 currentRecipe = createRecipe(maxVoltage, bus, importFluids, currentRecipe);
-                if (!this.setupAndConsumeRecipeInputs(currentRecipe, i)) {
+                if (!setupAndConsumeRecipeInputs(currentRecipe, i)) {
                     continue;
                 }
                 lastRecipeIndex = i;
-                this.setupRecipe(currentRecipe);
+                setupRecipe(currentRecipe);
                 return true;
             }
             return false;

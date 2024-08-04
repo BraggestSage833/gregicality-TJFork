@@ -214,13 +214,13 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
             if (currentRecipe == null) {
                 return false;
             }
-            if (!this.setupAndConsumeRecipeInputs(currentRecipe)) {
+            if (!setupAndConsumeRecipeInputs(currentRecipe)) {
                 return false;
             }
 //            if (foundRecipe != null) {
 //                this.previousRecipe.cacheUtilized();
 //            }
-            this.setupRecipe(currentRecipe);
+            setupRecipe(currentRecipe);
             return true;
         }
 
