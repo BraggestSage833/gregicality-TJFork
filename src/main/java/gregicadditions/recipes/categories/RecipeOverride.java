@@ -240,14 +240,6 @@ public class RecipeOverride {
                 .notConsumable(new IntCircuitIngredient(1))
                 .output(ingotHot, Thulium)
                 .buildAndRegister();
-
-        removeRecipesByInputs(MIXER_RECIPES, OreDictUnifier.get(dust, Nickel, 4), OreDictUnifier.get(dust, Chrome, 1));
-        MIXER_RECIPES.recipeBuilder().EUt(30).duration(280)
-                .input(dust, Nickel, 4)
-                .input(dust, Chrome, 1)
-                .notConsumable(new IntCircuitIngredient(7))
-                .output(dust, Nichrome, 5)
-                .buildAndRegister();
     }
 
     private static void brewingOverride() {

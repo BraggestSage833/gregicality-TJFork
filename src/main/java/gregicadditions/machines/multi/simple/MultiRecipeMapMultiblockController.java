@@ -235,7 +235,9 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
             tierNeeded = Math.max(1, GAUtility.getTierByVoltage(matchingRecipe.getEUt()));
             maxItemsLimit *= currentTier - tierNeeded;
             maxItemsLimit = Math.max(1, maxItemsLimit);
-
+            if (maxItemsLimit == 1) {
+                return matchingRecipe;
+            }
 
             Set<ItemStack> countIngredients = new HashSet<>();
             if (matchingRecipe.getInputs().size() != 0) {
@@ -258,35 +260,43 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
             EUt = matchingRecipe.getEUt();
             duration = matchingRecipe.getDuration();
 
-            List<CountableIngredient> newRecipeInputs = new ArrayList<>();
-            List<FluidStack> newFluidInputs = new ArrayList<>();
-            List<ItemStack> outputI = new ArrayList<>();
-            List<FluidStack> outputF = new ArrayList<>();
-            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, minMultiplier);
+            int tierDiff = currentTier - tierNeeded;
+            for (int i = 0; i < tierDiff; i++) {
+                int attemptItemsLimit = this.getStack();
+                attemptItemsLimit *= tierDiff - i;
+                attemptItemsLimit = Math.max(1, attemptItemsLimit);
+                attemptItemsLimit = Math.min(minMultiplier, attemptItemsLimit);
+                List<CountableIngredient> newRecipeInputs = new ArrayList<>();
+                List<FluidStack> newFluidInputs = new ArrayList<>();
+                List<ItemStack> outputI = new ArrayList<>();
+                List<FluidStack> outputF = new ArrayList<>();
+                this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, attemptItemsLimit);
 
-            // Get the currently selected RecipeMap
-            MultiRecipeMapMultiblockController metaTileEntity = (MultiRecipeMapMultiblockController) getMetaTileEntity();
-            int recipeMapIndex = metaTileEntity.getRecipeMapIndex();
+                // Get the currently selected RecipeMap
+                MultiRecipeMapMultiblockController metaTileEntity = (MultiRecipeMapMultiblockController) getMetaTileEntity();
+                int recipeMapIndex = metaTileEntity.getRecipeMapIndex();
 
-            RecipeBuilder<?> newRecipe = this.recipeMaps[recipeMapIndex].recipeBuilder();
-            copyChancedItemOutputs(newRecipe, matchingRecipe, minMultiplier);
+                RecipeBuilder<?> newRecipe = this.recipeMaps[recipeMapIndex].recipeBuilder();
+                copyChancedItemOutputs(newRecipe, matchingRecipe, attemptItemsLimit);
 
-            // determine if there is enough room in the output to fit all of this
-            // if there isn't, we can't process this recipe.
-            List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
-            totalOutputs.addAll(outputI);
-            boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
-            if (!canFitOutputs)
-                return matchingRecipe;
+                // determine if there is enough room in the output to fit all of this
+                // if there isn't, we can't process this recipe.
+                List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
+                totalOutputs.addAll(outputI);
+                boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
+                if (!canFitOutputs)
+                    continue;
 
-            newRecipe.inputsIngredients(newRecipeInputs)
-                    .fluidInputs(newFluidInputs)
-                    .outputs(outputI)
-                    .fluidOutputs(outputF)
-                    .EUt(Math.max(1, EUt * this.getEUtPercentage() / 100))
-                    .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
+                newRecipe.inputsIngredients(newRecipeInputs)
+                        .fluidInputs(newFluidInputs)
+                        .outputs(outputI)
+                        .fluidOutputs(outputF)
+                        .EUt(Math.max(1, EUt * this.getEUtPercentage() / 100))
+                        .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
 
-            return newRecipe.build().getResult();
+                return newRecipe.build().getResult();
+            }
+            return matchingRecipe;
         }
     }
 }
