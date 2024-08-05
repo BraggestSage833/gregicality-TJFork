@@ -34,6 +34,14 @@ public class MiscRecipes {
                 new UnificationEntry(dust, Bronze),
                 new UnificationEntry(dust, Tin));
 
+        MIXER_RECIPES.recipeBuilder().duration(40).EUt(20)
+                .input(dust, Lead, 2)
+                .input(dust, Bronze, 2)
+                .input(dust, Tin, 1)
+                .output(dust, Potin, 5)
+                .buildAndRegister();
+
+
         // Staballoy Dust
         MIXER_RECIPES.recipeBuilder().duration(50).EUt(16)
                 .input(dust, UraniumRadioactive.getMaterial(), 9)
