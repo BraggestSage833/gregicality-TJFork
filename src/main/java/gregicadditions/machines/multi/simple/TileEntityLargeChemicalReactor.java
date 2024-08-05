@@ -1,6 +1,7 @@
 package gregicadditions.machines.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
@@ -232,9 +233,9 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
             this.progressTime = 1;
 
-            // perfect overclocking
-            if (resultOverclock[1] < recipe.getDuration())
-                resultOverclock[1] *= 0.5;
+//            // perfect overclocking
+//            if (resultOverclock[1] < recipe.getDuration())
+//                resultOverclock[1] *= 0.5;
 
             // apply energy bonus
             resultOverclock[0] -= (int) (resultOverclock[0] * energyBonus * 0.01f);
@@ -250,6 +251,31 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             } else {
                 this.setActive(true);
             }
+        }
+
+        @Override
+        protected int[] calculateOverclock(int EUt, long voltage, int duration) {
+            int numMaintenanceProblems = (this.metaTileEntity instanceof GARecipeMapMultiblockController) ?
+                    ((GARecipeMapMultiblockController) metaTileEntity).getNumProblems() : 0;
+
+            double maintenanceDurationMultiplier = 1.0 + (0.2 * numMaintenanceProblems);
+            int durationModified = (int) (duration * maintenanceDurationMultiplier);
+
+            boolean negativeEU = EUt < 0;
+            int tier = getOverclockingTier(voltage);
+            if (GAValues.V[tier] <= EUt || tier == 0)
+                return new int[]{EUt, durationModified};
+            if (negativeEU)
+                EUt = -EUt;
+            int resultEUt = EUt;
+            double resultDuration = durationModified;
+            //do not overclock further if duration is already too small
+            while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
+                resultEUt *= 4;
+                resultDuration /= 4;
+            }
+            previousRecipeDuration = (int) resultDuration;
+            return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
         }
     }
 }
