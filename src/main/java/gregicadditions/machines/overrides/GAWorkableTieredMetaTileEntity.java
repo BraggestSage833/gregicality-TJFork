@@ -1,5 +1,6 @@
 package gregicadditions.machines.overrides;
 
+import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -12,8 +13,12 @@ import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -127,6 +132,40 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", energyContainer.getInputVoltage(), GAValues.VN[getTier()]));
         tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", energyContainer.getEnergyCapacity()));
+    }
+
+    @Override
+    public boolean onMinecraftStickClick(EntityPlayer playerIn, EnumHand hand, CuboidRayTraceResult hitResult) {
+        if (playerIn.isSneaking()) {
+            this.workable.previousRecipe.clear();
+            markDirty();
+            playerIn.sendMessage(new TextComponentString("The recipe cache has been cleared."));
+            return true;
+        }
+        boolean isAscending = this.workable.previousRecipe.toggleIsReadAscending();
+        markDirty();
+        if (isAscending) {
+            playerIn.sendMessage(new TextComponentString("Search recipe from the cache sequentially (starting from the most recently used, better performance)"));
+        }
+        else {
+            playerIn.sendMessage(new TextComponentString("Search recipe from the cache using a round-robin method (starting from the least recently used cache, may cause slightly lower performance)"));
+        }
+        return true;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+        NBTTagCompound tagCompound = super.writeToNBT(data);
+        tagCompound.setBoolean("RecipeCacheIsReadAscending", this.workable.previousRecipe.getIsReadAscending());
+        return tagCompound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        if (data.hasKey("RecipeCacheIsReadAscending")) {
+            this.workable.previousRecipe.setIsReadAscending(data.getBoolean("RecipeCacheIsReadAscending"));
+        }
     }
 }
 
