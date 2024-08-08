@@ -7,6 +7,7 @@ import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.client.ClientHandler;
+import gregtech.api.capability.impl.ThermalFluidHandlerItemStack;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
@@ -117,7 +118,7 @@ public class MetaTileEntityDrum extends MetaTileEntity {
 
 	@Override
 	public ICapabilityProvider initItemStackCapabilities(ItemStack itemStack) {
-		return new FluidHandlerItemStack(itemStack, tankSize);
+		return new ThermalFluidHandlerItemStack(itemStack, tankSize, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	@Override
