@@ -59,14 +59,27 @@ public class ElectricImplosionHandler {
             // Get the input list, converting from CountableIngredient to ItemStack
             AtomicInteger stackCount = new AtomicInteger();
             Set<ItemStack> inputs = new ObjectOpenCustomHashSet<>(strategy);
-            inputs.addAll(recipe.getInputs().stream()
-                                            .peek(ing -> stackCount.set(ing.getCount()))
-                                            .map(CountableIngredient::getIngredient)
-                                            .map(Ingredient::getMatchingStacks)
-                                            .filter(stack -> stack.length != 0)
-                                            .map(array -> array[0])
-                                            .peek(is -> is.copy().setCount(stackCount.get()))
-                                            .collect(Collectors.toSet()));
+//            inputs.addAll(recipe.getInputs().stream()
+//                                            .peek(ing -> stackCount.set(ing.getCount()))
+//                                            .map(CountableIngredient::getIngredient)
+//                                            .map(Ingredient::getMatchingStacks)
+//                                            .filter(stack -> stack.length != 0)
+//                                            .map(array -> array[0])
+//                                            .peek(is -> is.copy().setCount(stackCount.get()))
+//                                            .collect(Collectors.toSet()));
+
+            for (CountableIngredient input: recipe.getInputs()) {
+                stackCount.set(input.getCount());
+                Ingredient ingredient = input.getIngredient();
+                ItemStack[] itemStacks = ingredient.getMatchingStacks();
+                if (itemStacks.length == 0) {
+                    continue;
+                }
+                ItemStack itemStack = itemStacks[0];
+                ItemStack newItemStack = itemStack.copy();
+                newItemStack.setCount(stackCount.get());
+                inputs.add(newItemStack);
+            }
 
             // Make sure inputs were properly acquired, and remove explosive
             if (inputs.size() > 0 && inputs.remove(explosive))
