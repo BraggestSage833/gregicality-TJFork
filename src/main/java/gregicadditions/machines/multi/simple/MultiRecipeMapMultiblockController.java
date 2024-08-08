@@ -15,6 +15,7 @@ import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
+import gregtech.api.util.GTFluidUtils;
 import gregtech.api.util.InventoryUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,6 +94,7 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
 
     /**
      * Used to get all possible RecipeMaps a MultiBlock can run
+     *
      * @return array of RecipeMaps
      */
     public RecipeMap<?>[] getRecipeMaps() {
@@ -101,6 +103,7 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
 
     /**
      * Used to get the current index of the selected RecipeMap
+     *
      * @return index of the current recipe
      */
     public int getRecipeMapIndex() {
@@ -109,6 +112,7 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
 
     /**
      * Used to add new RecipeMaps to a given MultiBlock
+     *
      * @param recipeMaps to add to the MultiBlock
      */
     public void addRecipeMaps(RecipeMap<?>... recipeMaps) {
@@ -177,9 +181,9 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
     @SideOnly(Side.CLIENT)
     public String recipeMapsToString() {
         String recipeMapsString = "";
-        for(int i = 0; i < recipeMaps.length; i++) {
+        for (int i = 0; i < recipeMaps.length; i++) {
             recipeMapsString += recipeMaps[i].getLocalizedName();
-            if(recipeMaps.length - 1 != i)
+            if (recipeMaps.length - 1 != i)
                 recipeMapsString += ", "; // For delimiting
         }
         return recipeMapsString;
@@ -284,6 +288,7 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
                 List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
                 totalOutputs.addAll(outputI);
                 boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
+                canFitOutputs = canFitOutputs && GTFluidUtils.simulateFluidStackMerge(outputF, this.getOutputTank());
                 if (!canFitOutputs)
                     continue;
 
