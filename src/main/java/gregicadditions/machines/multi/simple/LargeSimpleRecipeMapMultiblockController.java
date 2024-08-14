@@ -342,7 +342,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
                 boolean dirty = checkRecipeInputsDirty(importInventory, importFluids);
                 if (dirty || this.forceRecipeRecheck) {
                     this.forceRecipeRecheck = false;
-                    currentRecipe = findRecipe(maxVoltage, importInventory, importFluids);
+                    currentRecipe = findRecipe(maxVoltage, importInventory, importFluids, this.useOptimizedRecipeLookUp);
                     if (currentRecipe != null) {
                         this.previousRecipe.put(currentRecipe);
                         this.previousRecipe.cacheUnutilized();
@@ -415,7 +415,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
                     continue;
                 }
                 this.forceRecipeRecheck = false;
-                currentRecipe = findRecipe(maxVoltage, bus, importFluids);
+                currentRecipe = findRecipe(maxVoltage, bus, importFluids, this.useOptimizedRecipeLookUp);
                 if (currentRecipe == null) {
                     continue;
                 }
@@ -433,9 +433,8 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
         }
 
         @Override
-        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
-            Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs);
-            return recipe;
+        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
+            return super.findRecipe(maxVoltage, inputs, fluidInputs, useOptimizedRecipeLookUp);
 //            if (recipe != null)
 //                return createRecipe(maxVoltage, inputs, fluidInputs, recipe);
 //            return null;

@@ -45,7 +45,7 @@ import static gregtech.api.unification.material.Materials.*;
 
 public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase { //todo add maintenance and soft hammering, cache values
 
-    private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = new MultiblockAbility[] {
+    private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = new MultiblockAbility[]{
             MultiblockAbility.EXPORT_FLUIDS, MultiblockAbility.INPUT_ENERGY
     };
 
@@ -97,7 +97,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        this.currentLocation = new int[] {
+        this.currentLocation = new int[]{
                 getWorld().getChunk(getPos()).x,
                 getWorld().getChunk(getPos()).z
         };
@@ -199,17 +199,17 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
                 exportFluidHandler.fill(out, true);
 
                 //exclude tier 3 rigs from  depleting
-                     if (this.rigTier !=4 ) {
-                // Deplete the vein's fluid
-                depleteFluid(depleted);
-                     }
+                if (this.rigTier != 4) {
+                    // Deplete the vein's fluid
+                    depleteFluid(depleted);
+                }
             }
         }
     }
 
     // Check if there is room in the output hatch
     public boolean canFillFluidExport() {
-        if(veinFluid == null)
+        if (veinFluid == null)
             return false;
 
         return exportFluidHandler.fill(new FluidStack(veinFluid, 1), false) > 0;
@@ -217,6 +217,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
 
     /**
      * Get the fluid to fill the output hatch with
+     *
      * @param fluidAmount amount of fluid to produce
      * @return FluidStack to produce with proper quantity
      */
@@ -227,6 +228,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
 
     /**
      * Apply a potential efficiency bonus to the fluid production value used for vein depletion
+     *
      * @param fluidAmount amount of fluid to drain
      * @return amount of fluid to deplete from the vein
      */
@@ -236,6 +238,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
 
     /**
      * Get the correct amount of fluid to use for calculations
+     *
      * @param fluidAmount the amount to compare the overclocked fluid quantity against
      * @return the smaller of the overclocked fluid quantity and the parameter
      */
@@ -276,15 +279,13 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     }
 
     /**
-     *
      * @return the amount of available fluid in the vein
      */
     public int getAvailableFluidAmount() {
-        return PumpjackHandler.getFluidAmount(getWorld(), currentLocation[0],  currentLocation[1]);
+        return PumpjackHandler.getFluidAmount(getWorld(), currentLocation[0], currentLocation[1]);
     }
 
     /**
-     *
      * @return the fluid in the vein
      */
     public Fluid getAvailableFluid() {
@@ -292,15 +293,15 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     }
 
     /**
-     *
      * @return the residual fluid in the vein
      */
     public int getResidualFluidAmount() {
-        return PumpjackHandler.getResidualFluid(getWorld(),  currentLocation[0], currentLocation[1]);
+        return PumpjackHandler.getResidualFluid(getWorld(), currentLocation[0], currentLocation[1]);
     }
 
     /**
      * Deplete fluid from the vein
+     *
      * @param amount the amount of fluid to remove from the vein
      */
     public void depleteFluid(int amount) {
@@ -334,7 +335,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
             } else {
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.rig_production", getAvailableFluidAmount() <= 0 ? getResidualFluidAmount() * this.rigTier : overclockFluidProduction()));
 
-                if( this.rigTier !=4 ) {
+                if (this.rigTier != 4) {
 
                     textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid_drain", getFluidAmountToDrain(getFluidAmountForUse(getAvailableFluidAmount()))));
 
@@ -353,17 +354,15 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.1"));
-        if (this.rigTier !=4 ) {
+        if (this.rigTier != 4) {
             tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.2", GAValues.VN[this.rigTier], GAValues.VN[this.rigTier == 2 ? 5 : this.rigTier == 3 ? 8 : 9]));
             tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.3"));
-        }
-
-        else {
+        } else {
             tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.void"));
             tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.void.2"));
         }
         tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.4", overclockFluidProduction(), GAValues.VN[this.rigTier]));
-        if (this.rigTier !=4 ) {
+        if (this.rigTier != 4) {
             tooltip.add(I18n.format("gtadditions.multiblock.drilling_rig.tooltip.5", getTieredFluidMultiplier()));
         }
     }

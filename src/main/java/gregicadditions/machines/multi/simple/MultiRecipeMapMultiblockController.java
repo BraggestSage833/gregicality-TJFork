@@ -85,6 +85,7 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
                 index = (recipeMapIndex + 1) % recipeMaps.length;
 
             setRecipeMapIndex(index);
+            this.recipeMapWorkable.previousRecipe.clear();
         }
 
         return true; // return true here on the client to keep the GUI closed
@@ -215,12 +216,11 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
         }
 
         @Override
-        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
+        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
             MultiRecipeMapMultiblockController metaTileEntity = (MultiRecipeMapMultiblockController) getMetaTileEntity();
             int recipeMapIndex = metaTileEntity.getRecipeMapIndex();
             // use the current recipemap for recipe finding
-            Recipe recipe = this.recipeMaps[recipeMapIndex].findRecipe(maxVoltage, inputs, fluidInputs, this.getMinTankCapacity(this.getOutputTank()));
-            return recipe;
+            return this.recipeMaps[recipeMapIndex].findRecipe(maxVoltage, inputs, fluidInputs, this.getMinTankCapacity(this.getOutputTank()), useOptimizedRecipeLookUp);
 
 //            if (recipe != null) {
 //                return createRecipe(maxVoltage, inputs, fluidInputs, recipe);

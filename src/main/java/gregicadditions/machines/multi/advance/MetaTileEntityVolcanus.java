@@ -130,8 +130,8 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
     public class VolcanusRecipeLogic extends LargeSimpleRecipeMapMultiblockController.LargeSimpleMultiblockRecipeLogic {
 
         @Override
-        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
-            Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs);
+        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
+            Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs, useOptimizedRecipeLookUp);
             int currentTemp = ((MetaTileEntityVolcanus) metaTileEntity).getBlastFurnaceTemperature();
             if (recipe != null && recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0) <= currentTemp)
                 return recipe;
@@ -221,7 +221,7 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
                 duration /= 2.8;
-                if (duration <= 0){
+                if (duration <= 0) {
                     duration = 1;
                 }
             }
