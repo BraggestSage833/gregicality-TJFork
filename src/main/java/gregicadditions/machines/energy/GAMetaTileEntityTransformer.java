@@ -14,6 +14,7 @@ import gregtech.api.capability.tool.ISoftHammerItem;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.PipelineUtil;
 import gregtech.common.tools.DamageValues;
@@ -29,6 +30,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 public class GAMetaTileEntityTransformer extends GATieredMetaTileEntity {
@@ -115,24 +117,25 @@ public class GAMetaTileEntityTransformer extends GATieredMetaTileEntity {
         if (isTransformUp) {
             //storage = 1 amp high; input = tier / 4; amperage = 4; output = tier; amperage = 1
             this.energyContainer = new GAEnergyContainerHandler(this, tierVoltage * ampsOut * 2, tierVoltage / 4, ampsOut, tierVoltage, ampsIn);
+            ((GAEnergyContainerHandler) this.energyContainer).setSideInputCondition(s -> s != getFrontFacing());
+            ((GAEnergyContainerHandler) this.energyContainer).setSideOutputCondition(s -> s == getFrontFacing());
         } else {
             //storage = 1 amp high; input = tier; amperage = 1; output = tier / 4; amperage = 4
             this.energyContainer = new GAEnergyContainerHandler(this, tierVoltage * ampsOut * 2, tierVoltage, ampsIn, tierVoltage / 4, ampsOut);
+            ((GAEnergyContainerHandler) this.energyContainer).setSideInputCondition(s -> s == getFrontFacing());
+            ((GAEnergyContainerHandler) this.energyContainer).setSideOutputCondition(s -> s != getFrontFacing());
         }
-        ((GAEnergyContainerHandler) this.energyContainer).setSideInputCondition(s -> s == getFrontFacing());
-        ((GAEnergyContainerHandler) this.energyContainer).setSideOutputCondition(s -> s == getFrontFacing().getOpposite());
     }
 
     @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         super.renderMetaTileEntity(renderState, translation, pipeline);
-        if (isTransformUp) {
-            Textures.ENERGY_OUT_MULTI.renderSided(getFrontFacing(), renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier() - 1]));
-            ClientHandler.HIGH_ENERGY_IN.renderSided(getFrontFacing().getOpposite(), renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier()]));
-        } else {
-            Textures.ENERGY_IN_MULTI.renderSided(getFrontFacing(), renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier()]));
-            ClientHandler.HIGH_ENERGY_OUT.renderSided(getFrontFacing().getOpposite(), renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier() - 1]));
-        }
+        SimpleOverlayRenderer otherFaceRender = isTransformUp ? ClientHandler.HIGH_ENERGY_IN : ClientHandler.HIGH_ENERGY_OUT;
+        SimpleOverlayRenderer frontFaceRender = isTransformUp ? Textures.ENERGY_OUT_MULTI : Textures.ENERGY_IN_MULTI;
+
+        frontFaceRender.renderSided(frontFacing, renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier()]));
+        Arrays.stream(EnumFacing.values()).filter(f -> f != frontFacing)
+                .forEach((f -> otherFaceRender.renderSided(f, renderState, translation, PipelineUtil.color(pipeline, GAValues.VC[getTier() - 1]))));
     }
 
     @Override
