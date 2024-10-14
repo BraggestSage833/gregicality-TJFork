@@ -65,6 +65,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class CoverDigitalInterface extends CoverBehavior implements IRenderMetaTileEntity, ITickable, CoverWithUI {
@@ -1048,10 +1049,11 @@ public class CoverDigitalInterface extends CoverBehavior implements IRenderMetaT
         for (long d : outputEnergyList) {
             max = Math.max(max, d);
         }
+
         RenderHelper.renderLineChart(inputEnergyList, max, -5.5f / 16, 5.5f / 16, 12f / 16, 6f / 16, 0.005f, 0XFF03FF00);
         RenderHelper.renderLineChart(outputEnergyList, max, -5.5f / 16, 5.5f / 16, 12f / 16, 6f / 16, 0.005f, 0XFFFF2F39);
-        RenderHelper.renderText(-5.7f / 16, -2.3f / 16, 0, 1.0f / 270, 0XFF03FF00, "EU I: " + energyInputPerDur + "EU/s", false);
-        RenderHelper.renderText(-5.7f / 16, -1.6f / 16, 0, 1.0f / 270, 0XFFFF0000, "EU O: " + energyOutputPerDur + "EU/s", false);
+        RenderHelper.renderText(-5.7f / 16, -2.3f / 16, 0, 1.0f / 270, 0XFF03FF00, "EU I: " + String.format(Locale.US, "%,d", energyInputPerDur/20).replace(',', ' ') + "EU/t", false);
+        RenderHelper.renderText(-5.7f / 16, -1.6f / 16, 0, 1.0f / 270, 0XFFFF0000, "EU O: " + String.format(Locale.US, "%,d", energyOutputPerDur/20).replace(',', ' ') + "EU/t", false);
         RenderHelper.renderRect(-7f / 16, -7f / 16, energyStored * 14f / (energyCapability * 16), 3f / 16, 0.002f, 0XFFFFD817);
         RenderHelper.renderText(0, -5.5F / 16, 0, 1.0f / (isProxy() ? 110 : 70), 0XFFFFFFFF, readAmountOrCountOrEnergy(energyStored, MODE.ENERGY), true);
     }
