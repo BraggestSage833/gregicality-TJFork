@@ -303,8 +303,8 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
         }
 
         @Override
-        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs) {
-            Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs);
+        protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
+            Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs, useOptimizedRecipeLookUp);
             RecipeBuilder<?> newRecipe;
             if (recipe == null || (long) recipe.getProperty("eu_to_start") > energyContainer.getEnergyCapacity()) {
                 return null;

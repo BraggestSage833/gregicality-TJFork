@@ -8,6 +8,7 @@ import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.multi.GAFuelRecipeLogic;
 import gregicadditions.machines.multi.GAFueledMultiblockController;
 import gregicadditions.recipes.GARecipeMaps;
+import gregicadditions.recipes.helper.HelperMethods;
 import gregtech.api.GTValues;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
@@ -168,7 +169,7 @@ public class MetaTileEntityLargeRocketEngine extends GAFueledMultiblockControlle
         protected int calculateFuelAmount(FuelRecipe recipe) {
             FluidStack rocketFuel = recipe.getRecipeFluid().copy();
             this.fuelStack = fluidTank.get().drain(rocketFuel, false);
-            return  recipe.getRecipeFluid().amount * getVoltageMultiplier(maxVoltage * (isUsingOxygen() ? 12 : 4), recipe.getMinVoltage()) * (isUsingOxygen() ? 2 : 1);
+            return  recipe.getRecipeFluid().amount * getVoltageMultiplier(maxVoltage * (isUsingOxygen() ? 10 : 4), recipe.getMinVoltage()) * (isUsingOxygen() ? 2 : 1);
         }
 
 
@@ -187,9 +188,9 @@ public class MetaTileEntityLargeRocketEngine extends GAFueledMultiblockControlle
             oxygenNeededToBoost = 4 * (int) Math.ceil(fuelUsed / 10.0);
     if (checkBoost()) {
         fluidTank.get().drain(GAMaterials.LiquidOxygen.getFluid(oxygenNeededToBoost), true);
-        MaxVoltage *= 12;
+        MaxVoltage *= 64;
     } else {
-        MaxVoltage *= 4;
+        MaxVoltage *= 32;
     }
 
 

@@ -18,6 +18,7 @@ import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.XSTR;
+import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockWireCoil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -353,7 +354,9 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
                     .setStyle(new Style().setColor(TextFormatting.RED)
                             .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))));
         }
-        textList.add((new TextComponentString(String.format("Cache size (%s) hit (%s) miss (%s)", this.recipeMapWorkable.previousRecipe.getCachedRecipeCount(), this.recipeMapWorkable.previousRecipe.getCacheHit(), this.recipeMapWorkable.previousRecipe.getCacheMiss()))).setStyle((new Style()).setColor(TextFormatting.WHITE)));
+        if (ConfigHolder.debug_options_for_caching) {
+            textList.add((new TextComponentString(String.format("Cache size (%s) hit (%s) miss (%s)", this.recipeMapWorkable.previousRecipe.getCachedRecipeCount(), this.recipeMapWorkable.previousRecipe.getCacheHit(), this.recipeMapWorkable.previousRecipe.getCacheMiss()))).setStyle((new Style()).setColor(TextFormatting.WHITE)));
+        }
     }
 
     @Override

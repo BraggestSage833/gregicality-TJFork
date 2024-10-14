@@ -219,13 +219,14 @@ public class VariousChains {
                 .buildAndRegister();
 
         // Nuclear Process Distillation ================================================================================
-        DISTILLATION_RECIPES.recipeBuilder().duration(75).EUt(120)
+       /* DISTILLATION_RECIPES.recipeBuilder().duration(75).EUt(120)
                 .fluidInputs(RedOil.getFluid(3000))
                 .output(dust, FerriteMixture)
                 .fluidOutputs(Hydrazine.getFluid(1000))
                 .fluidOutputs(RP1.getFluid(1000))
                 .fluidOutputs(TributylPhosphate.getFluid(1000))
                 .buildAndRegister();
+        */
 
         // 3Cl + P -> PCl3
         CHEMICAL_RECIPES.recipeBuilder().duration(60)

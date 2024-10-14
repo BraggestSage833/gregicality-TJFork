@@ -1,15 +1,11 @@
 package gregicadditions.machines.multi.override;
 
 import gregicadditions.GAConfig;
-import gregicadditions.GAUtility;
-import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregicadditions.item.GAHeatingCoil;
-import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultipleTankHandler;
-import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -33,10 +29,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -203,7 +196,7 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
             boolean dirty = this.checkRecipeInputsDirty(importInventory, importFluids);
             if (dirty || this.forceRecipeRecheck) {
                 this.forceRecipeRecheck = false;
-                currentRecipe = this.findRecipe(maxVoltage, importInventory, importFluids);
+                currentRecipe = this.findRecipe(maxVoltage, importInventory, importFluids, this.useOptimizedRecipeLookUp);
 //                    if (currentRecipe != null) {
 //                        this.previousRecipe.put(currentRecipe);
 //                        this.previousRecipe.cacheUnutilized();
@@ -227,7 +220,7 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
         @Override
         protected Recipe findRecipe(long maxVoltage,
                                     IItemHandlerModifiable inputs,
-                                    IMultipleTankHandler fluidInputs) {
+                                    IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
             int currentItemsEngaged = 0;
             final int maxItemsLimit = 32 * heatingCoilLevel;
             final ArrayList<CountableIngredient> recipeInputs = new ArrayList<>();
@@ -246,7 +239,7 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
                 // Determine if there is a valid recipe for this item. If not, skip it.
                 Recipe matchingRecipe = recipeMap.findRecipe(maxVoltage,
                         Collections.singletonList(currentInputItem),
-                        Collections.emptyList(), 0);
+                        Collections.emptyList(), 0, useOptimizedRecipeLookUp);
                 CountableIngredient inputIngredient;
                 if (matchingRecipe != null)
                     inputIngredient = matchingRecipe.getInputs().get(0);

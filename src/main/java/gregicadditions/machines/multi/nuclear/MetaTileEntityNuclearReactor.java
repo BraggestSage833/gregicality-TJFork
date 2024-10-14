@@ -84,7 +84,6 @@ public class MetaTileEntityNuclearReactor extends GARecipeMapMultiblockControlle
 
     public MetaTileEntityNuclearReactor(ResourceLocation metaTileEntityId, RecipeMap<?> recipe) {
         super(metaTileEntityId, recipe, false, true, true);
-        recipeMapWorkable.setAllowOverclocking(false);
         reinitializeStructurePattern();
     }
 
@@ -226,21 +225,6 @@ public class MetaTileEntityNuclearReactor extends GARecipeMapMultiblockControlle
                         }
                         notEnoughCoolant = false;
                         outputFluidInventory.fill(new FluidStack(hotCoolant, fluidStack.amount), true);
-
-                        boolean overclock = true;
-                        do {
-                            fluidStack = inputFluidInventory.drain(coolant.getFluid(coolantRatio()), true);
-                            if (fluidStack == null || fluidStack.amount < coolantRatio()) {
-                                overclock = false;
-                                if (fluidStack != null)
-                                    inputFluidInventory.fill(fluidStack, true);
-                            } else {
-                                int progressTime = ObfuscationReflectionHelper.getPrivateValue(AbstractRecipeLogic.class, recipeMapWorkable, "progressTime");
-                                ObfuscationReflectionHelper.setPrivateValue(AbstractRecipeLogic.class, recipeMapWorkable, progressTime + 20, "progressTime");
-                                outputFluidInventory.fill(new FluidStack(hotCoolant, fluidStack.amount), true);
-                            }
-
-                        } while (overclock);
 
                     }
                 } else {

@@ -137,7 +137,8 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
 
         @Override
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
-            int maxItemsLimit = this.getStack();
+//            int maxItemsLimit = this.getStack(); code below will set the stack based on mode
+            int maxItemsLimit = 1;
             int EUt;
             int duration;
             int currentTier = getOverclockingTier(maxVoltage);
@@ -159,6 +160,9 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
                 maxItemsLimit *= 8;
                 maxItemsLimit = Math.max(1, maxItemsLimit);
                 maxItemsLimit = Math.min(64, maxItemsLimit);
+            }
+            if (maxItemsLimit == 1) {
+                return matchingRecipe;
             }
 
             Set<ItemStack> countIngredients = new HashSet<>();
@@ -182,32 +186,48 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
             EUt = matchingRecipe.getEUt();
             duration = matchingRecipe.getDuration();
 
-            List<CountableIngredient> newRecipeInputs = new ArrayList<>();
-            List<FluidStack> newFluidInputs = new ArrayList<>();
-            List<ItemStack> outputI = new ArrayList<>();
-            List<FluidStack> outputF = new ArrayList<>();
-            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, minMultiplier);
+            int tierDiff = currentTier - tierNeeded;
+            for (int i = 0; i < tierDiff; i++) {
+                int attemptItemsLimit = 1;
+                attemptItemsLimit *= tierDiff - i;
+                if (mode == 0) { // Distillation tower = 2 parallel/oc, max 8
+                    attemptItemsLimit *= 4;
+                    attemptItemsLimit = Math.max(1, attemptItemsLimit);
+                    attemptItemsLimit = Math.min(16, attemptItemsLimit);
+                } else { // Others = 8 parallel/oc, max 64
+                    attemptItemsLimit *= 8;
+                    attemptItemsLimit = Math.max(1, attemptItemsLimit);
+                    attemptItemsLimit = Math.min(64, attemptItemsLimit);
+                }
+                attemptItemsLimit = Math.min(minMultiplier, attemptItemsLimit);
+                List<CountableIngredient> newRecipeInputs = new ArrayList<>();
+                List<FluidStack> newFluidInputs = new ArrayList<>();
+                List<ItemStack> outputI = new ArrayList<>();
+                List<FluidStack> outputF = new ArrayList<>();
+                this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, attemptItemsLimit);
 
-            RecipeBuilder<?> newRecipe = recipeMap.recipeBuilder();
-            copyChancedItemOutputs(newRecipe, matchingRecipe, minMultiplier);
+                RecipeBuilder<?> newRecipe = recipeMap.recipeBuilder();
+                copyChancedItemOutputs(newRecipe, matchingRecipe, attemptItemsLimit);
 
-            // determine if there is enough room in the output to fit all of this
-            // if there isn't, we can't process this recipe.
-            List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
-            totalOutputs.addAll(outputI);
-            boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
-            canFitOutputs = canFitOutputs && GTFluidUtils.simulateFluidStackMerge(outputF, this.getOutputTank());
-            if (!canFitOutputs)
-                return matchingRecipe;
+                // determine if there is enough room in the output to fit all of this
+                // if there isn't, we can't process this recipe.
+                List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
+                totalOutputs.addAll(outputI);
+                boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
+                canFitOutputs = canFitOutputs && GTFluidUtils.simulateFluidStackMerge(outputF, this.getOutputTank());
+                if (!canFitOutputs) {
+                    continue;
+                }
 
-            newRecipe.inputsIngredients(newRecipeInputs)
-                    .fluidInputs(newFluidInputs)
-                    .outputs(outputI)
-                    .fluidOutputs(outputF)
-                    .EUt(Math.max(1, EUt * this.getEUtPercentage() / 100))
-                    .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
-
-            return newRecipe.build().getResult();
+                newRecipe.inputsIngredients(newRecipeInputs)
+                        .fluidInputs(newFluidInputs)
+                        .outputs(outputI)
+                        .fluidOutputs(outputF)
+                        .EUt(Math.max(1, EUt * this.getEUtPercentage() / 100))
+                        .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
+                return newRecipe.build().getResult();
+            }
+            return matchingRecipe;
         }
     }
 }

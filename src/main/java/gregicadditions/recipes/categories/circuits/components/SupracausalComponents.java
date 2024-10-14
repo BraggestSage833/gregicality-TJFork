@@ -1,5 +1,7 @@
 package gregicadditions.recipes.categories.circuits.components;
 
+import gregicadditions.GAValues;
+
 import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAExplosive.ExplosiveType.LEPTONIC_CHARGE;
 import static gregicadditions.item.GAExplosive.ExplosiveType.QCD_CHARGE;
@@ -191,7 +193,7 @@ public class SupracausalComponents {
                 .outputs(RECURSIVELY_FOLDED_NEGATIVE_SPACE.getStackForm())
                 .buildAndRegister();
 
-        STELLAR_FORGE_RECIPES.recipeBuilder().duration(100).EUt(134217728)
+        STELLAR_FORGE_RECIPES.recipeBuilder().duration(100).EUt(GAValues.VA[GAValues.UXV])
                 .inputs(STABILIZED_WORMHOLE_GENERATOR.getStackForm())
                 .inputs(RECURSIVELY_FOLDED_NEGATIVE_SPACE.getStackForm())
                 .inputs(EXPLOSIVE.getItemVariant((QCD_CHARGE)))

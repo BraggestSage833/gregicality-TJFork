@@ -286,6 +286,13 @@ public class TaraniumChain {
                 .EUToStart(480000000)
                 .buildAndRegister();
 
+
+        ADV_FUSION_RECIPES.recipeBuilder().duration(100).EUt(16000000).coilTier(1).euStart(1200000000L).euReturn(75)
+                .fluidInputs(TaraniumEnrichedLHelium3.getFluid(1000))
+                .fluidInputs(Helium3.getFluid(1000))
+                .fluidOutputs(TaraniumRichDustyHeliumPlasma.getFluid(3000))
+                .buildAndRegister();
+
         LARGE_CENTRIFUGE_RECIPES.recipeBuilder()
                 .fluidInputs(TaraniumRichDustyHeliumPlasma.getFluid(3000))
                 .notConsumable(SEPARATION_ELECTROMAGNET.getStackForm())

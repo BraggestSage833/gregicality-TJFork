@@ -19,6 +19,7 @@ import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -141,16 +142,16 @@ public class MachineCraftingRecipes {
     private static void misc() {
 
         // Fluid Export Hatch
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_ulv", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.ULV).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[ULV].getStackForm(),          'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_lv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.LV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[LV].getStackForm(),           'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_mv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.MV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.MV].getStackForm(),  'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_hv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.HV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.HV].getStackForm(),  'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_ev",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.EV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.EV].getStackForm(),  'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_iv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.IV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.IV].getStackForm(),  'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_luv", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.LuV).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.LuV].getStackForm(), 'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_zpm", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.ZPM).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.ZPM].getStackForm(), 'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_uv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.UV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.UV].getStackForm(),  'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
-        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_max", GATileEntities.OUTPUT_HATCH_FILTERED.get(9).getStackForm(),                "F", "M", "G", 'M', MetaTileEntities.HULL[GTValues.MAX].getStackForm(), 'G', Blocks.GLASS, 'F', MetaItems.FLUID_FILTER);
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_ulv", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.ULV).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[ULV].getStackForm(),          'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_lv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.LV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[LV].getStackForm(),           'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_mv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.MV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.MV].getStackForm(),  'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_hv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.HV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.HV].getStackForm(),  'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_ev",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.EV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.EV].getStackForm(),  'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_iv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.IV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.IV].getStackForm(),  'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_luv", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.LuV).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.LuV].getStackForm(), 'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_zpm", GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.ZPM).getStackForm(),     "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.ZPM].getStackForm(), 'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_uv",  GATileEntities.OUTPUT_HATCH_FILTERED.get(GAValues.UV).getStackForm(),      "F", "M", "G", 'M', MetaTileEntities.HULL[GAValues.UV].getStackForm(),  'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
+        ModHandler.addShapedRecipe("ga_filtered_fluid_export_hatch_max", GATileEntities.OUTPUT_HATCH_FILTERED.get(9).getStackForm(),                "F", "M", "G", 'M', MetaTileEntities.HULL[GTValues.MAX].getStackForm(), 'G', Blocks.GLASS, 'F', new UnificationEntry(gem,Lapis));
 
         OrePrefix plateOrCurved = GAConfig.GT6.addCurvedPlates ? plateCurved : plate;
         // Drums

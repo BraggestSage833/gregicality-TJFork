@@ -180,7 +180,7 @@ public class UraniumChain {
 
         // ThO + CaCl2 -> Th + CaO + 2Cl
         BLAST_RECIPES.recipeBuilder().duration(150).EUt(120).blastFurnaceTemp(1000)
-                .input(oxide, Thorium, 2)
+                .input(oxide, Thorium, 1)
                 .input(dust, CalciumChloride, 3)
                 .output(dust, ThoriumRadioactive.getMaterial())
                 .output(dust, Quicklime, 2)

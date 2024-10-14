@@ -163,13 +163,13 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
                 continue;
             }
             this.forceRecipeRecheck = false;
-            currentRecipe = findRecipe(maxVoltage, bus, importFluids);
-            if (currentRecipe == null){
+            currentRecipe = findRecipe(maxVoltage, bus, importFluids, this.useOptimizedRecipeLookUp);
+            if (currentRecipe == null) {
                 continue;
             }
             this.previousRecipe.put(currentRecipe);
             this.previousRecipe.cacheUnutilized();
-            if(!setupAndConsumeRecipeInputs(currentRecipe, i)) {
+            if (!setupAndConsumeRecipeInputs(currentRecipe, i)) {
                 continue;
             }
             lastRecipeIndex = i;

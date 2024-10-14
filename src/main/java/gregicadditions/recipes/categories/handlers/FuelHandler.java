@@ -121,10 +121,10 @@ public class FuelHandler {
 
         // Rocket Fuel
         registerRocketFuel(RocketFuelH8N4C2O4       .getFluid( 3), 160, EV);
-        registerRocketFuel(RocketFuelCN3H7O3        .getFluid( 6), 120, EV);
-        registerRocketFuel(DenseHydrazineFuelMixture.getFluid( 9),  80, EV);
-        registerRocketFuel(RP1RocketFuel            .getFluid( 12),  60, EV);
-        registerRocketFuel(RocketFuel               .getFluid(15),  20, EV);
+        registerRocketFuel(RocketFuelCN3H7O3        .getFluid( 6), 120, IV);
+        registerRocketFuel(DenseHydrazineFuelMixture.getFluid( 9),  80, IV);
+        registerRocketFuel(RP1RocketFuel            .getFluid( 12),  60, IV);
+        registerRocketFuel(RocketFuel               .getFluid(15),  20, IV);
 
         // Naquadah Reactor
         registerNaquadahReactorFuel(HeavyENaquadahFuel .getFluid(1), 381, LuV);
