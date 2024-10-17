@@ -287,7 +287,7 @@ public class TaraniumChain {
                 .buildAndRegister();
 
 
-        ADV_FUSION_RECIPES.recipeBuilder().duration(100).EUt(16000000).coilTier(1).euStart(1200000000L).euReturn(75)
+        ADV_FUSION_RECIPES.recipeBuilder().duration(100).EUt(160000).coilTier(1).euStart(1200000000L).euReturn(75)
                 .fluidInputs(TaraniumEnrichedLHelium3.getFluid(1000))
                 .fluidInputs(Helium3.getFluid(1000))
                 .fluidOutputs(TaraniumRichDustyHeliumPlasma.getFluid(3000))
