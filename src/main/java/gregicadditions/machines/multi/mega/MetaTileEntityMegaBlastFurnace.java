@@ -191,8 +191,11 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gtadditions.multiblock.universal.tooltip.1", this.recipeMap.getLocalizedName()));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.1"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_blast_logic.tooltip.1"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_blast_logic.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.3"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.1"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.3"));
     }
 
     @Override

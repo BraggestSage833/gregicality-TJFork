@@ -66,7 +66,7 @@ public class MetaTileEntityMegaVacuumFreezer extends MegaMultiblockRecipeMapCont
         tooltip.add(I18n.format("gtadditions.multiblock.universal.tooltip.1", this.recipeMap.getLocalizedName()));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.1"));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.2"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.3", 1.0));
+        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.3"));
     }
 
     public static final IBlockState casingState = MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.ALUMINIUM_FROSTPROOF);
