@@ -33,7 +33,7 @@ public class MetaTileEntityMegaDistillationTower extends MegaMultiblockRecipeMap
     };
 
     public MetaTileEntityMegaDistillationTower(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, DISTILLATION_RECIPES, 100, 200, 100, 0);
+        super(metaTileEntityId, DISTILLATION_RECIPES, 100, 100, 100, 0);
     }
 
     @Override
