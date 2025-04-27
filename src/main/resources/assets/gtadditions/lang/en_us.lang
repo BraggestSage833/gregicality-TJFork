@@ -3123,9 +3123,8 @@ gtadditions.multiblock.battery_tower.passive_drain=Passive EU loss per tick: %s
 
 gtadditions.multiblock.blast_furnace.additional_temperature=Additional Temperature: %dK
 
-gtadditions.multiblock.mega_logic.tooltip.1=Parallels quadruple each voltage above LuV, starting with 1 at LuV.
+gtadditions.multiblock.mega_logic.tooltip.1=Parallels quadruple each voltage above IV, starting with 1 at IV.
 gtadditions.multiblock.mega_logic.tooltip.2=Parallels doesn't use additional energy.
-gtadditions.multiblock.mega_logic.tooltip.3=Overclocks halves duration and quadruples energy usage.
 
 gtadditions.multiblock.chemical_plant.tooltip.1=Does not run in parallel when running chemical plant recipes.
 

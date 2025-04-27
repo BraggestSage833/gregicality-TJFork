@@ -192,7 +192,6 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         tooltip.add(I18n.format("gtadditions.multiblock.universal.tooltip.1", this.recipeMap.getLocalizedName()));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.1"));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.2"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.3"));
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.1"));
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.2"));
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.3"));
@@ -267,11 +266,11 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         @Override
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
             long EUt;
-            int duration;
+            double duration;
             int minMultiplier = Integer.MAX_VALUE;
             int recipeTemp = matchingRecipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0);
             int tier = getOverclockingTier(maxVoltage);
-            int maxParallel = (int) Math.max(Math.pow(4, tier - 6 ), 1);
+            int maxParallel = (int) Math.max(Math.pow(4, tier - 5 ), 1);
 
             Set<ItemStack> countIngredients = new HashSet<>();
             if (matchingRecipe.getInputs().size() != 0) {
@@ -312,7 +311,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             // Apply Mega Overclocking
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
-                duration /= 2;
+                duration /= 2.8;
             }
             if (duration <= 0) {
                 duration = 1;
@@ -341,7 +340,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
                     .outputs(outputI)
                     .fluidOutputs(outputF)
                     .EUt((int) Math.max(1, EUt))
-                    .duration(duration)
+                    .duration((int) duration)
                     .blastFurnaceTemp(recipeTemp);
 
             return newRecipe.build().getResult();

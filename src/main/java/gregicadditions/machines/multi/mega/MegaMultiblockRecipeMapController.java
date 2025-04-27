@@ -119,10 +119,10 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
         @Override
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
             int EUt;
-            int duration;
+            double duration;
             int minMultiplier = Integer.MAX_VALUE;
             int tier = getOverclockingTier(maxVoltage);
-            int maxParallel = (int) Math.max(Math.pow(4, tier - 6 ), 1);
+            int maxParallel = (int) Math.max(Math.pow(4, tier - 5 ), 1);
 
             Set<ItemStack> countIngredients = new HashSet<>();
             if (matchingRecipe.getInputs().size() != 0) {
@@ -148,7 +148,7 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
             // Apply Mega Overclocking
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
-                duration /= 2;
+                duration /= 2.8;
             }
             if (duration <= 0) {
                 duration = 1;
