@@ -270,7 +270,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             int minMultiplier = Integer.MAX_VALUE;
             int recipeTemp = matchingRecipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0);
             int tier = getOverclockingTier(maxVoltage);
-            int maxParallel = (int) Math.max(Math.pow(4, tier - 5 ), 1);
+            int maxParallel = (int) Math.max(Math.pow(4, tier - 6 ), 1);
 
             Set<ItemStack> countIngredients = new HashSet<>();
             if (matchingRecipe.getInputs().size() != 0) {
