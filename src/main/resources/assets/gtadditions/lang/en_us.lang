@@ -3123,12 +3123,8 @@ gtadditions.multiblock.battery_tower.passive_drain=Passive EU loss per tick: %s
 
 gtadditions.multiblock.blast_furnace.additional_temperature=Additional Temperature: %dK
 
-gtadditions.multiblock.mega_logic.tooltip.1=Max Parallel: §e512
-gtadditions.multiblock.mega_logic.tooltip.2=EU/t Usage: §eParallel Amount * Recipe EU/t * 0.5
-gtadditions.multiblock.mega_logic.tooltip.3=Duration Multiplier: §e%d
-
-gtadditions.multiblock.mega_blast_logic.tooltip.1=EU/t Usage: §eParallel Amount * Recipe EU/t
-gtadditions.multiblock.mega_blast_logic.tooltip.2=Prioritizes Parallel Recipes over Heating Coil Bonuses.
+gtadditions.multiblock.mega_logic.tooltip.1=Parallels quadruple each voltage above LuV, starting with 1 at LuV.
+gtadditions.multiblock.mega_logic.tooltip.2=Parallels doesn't use additional energy.
 
 gtadditions.multiblock.chemical_plant.tooltip.1=Does not run in parallel when running chemical plant recipes.
 
