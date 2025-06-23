@@ -1,10 +1,13 @@
 package gregicadditions.machines.multi.override;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAUtility;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
+import gregicadditions.utils.GALog;
+import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -14,9 +17,14 @@ import gregtech.api.multiblock.BlockPattern;
 import gregtech.api.multiblock.BlockWorldState;
 import gregtech.api.multiblock.FactoryBlockPattern;
 import gregtech.api.multiblock.PatternMatchContext;
+import gregtech.api.recipes.CountableIngredient;
+import gregtech.api.recipes.Recipe;
+import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
+import gregtech.api.util.GTFluidUtils;
+import gregtech.api.util.InventoryUtils;
 import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
@@ -25,14 +33,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static gregtech.api.recipes.RecipeMaps.PYROLYSE_RECIPES;
 
@@ -63,7 +75,7 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
                 return false;
             int heatingCoilDiscount = coilType.getEnergyDiscount();
             int currentCoilDiscount = blockWorldState.getMatchContext().getOrPut("heatingCoilDiscount", heatingCoilDiscount);
-            int heatingCoilLevel = coilType.getLevel();
+            int heatingCoilLevel = coilType.ordinal() + 1;
             int currentCoilLevel = blockWorldState.getMatchContext().getOrPut("heatingCoilLevel", heatingCoilLevel);
             return currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel;
         };
@@ -80,7 +92,7 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
                 return false;
             int heatingCoilDiscount = coilType.getEnergyDiscount();
             int currentCoilDiscount = blockWorldState.getMatchContext().getOrPut("heatingCoilDiscount", heatingCoilDiscount);
-            int heatingCoilLevel = coilType.getLevel();
+            int heatingCoilLevel = coilType.ordinal() + 8;
             int currentCoilLevel = blockWorldState.getMatchContext().getOrPut("heatingCoilLevel", heatingCoilLevel);
             return currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel;
         };
@@ -95,7 +107,7 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
         this.heatingCoilLevel = context.getOrDefault("heatingCoilLevel", 0);
-        this.heatingCoilDiscount = context.getOrDefault("heatingCoilDiscount", 0);
+        this.heatingCoilDiscount = 100 / context.getOrDefault("heatingCoilDiscount", 0);
     }
 
     @Override
@@ -110,7 +122,8 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
         super.addDisplayText(textList);
         if (isStructureFormed()) {
             textList.add(new TextComponentTranslation("gregtech.multiblock.multi_furnace.heating_coil_level", heatingCoilLevel));
-            textList.add(new TextComponentTranslation("gregtech.multiblock.multi_furnace.heating_coil_discount", heatingCoilDiscount));
+            textList.add(new TextComponentTranslation("gregtech.multiblock.universal.energy_usage", heatingCoilDiscount)
+                    .setStyle(new Style().setColor(TextFormatting.AQUA)));
         }
     }
 
@@ -156,7 +169,77 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
             super(tileEntity, 100 / heatingCoilDiscount, 100, 100, heatingCoilLevel);
         }
 
+        @Override
+        protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
+            int maxItemsLimit = heatingCoilLevel;
+            int EUt;
+            int duration;
+            int currentTier = getOverclockingTier(maxVoltage);
+            int tierNeeded = Math.max(1, GAUtility.getTierByVoltage(matchingRecipe.getEUt()));;
+            int minMultiplier = Integer.MAX_VALUE;
+
+            maxItemsLimit = Math.max(1, maxItemsLimit);
+            if (maxItemsLimit == 1) {
+                return matchingRecipe;
+            }
+
+            Set<ItemStack> countIngredients = new HashSet<>();
+            if (matchingRecipe.getInputs().size() != 0) {
+                this.findIngredients(countIngredients, inputs);
+                minMultiplier = Math.min(maxItemsLimit, this.getMinRatioItem(countIngredients, matchingRecipe, maxItemsLimit));
+            }
+
+            Map<String, Integer> countFluid = new HashMap<>();
+            if (matchingRecipe.getFluidInputs().size() != 0) {
+
+                this.findFluid(countFluid, fluidInputs);
+                minMultiplier = Math.min(minMultiplier, this.getMinRatioFluid(countFluid, matchingRecipe, maxItemsLimit));
+            }
+
+            if (minMultiplier == Integer.MAX_VALUE) {
+                GALog.logger.error("Cannot calculate ratio of items for large multiblocks");
+                return null;
+            }
+
+            EUt = matchingRecipe.getEUt();
+            duration = matchingRecipe.getDuration();
+
+            int tierDiff = currentTier - tierNeeded;
+            for (int i = 0; i < tierDiff; i++) {
+                int attemptItemsLimit = heatingCoilLevel;
+                attemptItemsLimit += tierDiff - i;
+                attemptItemsLimit = Math.max(1, attemptItemsLimit);
+                attemptItemsLimit = Math.min(minMultiplier, attemptItemsLimit);
+                List<CountableIngredient> newRecipeInputs = new ArrayList<>();
+                List<FluidStack> newFluidInputs = new ArrayList<>();
+                List<ItemStack> outputI = new ArrayList<>();
+                List<FluidStack> outputF = new ArrayList<>();
+                this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, attemptItemsLimit);
+
+
+                RecipeBuilder<?> newRecipe = recipeMap.recipeBuilder();
+                copyChancedItemOutputs(newRecipe, matchingRecipe, attemptItemsLimit);
+
+                // determine if there is enough room in the output to fit all of this
+                // if there isn't, we can't process this recipe.
+                List<ItemStack> totalOutputs = newRecipe.getChancedOutputs().stream().map(Recipe.ChanceEntry::getItemStack).collect(Collectors.toList());
+                totalOutputs.addAll(outputI);
+                boolean canFitOutputs = InventoryUtils.simulateItemStackMerge(totalOutputs, this.getOutputInventory());
+                canFitOutputs = canFitOutputs && GTFluidUtils.simulateFluidStackMerge(outputF, this.getOutputTank());
+                if (!canFitOutputs) {
+                    continue;
+                }
+
+                newRecipe.inputsIngredients(newRecipeInputs)
+                        .fluidInputs(newFluidInputs)
+                        .outputs(outputI)
+                        .fluidOutputs(outputF)
+                        .EUt(Math.max(1, EUt * heatingCoilDiscount / 100))
+                        .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
+
+                return newRecipe.build().getResult();
+            }
+            return matchingRecipe;
+        }
     }
-
-
 }
