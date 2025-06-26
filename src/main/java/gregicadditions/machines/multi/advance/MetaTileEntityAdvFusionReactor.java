@@ -317,7 +317,7 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
                 newRecipe.EUt((int) Math.max(1, recipe.getEUt() * (1 - vacuumTierDifference * GAConfig.multis.advFusion.vacuumEnergyDecrease)));
 
                 newRecipe.fluidInputs(recipe.getFluidInputs().get(0), recipe.getFluidInputs().get(1));
-                FluidStack newOutput = recipe.getFluidOutputs().get(0);
+                FluidStack newOutput = recipe.getFluidOutputs().get(0).copy();
                 newOutput.amount = (int) (newOutput.amount * (1 + divertorTierDifference * GAConfig.multis.advFusion.divertorOutputIncrease));
                 newRecipe.fluidOutputs(newOutput);
 
