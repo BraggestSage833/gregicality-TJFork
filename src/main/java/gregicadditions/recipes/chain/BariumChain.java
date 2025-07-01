@@ -88,7 +88,7 @@ public class BariumChain {
         // (H20)CaCO3 -> H2O + CaCO3
         CENTRIFUGE_RECIPES.recipeBuilder().duration(200).EUt(30)
                 .fluidInputs(CalciumCarbonateSolution.getFluid(1000))
-                .output(dust, Calcite, 5)
+                .output(dust, Calcite, 1)
                 .fluidOutputs(Water.getFluid(1000))
                 .buildAndRegister();
 

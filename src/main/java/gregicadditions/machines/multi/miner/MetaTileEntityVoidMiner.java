@@ -172,16 +172,24 @@ public class MetaTileEntityVoidMiner extends GAMultiblockWithDisplayBase { //tod
 
                 calculateMaintenance(20);
 
-                if (usingPyrotheum && canDrainPyrotheum != null && canDrainPyrotheum.amount == (int) currentDrillingFluid) {
+
+
+                if ((usingPyrotheum && canDrainPyrotheum != null && canDrainPyrotheum.amount == (int) currentDrillingFluid) && (temperature > 0 && canDrainCryotheum != null && canDrainCryotheum.amount == (int) currentDrillingFluid)) {
+                    importFluidHandler.drain(cryotheumFluid, true);
+                    importFluidHandler.drain(pyrotheumFluid, true);
+                    hasConsume = true;
+
+                } else if ((usingPyrotheum && canDrainPyrotheum != null && canDrainPyrotheum.amount == (int) currentDrillingFluid)  && (canDrainCryotheum == null)) {
                     importFluidHandler.drain(pyrotheumFluid, true);
                     temperature += (int)(currentDrillingFluid / 100.0);
                     currentDrillingFluid = currentDrillingFluid * 1.02;
                     hasConsume = true;
-                } else if (temperature > 0 && canDrainCryotheum != null && canDrainCryotheum.amount == (int) currentDrillingFluid) {
+                } else if ((temperature > 0 && canDrainCryotheum != null && canDrainCryotheum.amount == (int) currentDrillingFluid) && canDrainPyrotheum == null) {
                     importFluidHandler.drain(cryotheumFluid, true);
                     currentDrillingFluid = currentDrillingFluid / 1.02;
-                    temperature -= (int)(currentDrillingFluid / 100.0);
+                    temperature -= (int) (currentDrillingFluid / 100.0);
                 }
+
                 if (temperature < 0) {
                     temperature = 0;
                 }
