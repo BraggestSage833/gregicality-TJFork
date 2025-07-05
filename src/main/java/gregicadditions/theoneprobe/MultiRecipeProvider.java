@@ -44,7 +44,7 @@ public class MultiRecipeProvider implements IProbeInfoProvider {
             if (iMultiRecipe.getRecipeMapIndex() == i) {
                 iProbeInfo.text(TextStyleClass.INFOIMP + "{*recipemap." + recipes[i].getUnlocalizedName() + ".name*} {*<*}");
             } else {
-                iProbeInfo.text(TextStyleClass.INFO + recipes[i].getLocalizedName());
+                iProbeInfo.text(TextStyleClass.INFO + "{*recipemap." + recipes[i].getUnlocalizedName() + ".name*}");
             }
 
         }
