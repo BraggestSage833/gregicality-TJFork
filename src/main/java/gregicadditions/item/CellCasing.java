@@ -1,6 +1,7 @@
 package gregicadditions.item;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregtech.common.blocks.VariantBlock;
 import gregtech.common.blocks.VariantItemBlock;
@@ -40,7 +41,7 @@ public class CellCasing extends VariantBlock<CellCasing.CellType> {
 
         lines.add(I18n.format("tile.cell_casing.tooltip.1"));
         lines.add(I18n.format("tile.cell_casing.tooltip.2", coilType.getStorage()));
-        lines.add(I18n.format("tile.cell_casing.tooltip.3", GAValues.VN[coilType.getTier()]));
+        lines.add(I18n.format("tile.cell_casing.tooltip.3", GAUtility.TIER_COLOR[coilType.getTier()], GAValues.VN[coilType.getTier()]));
 
     }
 
