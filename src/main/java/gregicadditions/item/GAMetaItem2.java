@@ -1,6 +1,7 @@
 package gregicadditions.item;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GAElectricStats;
 import gregicadditions.item.behaviors.ProspectingToolBehaviour;
@@ -10,6 +11,7 @@ import gregtech.api.items.metaitem.ElectricStats;
 import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.items.metaitem.StandardMetaItem;
 import gregtech.api.items.metaitem.stats.IItemBehaviour;
+import gregtech.api.util.GTUtility;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -71,6 +73,7 @@ public class GAMetaItem2 extends StandardMetaItem {
             lines.add(I18n.format("metaitem.generic.electric_item.tooltip",
                     electricItem.getCharge(),
                     electricItem.getMaxCharge(),
+                    GAUtility.TIER_COLOR[electricItem.getTier()],
                     GAValues.VN[electricItem.getTier()]));
         }
 

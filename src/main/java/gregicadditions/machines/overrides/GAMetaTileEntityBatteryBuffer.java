@@ -3,6 +3,7 @@ package gregicadditions.machines.overrides;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GAEnergyContainerBatteryBuffer;
 import gregtech.api.capability.GregtechTileCapabilities;
@@ -145,8 +146,8 @@ public class GAMetaTileEntityBatteryBuffer extends GATieredMetaTileEntity implem
         String tierName = GAValues.VN[getTier()];
 
         tooltip.add(I18n.format("gregtech.universal.tooltip.item_storage_capacity", inventorySize));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", energyContainer.getInputVoltage(), tierName));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", energyContainer.getOutputVoltage(), tierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", energyContainer.getInputVoltage(), GAUtility.TIER_COLOR[getTier()], tierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", energyContainer.getOutputVoltage(), GAUtility.TIER_COLOR[getTier()], tierName));
         tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_out_till", inventorySize));
         tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", energyContainer.getEnergyCapacity()));
     }

@@ -3,6 +3,7 @@ package gregicadditions.machines.multi.multiblockpart;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.IQubitContainer;
@@ -101,10 +102,10 @@ public class MetaTileEntityQubitHatch extends MetaTileEntityMultiblockPart imple
         String tierName = GAValues.VN[getTier()];
 
         if (isExportHatch) {
-            tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", qubitContainer.getOutputQubit(), tierName));
+            tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", qubitContainer.getOutputQubit(), GAUtility.TIER_COLOR[getTier()], tierName));
             tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_out_till", qubitContainer.getOutputParallel()));
         } else {
-            tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", qubitContainer.getInputQubit(), tierName));
+            tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", qubitContainer.getInputQubit(), GAUtility.TIER_COLOR[getTier()], tierName));
             tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_in_till", qubitContainer.getInputParallel()));
         }
         tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", qubitContainer.getQubitCapacity()));
