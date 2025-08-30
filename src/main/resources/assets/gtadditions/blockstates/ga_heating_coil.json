@@ -126,7 +126,7 @@
         }
       }
     ],
-    "active=true,variant=eternity": [
+    "active=true,variant=eternity_coil": [
       {
         "textures": {
           "bottom": "gregtech:blocks/casings/solid/heating_coil/heating.coil.top.bottom",
