@@ -32,6 +32,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -253,6 +254,13 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
                     .blastFurnaceTemp(recipeTemp);
 
             return newRecipe.build().getResult();
+        }
+
+        @Override
+        protected void setActive(boolean active) {
+            MetaTileEntityElectricBlastFurnace tileEntity = (MetaTileEntityElectricBlastFurnace) this.metaTileEntity;
+            tileEntity.replaceCoilsAsActive(active);
+            super.setActive(active);
         }
     }
 

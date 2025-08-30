@@ -23,26 +23,36 @@ import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.GTUtility;
-import gregtech.common.blocks.BlockMetalCasing;
-import gregtech.common.blocks.BlockWireCoil;
-import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.blocks.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static gregtech.api.render.Textures.HEAT_PROOF_CASING;
 
 public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockController {
+
+	protected int blastFurnaceTemperature;
+	private int bonusTemperature;
+	private final Set<BlockPos> activeStates = new HashSet<>();
+
+	private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
+			MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS,
+			MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.EXPORT_FLUIDS,
+			MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH
+	};
+
 	public MetaTileEntityElectricBlastFurnace(ResourceLocation metaTileEntityId) {
 		super(metaTileEntityId, RecipeMaps.BLAST_RECIPES, true, true, true);
 		this.recipeMapWorkable = new ElectricBlastFurnaceWorkable(this);
@@ -51,15 +61,6 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 	public MetaTileEntity createMetaTileEntity(MetaTileEntityHolder holder) {
 		return new MetaTileEntityElectricBlastFurnace(this.metaTileEntityId);
 	}
-
-	protected int blastFurnaceTemperature;
-	private int bonusTemperature;
-
-	private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
-			MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS,
-			MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.EXPORT_FLUIDS,
-			MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH
-	};
 
 	@Override
 	public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
@@ -82,7 +83,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 				.build();
 	}
 
-	public static Predicate<BlockWorldState> heatingCoilPredicate() {
+	public Predicate<BlockWorldState> heatingCoilPredicate() {
 		return blockWorldState -> {
 			IBlockState blockState = blockWorldState.getBlockState();
 			if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -91,17 +92,19 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 			BlockWireCoil.CoilType coilType = blockWireCoil.getState(blockState);
 			if (Arrays.asList(GAConfig.multis.heatingCoils.gtceHeatingCoilsBlacklist).contains(coilType.getName()))
 				return false;
-
 			int blastFurnaceTemperature = coilType.getCoilTemperature();
 			int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
 			BlockWireCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("coilType", coilType);
-
-			return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+			if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+				if (blockWorldState.getWorld() != null)
+					this.activeStates.add(blockWorldState.getPos());
+				return true;
+			}
+			return false;
 		};
 	}
 
-	public static Predicate<BlockWorldState> heatingCoilPredicate2() {
+	public Predicate<BlockWorldState> heatingCoilPredicate2() {
 		return blockWorldState -> {
 			IBlockState blockState = blockWorldState.getBlockState();
 			if (!(blockState.getBlock() instanceof GAHeatingCoil))
@@ -110,13 +113,15 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 			GAHeatingCoil.CoilType coilType = blockWireCoil.getState(blockState);
 			if (Arrays.asList(GAConfig.multis.heatingCoils.gregicalityheatingCoilsBlacklist).contains(coilType.getName()))
 				return false;
-
 			int blastFurnaceTemperature = coilType.getCoilTemperature();
 			int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
 			GAHeatingCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("gaCoilType", coilType);
-
-			return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+			 if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+				 if (blockWorldState.getWorld() != null)
+					 this.activeStates.add(blockWorldState.getPos());
+				 return true;
+			 }
+			 return false;
 		};
 	}
 
@@ -172,6 +177,28 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 	@Override
 	protected OrientedOverlayRenderer getFrontOverlay() {
 		return Textures.BLAST_FURNACE_OVERLAY;
+	}
+
+	public void replaceCoilsAsActive(boolean isActive) {
+		this.activeStates.forEach(pos -> {
+			IBlockState state = this.getWorld().getBlockState(pos);
+			Block block = state.getBlock();
+			if (block instanceof BlockWireCoil) {
+				state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state);
+			} else if (block instanceof GAHeatingCoil) {
+				state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state);
+			}
+		});
+	}
+
+	@Override
+	public void onRemoval() {
+		super.onRemoval();
+		if (!this.getWorld().isRemote) {
+			this.replaceCoilsAsActive(false);
+		}
 	}
 
 	protected static class ElectricBlastFurnaceWorkable extends GAMultiblockRecipeLogic {
@@ -250,6 +277,13 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 				previousRecipeDuration = (int) resultDuration;
 				return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
 			}
+		}
+
+		@Override
+		protected void setActive(boolean active) {
+			MetaTileEntityElectricBlastFurnace tileEntity = (MetaTileEntityElectricBlastFurnace) this.metaTileEntity;
+			tileEntity.replaceCoilsAsActive(active);
+			super.setActive(active);
 		}
 	}
 }

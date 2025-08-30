@@ -9,6 +9,7 @@ import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
+import gregicadditions.machines.multi.mega.MetaTileEntityMegaBlastFurnace;
 import gregicadditions.recipes.GARecipeMaps;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
@@ -26,10 +27,12 @@ import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.GTUtility;
 import gregtech.common.blocks.BlockWireCoil;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -37,7 +40,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static gregicadditions.client.ClientHandler.ZIRCONIUM_CARBIDE_CASING;
@@ -48,6 +53,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
     private int blastFurnaceTemperature;
     private int bonusTemperature;
+    private final Set<BlockPos> activeStates = new HashSet<>();
 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS,
@@ -91,7 +97,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
                 .build();
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate() {
+    public Predicate<BlockWorldState> heatingCoilPredicate() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -100,17 +106,19 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
             BlockWireCoil.CoilType coilType = blockWireCoil.getState(blockState);
             if (Arrays.asList(GAConfig.multis.heatingCoils.gtceHeatingCoilsBlacklist).contains(coilType.getName()))
                 return false;
-
             int blastFurnaceTemperature = coilType.getCoilTemperature();
             int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
             BlockWireCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("coilType", coilType);
-
-            return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+            if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate2() {
+    public Predicate<BlockWorldState> heatingCoilPredicate2() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof GAHeatingCoil))
@@ -121,10 +129,13 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
                 return false;
             int blastFurnaceTemperature = coilType.getCoilTemperature();
             int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
             GAHeatingCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("gaCoilType", coilType);
-
-            return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+            if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
@@ -179,9 +190,30 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
 
-
     protected int getBlastFurnaceTemperature() {
         return this.blastFurnaceTemperature;
+    }
+
+    private void replaceCoilsAsActive(boolean isActive) {
+        this.activeStates.forEach(pos -> {
+            IBlockState state = this.getWorld().getBlockState(pos);
+            Block block = state.getBlock();
+            if (block instanceof BlockWireCoil) {
+                state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            } else if (block instanceof GAHeatingCoil) {
+                state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            }
+        });
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!this.getWorld().isRemote) {
+            this.replaceCoilsAsActive(false);
+        }
     }
 
     protected static class AlloyBlastFurnaceWorkable extends GAMultiblockRecipeLogic {
@@ -262,6 +294,13 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
                 return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
             }
+        }
+
+        @Override
+        protected void setActive(boolean active) {
+            TileEntityAlloyBlastFurnace tileEntity = (TileEntityAlloyBlastFurnace) this.metaTileEntity;
+            tileEntity.replaceCoilsAsActive(active);
+            super.setActive(active);
         }
     }
 }

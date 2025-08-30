@@ -9,6 +9,7 @@ import gregicadditions.client.ClientHandler;
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
+import gregicadditions.machines.multi.override.MetaTileEntityElectricBlastFurnace;
 import gregicadditions.recipes.GARecipeMaps;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
@@ -23,12 +24,14 @@ import gregtech.api.recipes.Recipe;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.util.GTUtility;
 import gregtech.common.blocks.BlockWireCoil;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -37,7 +40,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockController {
@@ -47,6 +52,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             MultiblockAbility.EXPORT_FLUIDS, MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
     private int energyBonus;
+    private final Set<BlockPos> activeStates = new HashSet<>();
 
     public TileEntityLargeChemicalReactor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GARecipeMaps.LARGE_CHEMICAL_RECIPES, false, true, true);
@@ -84,7 +90,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
         return GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.CHEMICALLY_INERT);
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate() {
+    public Predicate<BlockWorldState> heatingCoilPredicate() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -95,11 +101,16 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
                 return false;
             int reactorCoilTemperature = coilType.getCoilTemperature();
             int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", reactorCoilTemperature);
-            return currentTemperature == reactorCoilTemperature;
+            if (currentTemperature == reactorCoilTemperature) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate2() {
+    public Predicate<BlockWorldState> heatingCoilPredicate2() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof GAHeatingCoil))
@@ -108,15 +119,18 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             GAHeatingCoil.CoilType coilType = blockWireCoil.getState(blockState);
             if (Arrays.asList(GAConfig.multis.heatingCoils.gregicalityheatingCoilsBlacklist).contains(coilType.getName()))
                 return false;
-
             int blastFurnaceTemperature = coilType.getCoilTemperature();
             int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
             GAHeatingCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("gaCoilType", coilType);
-
-            return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+            if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
+
     @Override
     protected void addDisplayText(List<ITextComponent> textList) {
         super.addDisplayText(textList);
@@ -219,6 +233,28 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
         this.energyBonus = buf.readInt();
     }
 
+    private void replaceCoilsAsActive(boolean isActive) {
+        this.activeStates.forEach(pos -> {
+            IBlockState state = this.getWorld().getBlockState(pos);
+            Block block = state.getBlock();
+            if (block instanceof BlockWireCoil) {
+                state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            } else if (block instanceof GAHeatingCoil) {
+                state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            }
+        });
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!this.getWorld().isRemote) {
+            this.replaceCoilsAsActive(false);
+        }
+    }
+
     private static class LargeChemicalReactorWorkableHandler extends GAMultiblockRecipeLogic {
 
         public LargeChemicalReactorWorkableHandler(RecipeMapMultiblockController tileEntity) {
@@ -276,6 +312,13 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             }
             previousRecipeDuration = (int) resultDuration;
             return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+        }
+
+        @Override
+        protected void setActive(boolean active) {
+            TileEntityLargeChemicalReactor tileEntity = (TileEntityLargeChemicalReactor) this.metaTileEntity;
+            tileEntity.replaceCoilsAsActive(active);
+            super.setActive(active);
         }
     }
 }
