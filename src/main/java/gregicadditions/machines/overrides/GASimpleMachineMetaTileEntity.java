@@ -19,6 +19,7 @@ import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
+import gregtech.common.gui.widget.GhostCircuitWidget;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -294,6 +295,7 @@ public class GASimpleMachineMetaTileEntity extends GAWorkableTieredMetaTileEntit
                         .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.CHARGER_OVERLAY))
                 .widget(new ImageWidget(79, 42, 18, 18, GuiTextures.INDICATOR_NO_ENERGY)
                         .setPredicate(workable::isHasNotEnoughEnergy))
+                .widget(new GhostCircuitWidget(ghostCircuitInventory, 133, 62))
                 .bindPlayerInventory(player.inventory);
 
         int leftButtonStartX = 7;

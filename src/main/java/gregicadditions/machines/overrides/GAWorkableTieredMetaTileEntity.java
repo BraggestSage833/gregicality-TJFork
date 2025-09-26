@@ -9,6 +9,7 @@ import gregicadditions.GAValues;
 import gregicadditions.capabilities.GARecipeLogicEnergy;
 import gregtech.api.capability.impl.FilteredFluidHandler;
 import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.capability.impl.RecipeLogicEnergy;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMap;
@@ -28,6 +29,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +38,8 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
 
     protected final RecipeLogicEnergy workable;
     protected final OrientedOverlayRenderer renderer;
+    protected final ItemStackHandler ghostCircuitInventory = new ItemStackHandler(1);
+    protected final IItemHandlerModifiable combinedInputInventory;
 
     public GAWorkableTieredMetaTileEntity(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, OrientedOverlayRenderer renderer, int tier) {
         super(metaTileEntityId, tier);
@@ -43,10 +47,16 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
         this.workable = createWorkable(recipeMap);
         initializeInventory();
         reinitializeEnergyContainer();
+        this.combinedInputInventory = new ItemHandlerList(Arrays.asList(this.ghostCircuitInventory, this.importItems));
     }
 
     protected RecipeLogicEnergy createWorkable(RecipeMap<?> recipeMap) {
-        return new GARecipeLogicEnergy(this, recipeMap, () -> energyContainer);
+        return new GARecipeLogicEnergy(this, recipeMap, () -> energyContainer) {
+            @Override
+            protected IItemHandlerModifiable getInputInventory() {
+                return combinedInputInventory;
+            }
+        };
     }
 
     @Override
@@ -157,6 +167,7 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         NBTTagCompound tagCompound = super.writeToNBT(data);
         tagCompound.setBoolean("UseOptimizedRecipeLookUp", this.workable.getUseOptimizedRecipeLookUp());
+        tagCompound.setTag("GhostCircuit", this.ghostCircuitInventory.serializeNBT());
         return tagCompound;
     }
 
@@ -166,6 +177,8 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
         if (data.hasKey("UseOptimizedRecipeLookUp")) {
             this.workable.setUseOptimizedRecipeLookUp(data.getBoolean("UseOptimizedRecipeLookUp"));
         }
+        if (data.hasKey("GhostCircuit"))
+            this.ghostCircuitInventory.deserializeNBT(data.getCompoundTag("GhostCircuit"));
     }
 }
 
