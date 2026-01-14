@@ -11,18 +11,17 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class LargeRocketEngineInfo extends MultiblockInfoPage {
 
@@ -33,20 +32,23 @@ public class LargeRocketEngineInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT);
         builder.aisle("CMC", "CSC", "CCC");
         for (int num = 0; num < 8; num++) {
             builder.aisle("CCC", "C#F", "CAC");
         }
         builder.aisle("CCC", "CEC", "CCC")
-                .where('S', GATileEntities.LARGE_ROCKET_ENGINE, EnumFacing.NORTH)
-                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
+                .where('S', GATileEntities.LARGE_ROCKET_ENGINE, EnumFacing.WEST)
+                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', METAL_CASING_1.getState(MetalCasing1.CasingType.NITINOL_60))
-                .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[4], EnumFacing.EAST)
-                .where('E', MetaTileEntities.ENERGY_OUTPUT_HATCH[4], EnumFacing.SOUTH)
-                .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING))
-                .where('#', Blocks.AIR.getDefaultState());
-        return Collections.singletonList(builder.build());
+                .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
+                    .build());
+        }
+        return shapeInfos;
 
     }
 

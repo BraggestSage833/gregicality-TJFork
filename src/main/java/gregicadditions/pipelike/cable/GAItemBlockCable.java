@@ -26,7 +26,7 @@ public class GAItemBlockCable extends ItemBlockCable {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         WireProperties wireProperties = blockPipe.createItemProperties(stack);
         String voltageName = GAValues.VN[GAUtility.getTierByVoltage(wireProperties.voltage)];
-        tooltip.add(I18n.format("gregtech.cable.voltage", wireProperties.voltage, voltageName));
+        tooltip.add(I18n.format("gregtech.cable.voltage", wireProperties.voltage, GAUtility.TIER_COLOR[GAUtility.getTierByVoltage(wireProperties.voltage)], voltageName));
         tooltip.add(I18n.format("gregtech.cable.amperage", wireProperties.amperage));
         tooltip.add(I18n.format("gregtech.cable.loss_per_block", wireProperties.lossPerBlock));
     }

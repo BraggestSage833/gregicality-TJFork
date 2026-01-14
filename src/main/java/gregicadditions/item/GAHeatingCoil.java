@@ -3,12 +3,15 @@ package gregicadditions.item;
 import gregtech.common.blocks.VariantBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -20,6 +23,8 @@ import java.util.List;
 
 public class GAHeatingCoil extends VariantBlock<GAHeatingCoil.CoilType> {
 
+    public static final PropertyBool ACTIVE = PropertyBool.create("active");
+
     public GAHeatingCoil() {
         super(Material.IRON);
         setTranslationKey("ga_heating_coil");
@@ -28,6 +33,37 @@ public class GAHeatingCoil extends VariantBlock<GAHeatingCoil.CoilType> {
         setSoundType(SoundType.METAL);
         setHarvestLevel("wrench", 2);
         setDefaultState(getState(CoilType.TITAN_STEEL_COIL));
+    }
+
+    @Override
+    public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return state.getValue(ACTIVE) ? 15 : 0;
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        super.createBlockState();
+        return new BlockStateContainer(this, VARIANT, ACTIVE);
+    }
+
+    @Override
+    public IBlockState getState(CoilType variant) {
+        return super.getState(variant).withProperty(ACTIVE, false);
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return super.getStateFromMeta(meta % 7).withProperty(ACTIVE, meta / 7 >= 1);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return Math.min(15, super.getMetaFromState(state) + (state.getValue(ACTIVE) ? 7 : 0));
+    }
+
+    @Override
+    public int damageDropped(IBlockState state) {
+        return super.damageDropped(state) - (state.getValue(ACTIVE) ? 7 : 0);
     }
 
     @Override

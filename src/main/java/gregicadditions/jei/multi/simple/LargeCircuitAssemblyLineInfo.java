@@ -4,7 +4,6 @@ import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GATransparentCasing;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
-import gregicadditions.machines.multi.simple.TileEntityLargeCircuitAssemblyLine;
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
@@ -21,8 +20,10 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 
 public class LargeCircuitAssemblyLineInfo extends MultiblockInfoPage {
@@ -36,27 +37,28 @@ public class LargeCircuitAssemblyLineInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        return TileEntityLargeCircuitAssemblyLine.CASING1_ALLOWED.stream().map(casingType -> {
-            GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
-            builder.aisle("COC", "RTR", "GYG");
-            for (int num = 0; num < 5; num++) {
-                if (num == 1) builder.aisle("CIC", "RTR", "GAG");
-                else builder.aisle("CIC", "RTR", "GAG");
-            }
-            builder.aisle("FIM", "RTR", "GSG")
-                    .where('S', GATileEntities.LARGE_CIRCUIT_ASSEMBLY_LINE, EnumFacing.SOUTH)
-                    .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
-                    .where('C', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[4], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[4], EnumFacing.DOWN)
-                    .where('Y', MetaTileEntities.ENERGY_INPUT_HATCH[4], EnumFacing.NORTH)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.DOWN)
-                    .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
-                    .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ASSEMBLER_CASING))
-                    .where('R', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.REINFORCED_GLASS))
-                    .where('T', GAMetaBlocks.MUTLIBLOCK_CASING.getState(casingType));
-            return builder.build();
-        }).collect(Collectors.toList());
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT);
+        builder.aisle("COC", "RTR", "GYG");
+        for (int num = 0; num < 5; num++) {
+            builder.aisle("CIC", "RTR", "GAG");
+        }
+        builder.aisle("FIM", "RTR", "GSG")
+                .where('S', GATileEntities.LARGE_CIRCUIT_ASSEMBLY_LINE, EnumFacing.WEST)
+                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
+                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.DOWN)
+                .where('C', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
+                .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
+                .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ASSEMBLER_CASING))
+                .where('R', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.REINFORCED_GLASS));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('Y', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.DOWN)
+                    .where('T', GAMetaBlocks.getFramework(Math.max(5, tier)))
+                    .build());
+        }
+        return shapeInfos;
     }
 
     @Override

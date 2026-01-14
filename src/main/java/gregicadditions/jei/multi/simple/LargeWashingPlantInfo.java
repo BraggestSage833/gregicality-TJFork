@@ -2,10 +2,10 @@ package gregicadditions.jei.multi.simple;
 
 import com.google.common.collect.Lists;
 import gregicadditions.GAConfig;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.metal.MetalCasing1;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.CasingUtils;
 import gregicadditions.machines.multi.simple.TileEntityLargeWashingPlant;
@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class LargeWashingPlantInfo extends MultiblockInfoPage {
+
 	@Override
 	public MultiblockControllerBase getController() {
 		return GATileEntities.LARGE_WASHING_PLANT;
@@ -37,28 +39,29 @@ public class LargeWashingPlantInfo extends MultiblockInfoPage {
 
 	@Override
 	public List<MultiblockShapeInfo> getMatchingShapes() {
-		ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-			shapeInfo.add(MultiblockShapeInfo.builder()
-					.aisle("XXXXX", "XXXXX", "XXXXX")
-					.aisle("XXXXX", "XP#PX", "X###X")
-					.aisle("XXXXX", "XP#PX", "X###X")
-					.aisle("XXXXX", "XP#PX", "X###X")
-					.aisle("XXXXX", "XP#PX", "X###X")
-					.aisle("XXXXX", "XP#PX", "X###X")
-					.aisle("IOMEX", "XHSXX", "XXXXX")
-					.where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.WEST)
-					.where('S', GATileEntities.LARGE_WASHING_PLANT, EnumFacing.SOUTH)
-					.where('X', TileEntityLargeWashingPlant.casingState)
-					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
-					.where('#', Blocks.WATER.getDefaultState())
-					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.LV], EnumFacing.WEST)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.WEST)
-					.where('M', GAMetaBlocks.MOTOR_CASING.getDefaultState())
-					.where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
+		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+		GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+				.aisle("XXXXX", "XXXXX", "XXXXX")
+				.aisle("XXXXX", "XP#PX", "X###X")
+				.aisle("XXXXX", "XP#PX", "X###X")
+				.aisle("XXXXX", "XP#PX", "X###X")
+				.aisle("XXXXX", "XP#PX", "X###X")
+				.aisle("XXXXX", "XP#PX", "X###X")
+				.aisle("IOMEX", "XHSiX", "XXXXX")
+				.where('S', GATileEntities.LARGE_WASHING_PLANT, EnumFacing.WEST)
+				.where('X', TileEntityLargeWashingPlant.casingState)
+				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+				.where('#', Blocks.WATER.getDefaultState())
+				.where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE));
+		for (int tier = 0; tier < 15; tier++) {
+			shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
+					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
+					.where('i', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+					.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
 					.build());
-
-
-		return Lists.newArrayList(shapeInfo);
+		}
+		return Lists.newArrayList(shapeInfos);
 	}
 
 	private static final ITextComponent componentCasingTooltip = new TextComponentTranslation("gregtech.multiblock.universal.component_casing.tooltip").setStyle(new Style().setColor(TextFormatting.RED));

@@ -1,8 +1,8 @@
 package gregicadditions.jei.multi.simple;
 
-import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.components.PistonCasing;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.simple.TileEntityLargeForgeHammer;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -10,15 +10,15 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.block.BlockDirectional.FACING;
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class LargeForgeHammerInfo extends MultiblockInfoPage {
+
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.LARGE_FORGE_HAMMER;
@@ -26,25 +26,21 @@ public class LargeForgeHammerInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        for (int i = 0; i < 1; i++) { //TODO: set 1 to 5 once GTCE formation logic is well-done enough to reinstate the extendable LFH
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("OXS", "E#M", "IpX", "FXX");
-            for (int j = 0; j < i; j++) {
-                builder.aisle("OXX", "X#X", "IpX", "XXX");
-            }
-            builder.where('S', GATileEntities.LARGE_FORGE_HAMMER, EnumFacing.NORTH)
-                    .where('X', TileEntityLargeForgeHammer.casingState)
-                    .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
-                    .where('#', Blocks.AIR.getDefaultState())
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.HV], EnumFacing.WEST)
-                    .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.WEST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.EV], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.WEST)
-                    .where('p', GAMetaBlocks.PISTON_CASING.getDefaultState());
-            shapeInfo.add(builder.build());
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+                .aisle("SXO", "M#E", "XpI", "XXF")
+                .where('S', GATileEntities.LARGE_FORGE_HAMMER, EnumFacing.WEST)
+                .where('X', TileEntityLargeForgeHammer.casingState)
+                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST);
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.SOUTH)
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
+                    .where('p', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .build());
         }
-        return Lists.newArrayList(shapeInfo);
+        return shapeInfos;
     }
 
     @Override

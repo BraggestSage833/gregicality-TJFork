@@ -1198,6 +1198,26 @@ public class GATileEntities {
 
     }
 
+    public static MetaTileEntity getEnergyHatch(int tier, boolean isOutput) {
+        switch (tier) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8: return isOutput ? MetaTileEntities.ENERGY_OUTPUT_HATCH[tier] : MetaTileEntities.ENERGY_INPUT_HATCH[tier];
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13: return isOutput ? GATileEntities.ENERGY_OUTPUT[tier - 9] : GATileEntities.ENERGY_INPUT[tier - 9];
+            case 14: return isOutput ? MetaTileEntities.ENERGY_OUTPUT_HATCH[9] : MetaTileEntities.ENERGY_INPUT_HATCH[9];
+            default: return isOutput ? MetaTileEntities.ENERGY_OUTPUT_HATCH[0] : MetaTileEntities.ENERGY_INPUT_HATCH[0];
+        }
+    }
+
     public static <T extends MetaTileEntity & ITieredMetaTileEntity> MTE<T> create(int id, T sampleMetaTileEntity) {
         return new MTE<>(GregTechAPI.registerMetaTileEntity(id, sampleMetaTileEntity));
     }

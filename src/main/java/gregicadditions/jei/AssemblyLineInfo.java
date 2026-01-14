@@ -13,7 +13,6 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
@@ -23,6 +22,8 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class AssemblyLineInfo extends MultiblockInfoPage {
 
@@ -35,31 +36,30 @@ public class AssemblyLineInfo extends MultiblockInfoPage {
 
 	@Override
 	public List<MultiblockShapeInfo> getMatchingShapes() {
-		List<MultiblockShapeInfo> shapes = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
-			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
+		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+		for (int tier = 0; tier < 15; tier++) {
+			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT);
 			builder.aisle("FIM", "RTR", "GSG", "#Q#");
-			for (int num = 0; num < 3 + i; num++) {
-				if (num == 4 || num == 9) builder.aisle("FIC", "RTR", "GAG", "#Y#");
+			for (int num = -3; num < Math.min(12, tier); num++) {
+				if (num == 1 || num == 6 || num == 11) builder.aisle("FIC", "RTR", "GAG", "#Y#");
 				else builder.aisle("CIC", "RTR", "GAG", "#C#");
 			}
-			builder.aisle("COC", "RTR", "GAG", "#Y#")
-					.where('S', GATileEntities.ASSEMBLY_LINE, EnumFacing.NORTH)
-					.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
+			shapeInfos.add(builder.aisle("COC", "RTR", "GAG", "#Y#")
+					.where('S', GATileEntities.ASSEMBLY_LINE, EnumFacing.WEST)
+					.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 					.where('C', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
-					.where('F', MetaTileEntities.FLUID_IMPORT_HATCH[4], EnumFacing.WEST)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[4], EnumFacing.DOWN)
-					.where('Y', MetaTileEntities.ENERGY_INPUT_HATCH[4], EnumFacing.UP)
+					.where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
+					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.DOWN)
+					.where('Y', GATileEntities.getEnergyHatch(tier, false), EnumFacing.UP)
 					.where('Q', GATileEntities.QBIT_INPUT_HATCH[0], EnumFacing.UP)
 					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.DOWN)
 					.where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
 					.where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ASSEMBLER_CASING))
 					.where('R', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.REINFORCED_GLASS))
 					.where('T', GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.ASSEMBLY_LINE_CASING))
-					.where('#', Blocks.AIR.getDefaultState());
-			shapes.add(builder.build());
+					.build());
 		}
-		return shapes;
+		return shapeInfos;
 	}
 
 	@Override

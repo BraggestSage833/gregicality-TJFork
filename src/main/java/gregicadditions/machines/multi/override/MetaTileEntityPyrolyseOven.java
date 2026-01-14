@@ -29,10 +29,12 @@ import gregtech.common.blocks.MetaBlocks;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -59,13 +61,14 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
 
     protected int heatingCoilLevel = 1;
     protected int heatingCoilDiscount = 1;
+    private final Set<BlockPos> activeStates = new HashSet<>();
 
     public MetaTileEntityPyrolyseOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, PYROLYSE_RECIPES);
         this.recipeMapWorkable = new PyrolyzeOvenWorkable(this);
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate() {
+    public Predicate<BlockWorldState> heatingCoilPredicate() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -78,11 +81,16 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
             int currentCoilDiscount = blockWorldState.getMatchContext().getOrPut("heatingCoilDiscount", heatingCoilDiscount);
             int heatingCoilLevel = coilType.ordinal() + 1;
             int currentCoilLevel = blockWorldState.getMatchContext().getOrPut("heatingCoilLevel", heatingCoilLevel);
-            return currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel;
+            if (currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate2() {
+    public Predicate<BlockWorldState> heatingCoilPredicate2() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof GAHeatingCoil))
@@ -95,7 +103,12 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
             int currentCoilDiscount = blockWorldState.getMatchContext().getOrPut("heatingCoilDiscount", heatingCoilDiscount);
             int heatingCoilLevel = coilType.ordinal() + 8;
             int currentCoilLevel = blockWorldState.getMatchContext().getOrPut("heatingCoilLevel", heatingCoilLevel);
-            return currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel;
+            if (currentCoilDiscount == heatingCoilDiscount && heatingCoilLevel == currentCoilLevel) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
@@ -164,6 +177,29 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
         tooltip.add(I18n.format("gtadditions.multiblock.pyrolyse_oven.tooltip.2"));
     }
 
+    private void replaceCoilsAsActive(boolean isActive) {
+        if (!GAConfig.Misc.activeCoils) return;
+        for (BlockPos pos : this.activeStates) {
+            IBlockState state = this.getWorld().getBlockState(pos);
+            Block block = state.getBlock();
+            if (block instanceof BlockWireCoil) {
+                state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            } else if (block instanceof GAHeatingCoil) {
+                state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            }
+        }
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!this.getWorld().isRemote) {
+            this.replaceCoilsAsActive(false);
+        }
+    }
+
     protected class PyrolyzeOvenWorkable extends LargeSimpleRecipeMapMultiblockController.LargeSimpleMultiblockRecipeLogic {
 
         public PyrolyzeOvenWorkable(RecipeMapMultiblockController tileEntity) {
@@ -230,12 +266,19 @@ public class MetaTileEntityPyrolyseOven extends GARecipeMapMultiblockController 
                         .fluidInputs(newFluidInputs)
                         .outputs(outputI)
                         .fluidOutputs(outputF)
-                        .EUt(Math.max(1, EUt * heatingCoilDiscount / 100))
+                        .EUt((int) Math.min(Integer.MAX_VALUE, Math.max(1, (long) EUt * heatingCoilDiscount / 100)))
                         .duration((int) Math.max(3, duration * (this.getDurationPercentage() / 100.0)));
 
                 return newRecipe.build().getResult();
             }
             return matchingRecipe;
+        }
+
+        @Override
+        protected void setActive(boolean active) {
+            MetaTileEntityPyrolyseOven tileEntity = (MetaTileEntityPyrolyseOven) this.metaTileEntity;
+            tileEntity.replaceCoilsAsActive(active);
+            super.setActive(active);
         }
     }
 }

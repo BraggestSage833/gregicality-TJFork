@@ -120,11 +120,11 @@ public class FuelHandler {
         registerSemiFluidGeneratorFuel(SulfuricCoalTarOil.getFluid(120),  10, LV);
 
         // Rocket Fuel
-        registerRocketFuel(RocketFuelH8N4C2O4       .getFluid( 3), 160, EV);
-        registerRocketFuel(RocketFuelCN3H7O3        .getFluid( 6), 120, IV);
-        registerRocketFuel(DenseHydrazineFuelMixture.getFluid( 9),  80, IV);
-        registerRocketFuel(RP1RocketFuel            .getFluid( 12),  60, IV);
-        registerRocketFuel(RocketFuel               .getFluid(15),  20, IV);
+        registerRocketFuel(RocketFuelH8N4C2O4       .getFluid( 6), 160, EV);
+        registerRocketFuel(RocketFuelCN3H7O3        .getFluid( 12), 240, EV);
+        registerRocketFuel(DenseHydrazineFuelMixture.getFluid( 18),  160, EV);
+        registerRocketFuel(RP1RocketFuel            .getFluid( 21),  120, EV);
+        registerRocketFuel(RocketFuel               .getFluid(30),  40, EV);
 
         // Naquadah Reactor
         registerNaquadahReactorFuel(HeavyENaquadahFuel .getFluid(1), 381, LuV);

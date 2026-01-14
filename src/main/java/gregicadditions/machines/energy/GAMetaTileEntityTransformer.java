@@ -5,6 +5,7 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GAEnergyContainerHandler;
 import gregicadditions.client.ClientHandler;
@@ -192,13 +193,13 @@ public class GAMetaTileEntityTransformer extends GATieredMetaTileEntity {
         tooltip.add(I18n.format("gregtech.machine.transformer.tooltip_tool_usage"));
         tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", energyContainer.getEnergyCapacity()));
         tooltip.add(I18n.format("gregtech.machine.transformer.tooltip_transform_down"));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", higherVoltage, higherTierName));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", lowerVoltage, lowerTierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", higherVoltage, GAUtility.TIER_COLOR[getTier()], higherTierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", lowerVoltage, GAUtility.TIER_COLOR[getTier()-1], lowerTierName));
         tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_in", lowerAmperage));
         tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_out", higherAmperage));
         tooltip.add(I18n.format("gregtech.machine.transformer.tooltip_transform_up"));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", lowerVoltage, lowerTierName));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", higherVoltage, higherTierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", lowerVoltage, GAUtility.TIER_COLOR[getTier()-1], lowerTierName));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", higherVoltage, GAUtility.TIER_COLOR[getTier()], higherTierName));
         tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_in", higherAmperage));
         tooltip.add(I18n.format("gregtech.universal.tooltip.amperage_out", lowerAmperage));
     }

@@ -1,12 +1,10 @@
 package gregicadditions.jei;
 
-import gregicadditions.GAValues;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.centralmonitor.MetaTileEntityCentralMonitor;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
@@ -17,9 +15,6 @@ import java.util.List;
 
 public class CentralMonitorInfo extends MultiblockInfoPage {
 
-    public CentralMonitorInfo(){
-    }
-
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.CENTRAL_MONITOR;
@@ -27,8 +22,8 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapes = new ArrayList<>();
-        for (int i = 3; i <= MetaTileEntityCentralMonitor.MAX_WIDTH; i++) {
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        for (int tier = 0; tier < 15; tier++) {
             int height = 3;
             GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
             String[] start = new String[height];
@@ -42,17 +37,17 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
             start[0] = "E";
             start[1] = "S";
             builder.aisle(start);
-            for (int num = 0; num < i; num++) {
+            for (int num = -3; num < Math.min(11, tier); num++) {
                 builder.aisle(slice);
             }
-            builder.aisle(end)
-            .where('S', GATileEntities.CENTRAL_MONITOR, EnumFacing.WEST)
-            .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.WEST)
-            .where('A', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
-            .where('B', GATileEntities.MONITOR_SCREEN, EnumFacing.WEST);
-            shapes.add(builder.build());
+            shapeInfos.add(builder.aisle(end)
+                    .where('S', GATileEntities.CENTRAL_MONITOR, EnumFacing.WEST)
+                    .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
+                    .where('A', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
+                    .where('B', GATileEntities.MONITOR_SCREEN, EnumFacing.WEST)
+                    .build());
         }
-        return shapes;
+        return shapeInfos;
     }
 
     @Override

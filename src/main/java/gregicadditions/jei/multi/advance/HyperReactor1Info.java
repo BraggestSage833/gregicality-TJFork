@@ -11,15 +11,15 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 
 public class HyperReactor1Info extends MultiblockInfoPage {
+
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.HYPER_REACTOR_I;
@@ -27,8 +27,9 @@ public class HyperReactor1Info extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
-         builder.aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
+                .aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
                 .aisle("MCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
                 .aisle("SCCCE", "G#H#G", "GHHHG", "G#H#G", "CCCCC")
                 .aisle("FCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
@@ -36,13 +37,15 @@ public class HyperReactor1Info extends MultiblockInfoPage {
                 .where('S', GATileEntities.HYPER_REACTOR_I, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[2], EnumFacing.WEST)
                 .where('C', METAL_CASING_2.getState(MetalCasing2.CasingType.NAQUADRIA))
-                .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[4], EnumFacing.WEST)
-                .where('E', MetaTileEntities.ENERGY_OUTPUT_HATCH[8], EnumFacing.EAST)
                 .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS))
-                .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE))
-                .where('#', Blocks.AIR.getDefaultState());
-
-        return Collections.singletonList(builder.build());    }
+                .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+                    .build());
+        }
+        return shapeInfos;
+    }
 
     @Override
     public String[] getDescription() {

@@ -1,8 +1,9 @@
 package gregicadditions.jei.multi.simple;
 
 import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.components.PumpCasing;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.simple.TileEntityLargeArcFurnace;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -14,11 +15,12 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class LargeArcFurnaceInfo extends MultiblockInfoPage {
     @Override
@@ -28,28 +30,29 @@ public class LargeArcFurnaceInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
-                .aisle("#XXX#", "#XXX#", "#XXX#")
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
+                .aisle("#IHi#", "#XSX#", "#OXo#")
                 .aisle("XXXXX", "XCPCX", "#XGX#")
                 .aisle("XXXXX", "XCpCX", "#XGX#")
-                .aisle("EXXXX", "XCPCX", "#XGX#")
-                .aisle("#IHi#", "#XSX#", "#OXo#")
-                .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.SOUTH)
+                .aisle("XXXXX", "XCPCX", "#XGX#")
+                .aisle("#XEX#", "#XXX#", "#XXX#")
                 .where('C', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL))
-                .where('S', GATileEntities.LARGE_ARC_FURNACE, EnumFacing.SOUTH)
-                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
+                .where('S', GATileEntities.LARGE_ARC_FURNACE, EnumFacing.WEST)
+                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeArcFurnace.casingState)
-                .where('#', Blocks.AIR.getDefaultState())
-                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.LV], EnumFacing.SOUTH)
-                .where('i', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.LV], EnumFacing.SOUTH)
-                .where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.SOUTH)
-                .where('o', MetaTileEntities.FLUID_EXPORT_HATCH[GAValues.LV], EnumFacing.SOUTH)
-                .where('p', GAMetaBlocks.PUMP_CASING.getDefaultState())
                 .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
                 .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE));
-        shapeInfo.add(builder.build());
-        return Lists.newArrayList(shapeInfo);
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('i', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('o', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('p', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .build());
+        }
+        return Lists.newArrayList(shapeInfos);
     }
 
     @Override

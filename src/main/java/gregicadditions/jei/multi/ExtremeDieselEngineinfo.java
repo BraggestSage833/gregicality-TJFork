@@ -1,9 +1,8 @@
 package gregicadditions.jei.multi;
 
-import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
@@ -13,10 +12,12 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
 
@@ -27,7 +28,8 @@ public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        MultiblockShapeInfo shapeInfo = MultiblockShapeInfo.builder()
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, DOWN, RIGHT)
                 .aisle("AAA", "ACA", "AAA")
                 .aisle("HHH", "MGH", "HHH")
                 .aisle("HHH", "FGH", "HHH")
@@ -35,13 +37,14 @@ public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
                 .where('H', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.TUNGSTENSTEEL_ROBUST))
                 .where('G', GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TUNGSTENSTEEL_GEARBOX_CASING))
                 .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.EXTREME_ENGINE_INTAKE_CASING))
-                .where('C', GATileEntities.EXTREME_DIESEL_ENGINE, EnumFacing.NORTH)
-                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.EV], EnumFacing.WEST)
-                .where('E', MetaTileEntities.ENERGY_OUTPUT_HATCH[GAValues.IV], EnumFacing.SOUTH)
-                .where('#', Blocks.AIR.getDefaultState())
-                .build();
-        return Lists.newArrayList(shapeInfo);
+                .where('C', GATileEntities.EXTREME_DIESEL_ENGINE, EnumFacing.WEST)
+                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH);
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
+                    .build());
+        }
+        return shapeInfos;
     }
 
     @Override

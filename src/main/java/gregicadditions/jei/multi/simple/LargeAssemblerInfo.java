@@ -1,9 +1,7 @@
 package gregicadditions.jei.multi.simple;
 
-import com.google.common.collect.Lists;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
-import gregicadditions.item.GAMultiblockCasing2;
 import gregicadditions.item.GATransparentCasing;
 import gregicadditions.item.components.ConveyorCasing;
 import gregicadditions.item.components.RobotArmCasing;
@@ -15,7 +13,6 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -26,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LargeAssemblerInfo extends MultiblockInfoPage {
+
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.LARGE_ASSEMBLER;
@@ -33,33 +31,30 @@ public class LargeAssemblerInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        for (int i = 0; i < 4; i++) {
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        for (int tier = 0; tier < 15; tier++) {
             MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
                     .aisle("EOXX", "OXXX", "IXXX", "FXXX")
                     .aisle("MXXX", "SCRX", "XPPX", "XXXX");
 
-            for (int j = 0; j < 3*i; j++) {
+            for (int j = 0; j < Math.min(tier, 9); j++) {
                 builder.aisle("XXXX", "RCPX", "G#PX", "GGGX");
             }
-            shapeInfo.add(builder.aisle("XXXX", "XXXX", "XXXX", "XXXX")
+            shapeInfos.add(builder.aisle("XXXX", "XXXX", "XXXX", "XXXX")
                     .where('S', GATileEntities.LARGE_ASSEMBLER, EnumFacing.WEST)
                     .where('X', GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.LARGE_ASSEMBLER))
-                    .where('#', Blocks.AIR.getDefaultState())
-                    .where('R', GAMetaBlocks.ROBOT_ARM_CASING.getDefaultState())
-                    .where('C', GAMetaBlocks.CONVEYOR_CASING.getDefaultState())
+                    .where('R', GAMetaBlocks.ROBOT_ARM_CASING.getState(RobotArmCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .where('C', GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[Math.max(0, tier - 1)]))
                     .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS))
                     .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE))
-                    .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[6], EnumFacing.WEST)
+                    .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[6], EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[6], EnumFacing.WEST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[6], EnumFacing.WEST)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
                     .build());
         }
-
-        return Lists.newArrayList(shapeInfo);
+        return shapeInfos;
     }
 
     @Override

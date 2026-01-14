@@ -1,12 +1,10 @@
 package gregicadditions.machines.multi.override;
 
 import gregicadditions.GAConfig;
-import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
-import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
-import gregicadditions.machines.multi.simple.TileEntityLargeChemicalReactor;
+import gregicadditions.item.GAHeatingCoil;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -24,8 +22,10 @@ import gregtech.api.util.GTUtility;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -33,7 +33,9 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static gregtech.api.recipes.RecipeMaps.CRACKING_RECIPES;
@@ -47,6 +49,7 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
     };
 
     protected int heatingCoilTier = 0;
+    private final Set<BlockPos> activeStates = new HashSet<>();
 
     public MetaTileEntityCrackingUnit(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, CRACKING_RECIPES);
@@ -67,7 +70,7 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
         this.heatingCoilTier = coilTier;
     }
 
-    public static Predicate<BlockWorldState> heatingCoilPredicate() {
+    public Predicate<BlockWorldState> heatingCoilPredicate() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
             if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -77,7 +80,12 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
             if (Arrays.asList(GAConfig.multis.heatingCoils.gtceHeatingCoilsBlacklist).contains(coilType.getName()))
                 return false;
             BlockWireCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("coilType", coilType);
-            return coilType.equals(currentCoilType);
+            if (coilType.equals(currentCoilType)) {
+                if (blockWorldState.getWorld() != null)
+                    this.activeStates.add(blockWorldState.getPos());
+                return true;
+            }
+            return false;
         };
     }
 
@@ -125,6 +133,29 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
         return Textures.CRACKING_UNIT_OVERLAY;
     }
 
+    private void replaceCoilsAsActive(boolean isActive) {
+        if (!GAConfig.Misc.activeCoils) return;
+        for (BlockPos pos : this.activeStates) {
+            IBlockState state = this.getWorld().getBlockState(pos);
+            Block block = state.getBlock();
+            if (block instanceof BlockWireCoil) {
+                state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            } else if (block instanceof GAHeatingCoil) {
+                state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state);
+            }
+        }
+    }
+
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!this.getWorld().isRemote) {
+            this.replaceCoilsAsActive(false);
+        }
+    }
+
     protected static class CrackingUnitWorkable extends GAMultiblockRecipeLogic{
 
         public CrackingUnitWorkable(RecipeMapMultiblockController tileEntity) {
@@ -153,6 +184,13 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
             } else {
                 this.setActive(true);
             }
+        }
+
+        @Override
+        protected void setActive(boolean active) {
+            MetaTileEntityCrackingUnit tileEntity = (MetaTileEntityCrackingUnit) this.metaTileEntity;
+            tileEntity.replaceCoilsAsActive(active);
+            super.setActive(active);
         }
     }
 

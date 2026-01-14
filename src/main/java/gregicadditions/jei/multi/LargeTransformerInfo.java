@@ -1,17 +1,20 @@
 package gregicadditions.jei.multi;
 
-import com.google.common.collect.Lists;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
+
 public class LargeTransformerInfo extends MultiblockInfoPage {
+
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.LARGE_TRANSFORMER;
@@ -19,13 +22,16 @@ public class LargeTransformerInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        MultiblockShapeInfo shapeInfo = MultiblockShapeInfo.builder()
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("ISO")
-                .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.SOUTH)
-                .where('O', MetaTileEntities.ENERGY_OUTPUT_HATCH[0], EnumFacing.WEST)
-                .where('I', MetaTileEntities.ENERGY_INPUT_HATCH[0], EnumFacing.WEST)
-                .build();
-        return Lists.newArrayList(shapeInfo);
+                .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST);
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('O', GATileEntities.getEnergyHatch(tier, true), EnumFacing.SOUTH)
+                    .where('I', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
+                    .build());
+        }
+        return shapeInfos;
     }
 
     @Override

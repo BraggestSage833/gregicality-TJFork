@@ -4,6 +4,7 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GAEnergyContainerHandler;
 import gregicadditions.machines.overrides.GATieredMetaTileEntity;
@@ -144,6 +145,7 @@ public class GAMetaTileEntityDiode extends GATieredMetaTileEntity {
         String tierName = GAValues.VN[getTier()];
         tooltip.add(I18n.format("gtadditions.machine.diode.tooltip_general"));
         tooltip.add(I18n.format("gtadditions.machine.diode.tooltip_tool_usage"));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", voltage, tierName));
+
+        tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", voltage, GAUtility.TIER_COLOR[getTier()], tierName));
     }
 }

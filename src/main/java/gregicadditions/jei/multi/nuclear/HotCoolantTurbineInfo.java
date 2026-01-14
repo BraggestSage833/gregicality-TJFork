@@ -1,7 +1,5 @@
 package gregicadditions.jei.multi.nuclear;
 
-import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.impl.MetaTileEntityRotorHolderForNuclearCoolant;
 import gregicadditions.machines.multi.nuclear.MetaTileEntityHotCoolantTurbine;
@@ -16,10 +14,10 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HotCoolantTurbineInfo extends MultiblockInfoPage {
@@ -43,23 +41,22 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
         ItemStack rotorStack = MetaItems.TURBINE_ROTOR.getStackForm();
         TurbineRotorBehavior.getInstanceFor(rotorStack).setPartMaterial(rotorStack, Materials.Darmstadtium);
         ((MetaTileEntityRotorHolderForNuclearCoolant) holder.getMetaTileEntity()).getRotorInventory().setStackInSlot(0, rotorStack);
-        MultiblockShapeInfo.Builder shapeInfo = MultiblockShapeInfo.builder()
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
                 .aisle("CCCC", "CIOC", "CCCC")
                 .aisle("CCCC", "R##D", "CCCC")
                 .aisle("CCCC", "CSMC", "CCCC")
                 .where('S', turbine, EnumFacing.SOUTH)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('C', turbine.turbineType.casingState)
-                .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder))
-                .where('D', MetaTileEntities.ENERGY_OUTPUT_HATCH[GAValues.EV], EnumFacing.EAST)
-                .where('#', Blocks.AIR.getDefaultState())
-                .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.HV], EnumFacing.NORTH);
-        if (turbine.turbineType.hasOutputHatch) {
-            shapeInfo.where('O', MetaTileEntities.FLUID_EXPORT_HATCH[GAValues.EV], EnumFacing.NORTH);
-        } else {
-            shapeInfo.where('O', turbine.turbineType.casingState);
+                .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('D', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
+                    .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
+                    .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
+                    .build());
         }
-        return Lists.newArrayList(shapeInfo.build());
+        return shapeInfos;
     }
 
     @Override

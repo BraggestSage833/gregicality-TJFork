@@ -1,10 +1,10 @@
 package gregicadditions.jei.multi.simple;
 
-import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.components.MotorCasing;
+import gregicadditions.item.components.PumpCasing;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
-import gregicadditions.machines.multi.simple.TileEntityLargeCutting;
 import gregicadditions.machines.multi.simple.TileEntityLargeElectrolyzer;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockBoilerCasing;
@@ -13,13 +13,15 @@ import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
+
 public class LargeElectrolyzerInfo extends MultiblockInfoPage {
+
 	@Override
 	public MultiblockControllerBase getController() {
 		return GATileEntities.LARGE_ELECTROLYZER;
@@ -27,29 +29,28 @@ public class LargeElectrolyzerInfo extends MultiblockInfoPage {
 
 	@Override
 	public List<MultiblockShapeInfo> getMatchingShapes() {
-		ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-		for (int i = 1; i < 6; i++) {
-			MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+		for (int tier = 0; tier < 15; tier++) {
+			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 					.aisle("XXCXX", "XXCXX", "XXCXX", "XX#XX");
-			for(int j = 0; j < i; j++) {
-				builder.aisle("IXCXX", "IP#MX", "XXCXX", "X###X");
+			for (int j = -1; j < Math.min(5, tier); j++) {
+				builder.aisle("iXCXi", "IP#MO", "XXCXX", "X###X");
 			}
-			builder.aisle("EXHXX", "XXSXX", "XXCXX", "XX#XX")
-					.where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.WEST)
-					.where('S', GATileEntities.LARGE_ELECTROLYZER, EnumFacing.SOUTH)
-					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
+			shapeInfos.add(builder.aisle("EXHXX", "XXSXX", "XXCXX", "XX#XX")
+					.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
+					.where('S', GATileEntities.LARGE_ELECTROLYZER, EnumFacing.WEST)
+					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 					.where('X', TileEntityLargeElectrolyzer.casingState)
-					.where('#', Blocks.AIR.getDefaultState())
-					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.LV], EnumFacing.WEST)
-					.where('i', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.LV], EnumFacing.EAST)
-					.where('o', MetaTileEntities.FLUID_IMPORT_HATCH[GAValues.LV], EnumFacing.EAST)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.WEST)
-					.where('M', GAMetaBlocks.MOTOR_CASING.getDefaultState())
-					.where('P', GAMetaBlocks.PUMP_CASING.getDefaultState())
-					.where('C', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE));
-			shapeInfo.add(builder.build());
+					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
+					.where('i', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
+					.where('o', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
+					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
+					.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
+					.where('P', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[Math.max(0, tier - 1)]))
+					.where('C', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
+					.build());
 		}
-		return Lists.newArrayList(shapeInfo);
+		return shapeInfos;
 	}
 
 	@Override

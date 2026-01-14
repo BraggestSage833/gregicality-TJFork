@@ -1,6 +1,5 @@
 package gregicadditions.jei.multi.quantum;
 
-import com.google.common.collect.Lists;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAQuantumCasing;
 import gregicadditions.machines.GATileEntities;
@@ -11,6 +10,7 @@ import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QubitComputerInfo extends MultiblockInfoPage {
@@ -22,18 +22,22 @@ public class QubitComputerInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        return Lists.newArrayList(MultiblockShapeInfo.builder()
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
                 .aisle("CC", "IC", "CC", "CC")
                 .aisle("OC", "SC", "CC", "CC")
                 .aisle("EC", "MC", "CC", "CC")
                 .aisle("CC", "CC", "CC", "CC")
                 .where('S', GATileEntities.QUBIT_COMPUTER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER))
-                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[4], EnumFacing.WEST)
-                .where('O', GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
-                .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[4], EnumFacing.WEST)
-                .build());
+                .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('O', GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
+                    .build());
+        }
+        return shapeInfos;
     }
 
     @Override

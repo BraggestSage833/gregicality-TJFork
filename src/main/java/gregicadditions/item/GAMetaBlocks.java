@@ -28,6 +28,7 @@ import gregtech.api.unification.material.type.Material;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.ore.StoneType;
 import gregtech.api.unification.ore.StoneTypes;
+import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.pipelike.cable.BlockCable;
 import gregtech.common.pipelike.cable.Insulation;
@@ -456,5 +457,44 @@ public class GAMetaBlocks {
         return METAL_CASING.get(material).getStateFromMaterial(material);
     }
 
+    public static IBlockState getFramework(int tier) {
+        switch (tier) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8: return GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.values()[3 + tier]);
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13: return GAMetaBlocks.MUTLIBLOCK_CASING2.getState(GAMultiblockCasing2.CasingType.values()[tier - 9]);
+            case 14: return GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TIERED_HULL_MAX);
+            default: return GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TIERED_HULL_ULV);
+        }
+    }
+
+    public static IBlockState getCoils(int tier) {
+        switch (tier) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7: return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.values()[tier - 1]);
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14: return GAMetaBlocks.HEATING_COIL.getState(GAHeatingCoil.CoilType.values()[tier - 8]);
+            default: return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL);
+        }
+    }
 
 }

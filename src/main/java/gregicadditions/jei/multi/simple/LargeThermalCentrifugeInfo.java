@@ -1,10 +1,8 @@
 package gregicadditions.jei.multi.simple;
 
 import gregicadditions.GAConfig;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
-import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.CasingUtils;
@@ -12,13 +10,11 @@ import gregicadditions.machines.multi.simple.TileEntityLargeThermalCentrifuge;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMultiblockCasing;
-import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
@@ -29,10 +25,10 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.ArrayList;
 import java.util.List;
 
-import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 
 public class LargeThermalCentrifugeInfo extends MultiblockInfoPage {
+
     @Override
     public MultiblockControllerBase getController() {
         return GATileEntities.LARGE_THERMAL_CENTRIFUGE;
@@ -40,33 +36,28 @@ public class LargeThermalCentrifugeInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        for (BlockWireCoil.CoilType coilType : BlockWireCoil.CoilType.values()) {
-            if (coilType.equals(BlockWireCoil.CoilType.SUPERCONDUCTOR) || coilType.equals(BlockWireCoil.CoilType.FUSION_COIL))
-                continue;
-
-            shapeInfo.add(MultiblockShapeInfo.builder()
-                    .aisle("#XXX#", "#XGX#", "#XXX#", "#####")
-                    .aisle("XXXXX", "XCCCX", "I###X", "#XXX#")
-                    .aisle("HXMXX", "SCPCG", "E#P#X", "#XmX#")
-                    .aisle("XXXXX", "XCCCX", "O###X", "#XXX#")
-                    .aisle("#XXX#", "#XGX#", "#XXX#", "#####")
-                    .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.WEST)
-                    .where('S', GATileEntities.LARGE_THERMAL_CENTRIFUGE, EnumFacing.WEST)
-                    .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                    .where('X', TileEntityLargeThermalCentrifuge.casingState)
-                    .where('#', Blocks.AIR.getDefaultState())
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.LV], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.WEST)
-                    .where('M', GAMetaBlocks.MOTOR_CASING.getDefaultState())
-                    .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
-                    .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
-                    .where('C', MetaBlocks.WIRE_COIL.getState(coilType))
-                    .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+                .aisle("#XXX#", "#XGX#", "#XXX#", "#####")
+                .aisle("XXXXX", "XCCCX", "I###X", "#XXX#")
+                .aisle("HXMXX", "SCPCG", "E#P#X", "#XmX#")
+                .aisle("XXXXX", "XCCCX", "O###X", "#XXX#")
+                .aisle("#XXX#", "#XGX#", "#XXX#", "#####")
+                .where('S', GATileEntities.LARGE_THERMAL_CENTRIFUGE, EnumFacing.WEST)
+                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+                .where('X', TileEntityLargeThermalCentrifuge.casingState)
+                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
+                .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
+                .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING));
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .where('C', GAMetaBlocks.getCoils(tier))
                     .build());
         }
-
-        return shapeInfo;
+        return shapeInfos;
     }
 
     private static final ITextComponent componentCasingTooltip = new TextComponentTranslation("gregtech.multiblock.universal.component_casing.tooltip").setStyle(new Style().setColor(TextFormatting.RED));

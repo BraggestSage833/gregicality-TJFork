@@ -1,21 +1,22 @@
 package gregicadditions.jei.multi.simple;
 
-import com.google.common.collect.Lists;
-import gregicadditions.GAValues;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.components.ConveyorCasing;
+import gregicadditions.item.components.RobotArmCasing;
+import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
-import gregicadditions.machines.multi.simple.TileEntityLargeCutting;
 import gregicadditions.machines.multi.simple.TileEntityLargePackager;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class LargePackagerInfo extends MultiblockInfoPage {
 
@@ -26,27 +27,25 @@ public class LargePackagerInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        for (int i = 1; i < 7; i++) {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        for (int tier = 0; tier < 15; tier++) {
+            GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                     .aisle("XXX", "XXX", "XXX");
-            for(int j = 0; j < i; j++) {
+            for (int j = -1; j < Math.min(5, tier); j++) {
                 builder.aisle("IXO", "XCX", "XRX");
             }
-            builder.aisle("XHX", "XSX", "XEX")
-                    .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[GAValues.HV], EnumFacing.SOUTH)
-                    .where('S', GATileEntities.LARGE_PACKAGER, EnumFacing.SOUTH)
-                    .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
+            shapeInfos.add(builder.aisle("XHX", "XSX", "XEX")
+                    .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
+                    .where('S', GATileEntities.LARGE_PACKAGER, EnumFacing.WEST)
+                    .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                     .where('X', TileEntityLargePackager.casingState)
-                    .where('#', Blocks.AIR.getDefaultState())
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[GAValues.LV], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[GAValues.LV], EnumFacing.EAST)
-                    .where('R', GAMetaBlocks.ROBOT_ARM_CASING.getDefaultState())
-                    .where('C', GAMetaBlocks.CONVEYOR_CASING.getDefaultState());
-            shapeInfo.add(builder.build());
+                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
+                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
+                    .where('R', GAMetaBlocks.ROBOT_ARM_CASING.getState(RobotArmCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .where('C', GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .build());
         }
-
-        return Lists.newArrayList(shapeInfo);
+        return shapeInfos;
     }
 
     @Override

@@ -18,7 +18,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StellarForgeInfo extends MultiblockInfoPage {
@@ -29,14 +29,15 @@ public class StellarForgeInfo extends MultiblockInfoPage {
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
-         builder.aisle("###############", "######CCC######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######CCC######", "###############")
+        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
+                .aisle("###############", "######CCC######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######CCC######", "###############")
                 .aisle("######C#C######", "#####FFFFF#####", "###############", "###############", "###############", "###############", "###############", "#####FFFFF#####", "######C#C######")
                 .aisle("######C#C######", "###FF#####FF###", "###############", "###############", "###############", "###############", "###############", "###FF#####FF###", "######C#C######")
                 .aisle("######C#C######", "##F#########F##", "#####FFFFF#####", "###############", "###############", "###############", "#####FFFFF#####", "##F#########F##", "######C#C######")
                 .aisle("######C#C######", "##F#########F##", "####F#XXX#F####", "######XXX######", "######XXX######", "######XXX######", "####F#XXX#F####", "##F#########F##", "######C#C######")
                 .aisle("######C#C######", "#F####XXX####F#", "###F#X###X#F###", "#####X###X#####", "#####X###X#####", "#####X###X#####", "###F#X###X#F###", "#F####XXX####F#", "######C#C######")
-                .aisle("#CCCCCCMCCCCCC#", "IF###XXXXX###FC", "f##FX#####XF##C", "C###X#####X###C", "C###X#####X###C", "C###X#####X###C", "C##FX#####XF##C", "CF###XXXXX###FC", "#CCCCCCMCCCCCC#")
+                .aisle("#CCCCCCMCCCCCC#", "IF###XXXXX###FC", "f##FX#####XF##C", "O###X#####X###C", "C###X#####X###C", "C###X#####X###C", "C##FX#####XF##C", "CF###XXXXX###FC", "#CCCCCCMCCCCCC#")
                 .aisle("######MMM######", "SF###XXXXX###FE", "###FX#####XF###", "####X#####X####", "####X#####X####", "####X#####X####", "###FX#####XF###", "CF###XXXXX###FC", "######MMM######")
                 .aisle("#CCCCCCMCCCCCC#", "iF###XXXXX###FC", "H##FX#####XF##C", "C###X#####X###C", "C###X#####X###C", "C###X#####X###C", "C##FX#####XF##C", "CF###XXXXX###FC", "#CCCCCCMCCCCCC#")
                 .aisle("######C#C######", "#F####XXX####F#", "###F#X###X#F###", "#####X###X#####", "#####X###X#####", "#####X###X#####", "###F#X###X#F###", "#F####XXX####F#", "######C#C######")
@@ -45,18 +46,21 @@ public class StellarForgeInfo extends MultiblockInfoPage {
                 .aisle("######C#C######", "###FF#####FF###", "###############", "###############", "###############", "###############", "###############", "###FF#####FF###", "######C#C######")
                 .aisle("######C#C######", "#####FFFFF#####", "###############", "###############", "###############", "###############", "###############", "#####FFFFF#####", "######C#C######")
                 .aisle("###############", "######CCC######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######CCC######", "###############")
-                .where('M', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.EMITTER_UV))
                 .where('C', GAMetaBlocks.METAL_CASING_2.getState(MetalCasing2.CasingType.ENRICHED_NAQUADAH_ALLOY))
                 .where('X', GAMetaBlocks.MUTLIBLOCK_CASING2.getState(GAMultiblockCasing2.CasingType.STELLAR_CONTAINMENT))
                 .where('F', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.FUSION_COIL_2))
                 .where('S', GATileEntities.STELLAR_FORGE, EnumFacing.WEST)
-                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('E', MetaTileEntities.ENERGY_INPUT_HATCH[8], EnumFacing.EAST)
-                .where('f', MetaTileEntities.FLUID_EXPORT_HATCH[4], EnumFacing.WEST)
-                .where('I', MetaTileEntities.ITEM_EXPORT_BUS[4], EnumFacing.WEST)
-                .where('i', MetaTileEntities.ITEM_IMPORT_BUS[4], EnumFacing.WEST);
-
-        return Collections.singletonList(builder.build());
+                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST);
+        for (int tier = 0; tier < 15; tier++) {
+            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
+                    .where('O', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('f', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('I', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('i', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
+                    .where('M', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[Math.max(0, tier - 1)]))
+                    .build());
+        }
+        return shapeInfos;
     }
 
     @Override

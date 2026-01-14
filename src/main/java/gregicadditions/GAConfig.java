@@ -456,6 +456,10 @@ public class GAConfig {
         @Config.RequiresMcRestart
         public boolean enableMagnetoCircuits = true;
 
+        @Config.Comment("Coils light up when machine is active and running")
+        @Config.Name("Toggle Active Coils")
+        @Config.RequiresMcRestart
+        public boolean activeCoils = true;
     }
 
     @Config.Comment({"Configs for Armor and Tools", "Tiers are from ULV-0 to MAX-14"})

@@ -25,10 +25,12 @@ import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -39,7 +41,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static gregicadditions.client.ClientHandler.RED_STEEL_CASING;
@@ -50,7 +54,7 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 	private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
 	private int speedBonus;
-
+	private final Set<BlockPos> activeStates = new HashSet<>();
 
 	public TileEntityLargeThermalCentrifuge(ResourceLocation metaTileEntityId) {
 		super(metaTileEntityId, RecipeMaps.THERMAL_CENTRIFUGE_RECIPES, GAConfig.multis.largeThermalCentrifuge.euPercentage, GAConfig.multis.largeThermalCentrifuge.durationPercentage, GAConfig.multis.largeThermalCentrifuge.chancedBoostPercentage, GAConfig.multis.largeThermalCentrifuge.stack, true, true, true);
@@ -85,7 +89,7 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 				.build();
 	}
 
-	public static Predicate<BlockWorldState> heatingCoilPredicate() {
+	public Predicate<BlockWorldState> heatingCoilPredicate() {
 		return blockWorldState -> {
 			IBlockState blockState = blockWorldState.getBlockState();
 			if (!(blockState.getBlock() instanceof BlockWireCoil))
@@ -94,16 +98,18 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			BlockWireCoil.CoilType coilType = blockWireCoil.getState(blockState);
 			if (Arrays.asList(GAConfig.multis.heatingCoils.gtceHeatingCoilsBlacklist).contains(coilType.getName()))
 				return false;
-
 			int blastFurnaceTemperature = coilType.getCoilTemperature();
 			int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
 			BlockWireCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("coilType", coilType);
-
-			return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+			if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+				if (blockWorldState.getWorld() != null)
+					this.activeStates.add(blockWorldState.getPos());
+				return true;
+			}
+			return false;
 		};
 	}
-	public static Predicate<BlockWorldState> heatingCoilPredicate2() {
+	public Predicate<BlockWorldState> heatingCoilPredicate2() {
 		return blockWorldState -> {
 			IBlockState blockState = blockWorldState.getBlockState();
 			if (!(blockState.getBlock() instanceof GAHeatingCoil))
@@ -112,13 +118,15 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			GAHeatingCoil.CoilType coilType = blockWireCoil.getState(blockState);
 			if (Arrays.asList(GAConfig.multis.heatingCoils.gregicalityheatingCoilsBlacklist).contains(coilType.getName()))
 				return false;
-
 			int blastFurnaceTemperature = coilType.getCoilTemperature();
 			int currentTemperature = blockWorldState.getMatchContext().getOrPut("blastFurnaceTemperature", blastFurnaceTemperature);
-
 			GAHeatingCoil.CoilType currentCoilType = blockWorldState.getMatchContext().getOrPut("gaCoilType", coilType);
-
-			return currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType);
+			if (currentTemperature == blastFurnaceTemperature && coilType.equals(currentCoilType)) {
+				if (blockWorldState.getWorld() != null)
+					this.activeStates.add(blockWorldState.getPos());
+				return true;
+			}
+			return false;
 		};
 	}
 
@@ -211,8 +219,29 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 		super.addInformation(stack, player, tooltip, advanced);
 		tooltip.add(I18n.format("gtadditions.multiblock.large_ThermalCentrifuge.tooltip.1"));
 		tooltip.add(I18n.format("gtadditions.multiblock.large_ThermalCentrifuge.tooltip.2"));
+	}
 
+	private void replaceCoilsAsActive(boolean isActive) {
+		if (!GAConfig.Misc.activeCoils) return;
+		for (BlockPos pos : this.activeStates) {
+			IBlockState state = this.getWorld().getBlockState(pos);
+			Block block = state.getBlock();
+			if (block instanceof BlockWireCoil) {
+				state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state);
+			} else if (block instanceof GAHeatingCoil) {
+				state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state);
+			}
+		}
+	}
 
+	@Override
+	public void onRemoval() {
+		super.onRemoval();
+		if (!this.getWorld().isRemote) {
+			this.replaceCoilsAsActive(false);
+		}
 	}
 
 
@@ -234,7 +263,7 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			int speedBonus = metaTileEntity.getSpeedBonus();
 
 			// apply speed bonus
-			resultOverclock[1] -= (int) (resultOverclock[0] * speedBonus * 0.01f);
+			resultOverclock[1] -= (int) (resultOverclock[1] * speedBonus * 0.01f);
 
 			setMaxProgress(resultOverclock[1]);
 			this.recipeEUt = resultOverclock[0];
@@ -246,6 +275,13 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			} else {
 				this.setActive(true);
 			}
+		}
+
+		@Override
+		protected void setActive(boolean active) {
+			TileEntityLargeThermalCentrifuge tileEntity = (TileEntityLargeThermalCentrifuge) this.metaTileEntity;
+			tileEntity.replaceCoilsAsActive(active);
+			super.setActive(active);
 		}
 	}
 
