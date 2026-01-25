@@ -6,10 +6,8 @@ import gregicadditions.client.ClientHandler;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAReactorCasing;
 import gregicadditions.item.GATransparentCasing;
-import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.GABoostableWorkableHandler;
 import gregicadditions.machines.multi.GAFueledMultiblockController;
-import gregicadditions.recipes.impl.BoostableWorkableHandler;
 import gregicadditions.recipes.GARecipeMaps;
 import gregicadditions.utils.GALog;
 import gregtech.api.capability.impl.FuelRecipeLogic;
@@ -21,7 +19,6 @@ import gregtech.api.multiblock.BlockPattern;
 import gregtech.api.multiblock.FactoryBlockPattern;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.metatileentities.multi.electric.generator.FueledMultiblockController;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -118,7 +115,7 @@ public class MetaTileEntityHyperReactorIII extends GAFueledMultiblockController 
                 .aisle("##F#####F##","##F#####F##","##F#####F##","##F#####F##","##F#####F##", "##F#####F##", "##FCCCCCF##", "##C#####C##", "#C#######C#", "#C#######C#", "#C#######C#", "#C#######C#", "#C#######C#", "##C#####C##", "###CCCCC###", "###########")
                 .aisle("###########","###########","###########","###########","###########", "###########", "###########", "###CCCCC###", "##CC###CC##", "##C#####C##", "##C#####C##", "##C#####C##", "##CC###CC##", "###CCCCC###", "###########", "###########")
                 .aisle("###########","###########","###########","###########","###########", "###########", "###########", "###########", "####CCC####", "###CCCCC###", "###CCSCC###", "###CCCCC###", "####CCC####", "###########", "###########", "###########")
-                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS)).or((tilePredicate((state, tile) -> tile.metaTileEntityId.equals(GATileEntities.MAINTENANCE_HATCH[2].metaTileEntityId)))))
+                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH)))
                 .where('#', (tile) -> true)
                 .where('S', selfPredicate())
                 .where('F', statePredicate(MetaBlocks.FRAMES.get(Naquadria).getDefaultState()))

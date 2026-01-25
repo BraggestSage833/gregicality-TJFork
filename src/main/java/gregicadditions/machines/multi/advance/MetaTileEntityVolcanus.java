@@ -8,6 +8,7 @@ import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.multi.override.MetaTileEntityElectricBlastFurnace;
 import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
 import gregicadditions.utils.GALog;
+import gregtech.api.GTValues;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
@@ -15,7 +16,6 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.multiblock.BlockPattern;
-import gregtech.api.multiblock.BlockWorldState;
 import gregtech.api.multiblock.FactoryBlockPattern;
 import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.recipes.CountableIngredient;
@@ -25,17 +25,14 @@ import gregtech.api.recipes.recipeproperties.BlastTemperatureProperty;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
-import gregtech.common.metatileentities.MetaTileEntities;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -43,7 +40,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static gregicadditions.client.ClientHandler.HASTELLOY_N_CASING;
@@ -54,12 +50,13 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
             MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.EXPORT_FLUIDS,
-            GregicAdditionsCapabilities.MAINTENANCE_HATCH};
+            GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.INPUT_ENERGY};
 
 
     private static final int DURATION_DECREASE_FACTOR = 20;
 
     private static final int ENERGY_DECREASE_FACTOR = 20;
+    private FluidStack pyrotheum;
 
     public MetaTileEntityVolcanus(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -72,7 +69,6 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
         return new MetaTileEntityVolcanus(metaTileEntityId);
     }
 
-
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -82,16 +78,11 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
                 .setAmountAtLeast('L', 8)
                 .where('L', statePredicate(getCasingState()))
                 .where('S', selfPredicate())
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(energyHatchPredicate()))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('M', abilityPartPredicate(GregicAdditionsCapabilities.MUFFLER_HATCH))
                 .where('C', heatingCoilPredicate().or(heatingCoilPredicate2()))
                 .where('#', isAirPredicate())
                 .build();
-    }
-
-    @Nonnull
-    private static Predicate<BlockWorldState> energyHatchPredicate() {
-        return tilePredicate((state, tile) -> tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[0].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[1].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[2].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[3].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[4].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[5].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[6].metaTileEntityId));
     }
 
     public IBlockState getCasingState() {
@@ -106,6 +97,7 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
+        this.pyrotheum = GAMaterials.Pyrotheum.getFluid((int) Math.pow(2, GAUtility.getTierByVoltage(this.energyContainer.getInputVoltage())));
     }
 
     @Override
@@ -130,6 +122,15 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
 
     public class VolcanusRecipeLogic extends LargeSimpleRecipeMapMultiblockController.LargeSimpleMultiblockRecipeLogic {
 
+        public VolcanusRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
+            super(tileEntity, EUtPercentage, durationPercentage, chancePercentage, stack);
+        }
+
+        @Override
+        protected long getMaxVoltage() {
+            return Math.min(GTValues.V[7], super.getMaxVoltage());
+        }
+
         @Override
         protected Recipe findRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, boolean useOptimizedRecipeLookUp) {
             Recipe recipe = super.findRecipe(maxVoltage, inputs, fluidInputs, useOptimizedRecipeLookUp);
@@ -139,31 +140,12 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
             return null;
         }
 
-
-        public VolcanusRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
-            super(tileEntity, EUtPercentage, durationPercentage, chancePercentage, stack);
-        }
-
         @Override
         protected boolean drawEnergy(int recipeEUt) {
-            int drain = (int) Math.pow(2, getOverclockingTier(getMaxVoltage()));
-            long resultEnergy = this.getEnergyStored() - (long) recipeEUt;
-            Optional<IFluidTank> fluidTank =
-                    getInputFluidInventory().getFluidTanks().stream()
-                            .filter(iFluidTank -> iFluidTank.getFluid() != null)
-                            .filter(iFluidTank -> iFluidTank.getFluid().isFluidEqual(GAMaterials.Pyrotheum.getFluid(drain)))
-                            .findFirst();
-            if (fluidTank.isPresent()) {
-                IFluidTank tank = fluidTank.get();
-                if (resultEnergy >= 0L && resultEnergy <= this.getEnergyCapacity() && tank.getCapacity() > 1) {
-                    tank.drain(drain, true);
-                    this.getEnergyContainer().changeEnergy(-recipeEUt);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return false;
+            if (!pyrotheum.isFluidStackIdentical(this.getInputTank().drain(pyrotheum, false)))
+                return false;
+            this.getInputTank().drain(pyrotheum, true);
+            return super.drawEnergy(recipeEUt);
         }
 
         @Override
@@ -222,9 +204,9 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
                 duration /= 2.8;
-                if (duration <= 0) {
-                    duration = 1;
-                }
+            }
+            if (duration <= 0) {
+                duration = 1;
             }
 
             List<CountableIngredient> newRecipeInputs = new ArrayList<>();
