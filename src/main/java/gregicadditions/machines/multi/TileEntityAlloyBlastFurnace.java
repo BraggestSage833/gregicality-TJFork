@@ -232,10 +232,10 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
             Block block = state.getBlock();
             if (block instanceof BlockWireCoil) {
                 state = state.withProperty(BlockFireboxCasing.ACTIVE, isActive);
-                this.getWorld().setBlockState(pos, state, 8);
+                this.getWorld().setBlockState(pos, state);
             } else if (block instanceof GAHeatingCoil) {
                 state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
-                this.getWorld().setBlockState(pos, state, 8);
+                this.getWorld().setBlockState(pos, state);
             }
         }
     }
