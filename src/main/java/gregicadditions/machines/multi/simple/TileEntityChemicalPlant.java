@@ -24,6 +24,7 @@ import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.GTUtility;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.block.Block;
@@ -215,18 +216,6 @@ public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController 
 		this.energyBonus = data.getInteger("energyBonus");
 	}
 
-	@Override
-	public void writeInitialSyncData(PacketBuffer buf) {
-		super.writeInitialSyncData(buf);
-		buf.writeInt(energyBonus);
-	}
-
-	@Override
-	public void receiveInitialSyncData(PacketBuffer buf) {
-		super.receiveInitialSyncData(buf);
-		this.energyBonus = buf.readInt();
-	}
-
 	@Nonnull
 	@Override
 	protected OrientedOverlayRenderer getFrontOverlay() {
@@ -246,19 +235,55 @@ public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController 
 		tooltip.add(I18n.format("gtadditions.multiblock.large_chemical_reactor.tooltip.3"));
 	}
 
-	private void replaceCoilsAsActive(boolean isActive) {
-		if (!GAConfig.Misc.activeCoils) return;
+	@Override
+	public void writeInitialSyncData(PacketBuffer buf) {
+		super.writeInitialSyncData(buf);
+		buf.writeInt(this.energyBonus);
+		this.writeActiveBlockPacket(buf, this.recipeMapWorkable.isActive());
+	}
+
+	@Override
+	public void receiveInitialSyncData(PacketBuffer buf) {
+		super.receiveInitialSyncData(buf);
+		this.energyBonus = buf.readInt();
+		this.readActiveBlockPacket(buf);
+	}
+
+	@Override
+	public void receiveCustomData(int dataId, PacketBuffer buf) {
+		super.receiveCustomData(dataId, buf);
+		if (dataId == 128) {
+			this.readActiveBlockPacket(buf);
+		}
+	}
+
+	private void writeActiveBlockPacket(PacketBuffer buffer, boolean isActive) {
+		buffer.writeBoolean(isActive);
+		buffer.writeInt(this.activeStates.size());
 		for (BlockPos pos : this.activeStates) {
+			buffer.writeBlockPos(pos);
+		}
+	}
+
+	private void readActiveBlockPacket(PacketBuffer buffer) {
+		boolean isActive = buffer.readBoolean();
+		int size = buffer.readInt();
+		for (int i = 0; i < size; i++) {
+			BlockPos pos = buffer.readBlockPos();
 			IBlockState state = this.getWorld().getBlockState(pos);
 			Block block = state.getBlock();
 			if (block instanceof BlockWireCoil) {
-				state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
-				this.getWorld().setBlockState(pos, state);
+				state = state.withProperty(BlockFireboxCasing.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state, 8);
 			} else if (block instanceof GAHeatingCoil) {
 				state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
-				this.getWorld().setBlockState(pos, state);
+				this.getWorld().setBlockState(pos, state, 8);
 			}
 		}
+	}
+
+	private void replaceCoilsAsActive(boolean isActive) {
+		this.writeCustomData(128, buffer -> this.writeActiveBlockPacket(buffer, isActive));
 	}
 
 	@Override

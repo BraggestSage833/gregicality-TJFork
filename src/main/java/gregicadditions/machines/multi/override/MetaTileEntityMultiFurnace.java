@@ -24,12 +24,14 @@ import gregtech.api.render.Textures;
 import gregtech.api.util.GTFluidUtils;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.InventoryUtils;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -159,19 +161,53 @@ public class MetaTileEntityMultiFurnace extends GARecipeMapMultiblockController 
         return Textures.MULTI_FURNACE_OVERLAY;
     }
 
-    private void replaceCoilsAsActive(boolean isActive) {
-        if (!GAConfig.Misc.activeCoils) return;
+    @Override
+    public void writeInitialSyncData(PacketBuffer buf) {
+        super.writeInitialSyncData(buf);
+        this.writeActiveBlockPacket(buf, this.recipeMapWorkable.isActive());
+    }
+
+    @Override
+    public void receiveInitialSyncData(PacketBuffer buf) {
+        super.receiveInitialSyncData(buf);
+        this.readActiveBlockPacket(buf);
+    }
+
+    @Override
+    public void receiveCustomData(int dataId, PacketBuffer buf) {
+        super.receiveCustomData(dataId, buf);
+        if (dataId == 128) {
+            this.readActiveBlockPacket(buf);
+        }
+    }
+
+    private void writeActiveBlockPacket(PacketBuffer buffer, boolean isActive) {
+        buffer.writeBoolean(isActive);
+        buffer.writeInt(this.activeStates.size());
         for (BlockPos pos : this.activeStates) {
+            buffer.writeBlockPos(pos);
+        }
+    }
+
+    private void readActiveBlockPacket(PacketBuffer buffer) {
+        boolean isActive = buffer.readBoolean();
+        int size = buffer.readInt();
+        for (int i = 0; i < size; i++) {
+            BlockPos pos = buffer.readBlockPos();
             IBlockState state = this.getWorld().getBlockState(pos);
             Block block = state.getBlock();
             if (block instanceof BlockWireCoil) {
-                state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
-                this.getWorld().setBlockState(pos, state);
+                state = state.withProperty(BlockFireboxCasing.ACTIVE, isActive);
+                this.getWorld().setBlockState(pos, state, 8);
             } else if (block instanceof GAHeatingCoil) {
                 state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
-                this.getWorld().setBlockState(pos, state);
+                this.getWorld().setBlockState(pos, state, 8);
             }
         }
+    }
+
+    private void replaceCoilsAsActive(boolean isActive) {
+        this.writeCustomData(128, buffer -> this.writeActiveBlockPacket(buffer, isActive));
     }
 
     @Override

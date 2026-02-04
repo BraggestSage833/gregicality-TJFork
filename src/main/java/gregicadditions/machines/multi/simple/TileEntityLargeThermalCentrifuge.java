@@ -21,14 +21,12 @@ import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.api.util.GTUtility;
-import gregtech.common.blocks.BlockBoilerCasing;
-import gregtech.common.blocks.BlockMultiblockCasing;
-import gregtech.common.blocks.BlockWireCoil;
-import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.blocks.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -221,19 +219,53 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 		tooltip.add(I18n.format("gtadditions.multiblock.large_ThermalCentrifuge.tooltip.2"));
 	}
 
-	private void replaceCoilsAsActive(boolean isActive) {
-		if (!GAConfig.Misc.activeCoils) return;
+	@Override
+	public void writeInitialSyncData(PacketBuffer buf) {
+		super.writeInitialSyncData(buf);
+		this.writeActiveBlockPacket(buf, this.recipeMapWorkable.isActive());
+	}
+
+	@Override
+	public void receiveInitialSyncData(PacketBuffer buf) {
+		super.receiveInitialSyncData(buf);
+		this.readActiveBlockPacket(buf);
+	}
+
+	@Override
+	public void receiveCustomData(int dataId, PacketBuffer buf) {
+		super.receiveCustomData(dataId, buf);
+		if (dataId == 128) {
+			this.readActiveBlockPacket(buf);
+		}
+	}
+
+	private void writeActiveBlockPacket(PacketBuffer buffer, boolean isActive) {
+		buffer.writeBoolean(isActive);
+		buffer.writeInt(this.activeStates.size());
 		for (BlockPos pos : this.activeStates) {
+			buffer.writeBlockPos(pos);
+		}
+	}
+
+	private void readActiveBlockPacket(PacketBuffer buffer) {
+		boolean isActive = buffer.readBoolean();
+		int size = buffer.readInt();
+		for (int i = 0; i < size; i++) {
+			BlockPos pos = buffer.readBlockPos();
 			IBlockState state = this.getWorld().getBlockState(pos);
 			Block block = state.getBlock();
 			if (block instanceof BlockWireCoil) {
-				state = state.withProperty(BlockWireCoil.ACTIVE, isActive);
-				this.getWorld().setBlockState(pos, state);
+				state = state.withProperty(BlockFireboxCasing.ACTIVE, isActive);
+				this.getWorld().setBlockState(pos, state, 8);
 			} else if (block instanceof GAHeatingCoil) {
 				state = state.withProperty(GAHeatingCoil.ACTIVE, isActive);
-				this.getWorld().setBlockState(pos, state);
+				this.getWorld().setBlockState(pos, state, 8);
 			}
 		}
+	}
+
+	private void replaceCoilsAsActive(boolean isActive) {
+		this.writeCustomData(128, buffer -> this.writeActiveBlockPacket(buffer, isActive));
 	}
 
 	@Override
