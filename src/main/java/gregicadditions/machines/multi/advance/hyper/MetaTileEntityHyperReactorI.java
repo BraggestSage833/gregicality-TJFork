@@ -6,10 +6,8 @@ import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
 import gregicadditions.item.GAReactorCasing;
 import gregicadditions.item.GATransparentCasing;
-import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.GABoostableWorkableHandler;
 import gregicadditions.machines.multi.GAFueledMultiblockController;
-import gregicadditions.recipes.impl.BoostableWorkableHandler;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.recipes.GARecipeMaps;
 import gregicadditions.utils.GALog;
@@ -39,12 +37,11 @@ import java.util.Objects;
 import static gregicadditions.client.ClientHandler.NAQUADRIA_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 import static gregtech.api.unification.material.Materials.Helium;
-import static gregtech.api.unification.material.Materials.Radon;
 
 public class MetaTileEntityHyperReactorI extends GAFueledMultiblockController {
 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
-            MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS
+            MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH
     };
 
     private long maxVoltage;
@@ -117,7 +114,7 @@ public class MetaTileEntityHyperReactorI extends GAFueledMultiblockController {
                 .aisle("CCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
                 .aisle("CCSCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
                 .where('S', selfPredicate())
-                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(((tilePredicate((state, tile) -> tile.metaTileEntityId.equals(GATileEntities.MAINTENANCE_HATCH[2].metaTileEntityId))))))
+                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('T', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TIERED_HULL_UV)))
                 .where('G', statePredicate(GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS)))
                 .where('H', statePredicate(GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE)))

@@ -5,7 +5,6 @@ import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.client.ClientHandler;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAReactorCasing;
-import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.GABoostableWorkableHandler;
 import gregicadditions.machines.multi.GAFueledMultiblockController;
 import gregicadditions.recipes.GARecipeMaps;
@@ -40,7 +39,7 @@ import static gregtech.api.unification.material.Materials.Radon;
 public class MetaTileEntityHyperReactorII extends GAFueledMultiblockController {
 
     public static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
-            MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS
+            MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH
     };
 
     private long maxVoltage;
@@ -123,7 +122,7 @@ public class MetaTileEntityHyperReactorII extends GAFueledMultiblockController {
                 .aisle("###CCCCCCCCC###", "##C##CCCCC##C##", "###CCCCCCCCC###")
                 .aisle("####CCCCCCC####", "###CC#####CC###", "####CCCCCCC####")
                 .aisle("#######C#######", "#####CCSCC#####", "#######C#######")
-                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES).or(((tilePredicate((state, tile) -> tile.metaTileEntityId.equals(GATileEntities.MAINTENANCE_HATCH[2].metaTileEntityId)))))))
+                .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('#', (tile) -> true)
                 .where('S', selfPredicate())
                 .where('F', statePredicate(MetaBlocks.FRAMES.get(Naquadria).getDefaultState()))

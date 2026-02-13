@@ -44,7 +44,7 @@ public class MetaTileEntityStellarForge extends GARecipeMapMultiblockController 
     private long maxVoltage;
 
     public MetaTileEntityStellarForge(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.STELLAR_FORGE_RECIPES);
+        super(metaTileEntityId, GARecipeMaps.STELLAR_FORGE_RECIPES, false, true, true);
         this.recipeMapWorkable = new GAMultiblockRecipeLogic(this) {
             @Override
             protected long getMaxVoltage() {

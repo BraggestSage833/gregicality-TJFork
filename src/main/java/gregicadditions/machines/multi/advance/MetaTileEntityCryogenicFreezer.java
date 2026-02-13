@@ -1,38 +1,35 @@
 package gregicadditions.machines.multi.advance;
 
-import gregicadditions.GAConfig;
 import gregicadditions.GAMaterials;
+import gregicadditions.GAUtility;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.client.ClientHandler;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.multi.override.MetaTileEntityVacuumFreezer;
 import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.multiblock.BlockPattern;
-import gregtech.api.multiblock.BlockWorldState;
 import gregtech.api.multiblock.FactoryBlockPattern;
+import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.OrientedOverlayRenderer;
-import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 import static gregicadditions.client.ClientHandler.INCOLOY_MA956_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
@@ -42,13 +39,13 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
             MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.EXPORT_FLUIDS,
-            GregicAdditionsCapabilities.MAINTENANCE_HATCH};
+            GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.INPUT_ENERGY};
 
     private static final int DURATION_DECREASE_FACTOR = 35;
 
     private static final int ENERGY_DECREASE_FACTOR = 20;
 
-    private final DecimalFormat formatter = new DecimalFormat("#0.00");
+    private FluidStack cryotheum;
 
     public MetaTileEntityCryogenicFreezer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -70,14 +67,15 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
                 .setAmountAtLeast('L', 14)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES).or(energyHatchPredicate())))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('#', isAirPredicate())
                 .build();
     }
 
-    @Nonnull
-    private static Predicate<BlockWorldState> energyHatchPredicate() {
-        return tilePredicate((state, tile) -> tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[0].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[1].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[2].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[3].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[4].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[5].metaTileEntityId) || tile.metaTileEntityId.equals(MetaTileEntities.ENERGY_INPUT_HATCH[6].metaTileEntityId));
+    @Override
+    protected void formStructure(PatternMatchContext context) {
+        super.formStructure(context);
+        this.cryotheum = GAMaterials.Cryotheum.getFluid((int) Math.pow(2, GAUtility.getTierByVoltage(this.energyContainer.getInputVoltage())));
     }
 
     @Override
@@ -116,25 +114,16 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
         }
 
         @Override
+        protected long getMaxVoltage() {
+            return Math.min(GTValues.V[7], super.getMaxVoltage());
+        }
+
+        @Override
         protected boolean drawEnergy(int recipeEUt) {
-            int drain = (int) Math.pow(3, getOverclockingTier(getMaxVoltage()));
-            long resultEnergy = this.getEnergyStored() - (long) recipeEUt;
-            Optional<IFluidTank> fluidTank =
-                    getInputFluidInventory().getFluidTanks().stream()
-                            .filter(iFluidTank -> iFluidTank.getFluid() != null)
-                            .filter(iFluidTank -> iFluidTank.getFluid().isFluidEqual(GAMaterials.Cryotheum.getFluid(drain)))
-                            .findFirst();
-            if (fluidTank.isPresent()) {
-                IFluidTank tank = fluidTank.get();
-                if (resultEnergy >= 0L && resultEnergy <= this.getEnergyCapacity() && tank.getCapacity() > 1) {
-                    tank.drain(drain, true);
-                    this.getEnergyContainer().changeEnergy(-recipeEUt);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return false;
+            if (!cryotheum.isFluidStackIdentical(this.getInputTank().drain(cryotheum, false)))
+                return false;
+            this.getInputTank().drain(cryotheum, true);
+            return super.drawEnergy(recipeEUt);
         }
     }
 }
