@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
+@Deprecated
 public class FluidStackTextRenderer extends FluidStackRenderer {
     public FluidStackTextRenderer(int capacityMb, boolean showCapacity, int width, int height, @Nullable IDrawable overlay) {
         super(capacityMb, showCapacity, width, height, overlay);

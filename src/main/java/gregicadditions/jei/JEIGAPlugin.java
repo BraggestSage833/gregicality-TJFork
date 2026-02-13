@@ -90,7 +90,7 @@ public class JEIGAPlugin implements IModPlugin {
         for (RecipeMap<?> recipeMap : RecipeMap.getRecipeMaps()) {
             List<GARecipeWrapper> recipesList = recipeMap.getRecipeList()
                     .stream().filter(recipe -> !recipe.isHidden() && recipe.hasValidInputsForDisplay())
-                    .map(r -> new GARecipeWrapper(r))
+                    .map(recipe -> new GARecipeWrapper(recipeMap, recipe))
                     .collect(Collectors.toList());
             registry.addRecipes(recipesList, Gregicality.MODID + ":" + recipeMap.unlocalizedName);
         }
