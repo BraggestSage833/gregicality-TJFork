@@ -200,8 +200,10 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gtadditions.multiblock.universal.tooltip.1", this.recipeMap.getLocalizedName()));
         tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.1"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_blast_logic.tooltip.1"));
-        tooltip.add(I18n.format("gtadditions.multiblock.mega_blast_logic.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.mega_logic.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.1"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.2"));
+        tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.3"));
     }
 
     @Override
@@ -329,21 +331,23 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         @Override
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
             long EUt;
-            int duration;
+            double  duration;
             int minMultiplier = Integer.MAX_VALUE;
             int recipeTemp = matchingRecipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0);
             int tier = getOverclockingTier(maxVoltage);
+            int maxParallel = (int) Math.max(Math.pow(4, tier - 5 ), 1);
+
             Set<ItemStack> countIngredients = new HashSet<>();
             if (!matchingRecipe.getInputs().isEmpty()) {
                 this.findIngredients(countIngredients, inputs);
-                minMultiplier = this.getMinRatioItem(countIngredients, matchingRecipe, MAX_ITEMS_LIMIT);
+                minMultiplier = this.getMinRatioItem(countIngredients, matchingRecipe, maxParallel);
             }
 
             Object2IntMap<String> countFluid = new Object2IntOpenHashMap<>();
             if (!matchingRecipe.getFluidInputs().isEmpty()) {
 
                 this.findFluid(countFluid, fluidInputs);
-                minMultiplier = Math.min(minMultiplier, this.getMinRatioFluid(countFluid, matchingRecipe, MAX_ITEMS_LIMIT));
+                minMultiplier = Math.min(minMultiplier, this.getMinRatioFluid(countFluid, matchingRecipe, maxParallel));
             }
 
             if (minMultiplier == Integer.MAX_VALUE) {
@@ -361,27 +365,16 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             // Apply EUt discount for every 900K above the base recipe temperature
             EUt *= Math.pow(0.95, bonusAmount);
 
-            // Get parallel recipes to run: [0, 256]
-            int multiplier = Math.min(minMultiplier, (int) (getMaxVoltage() / EUt));
-
-            // Change EUt to be the parallel amount
-            EUt *= multiplier;
-
-            // Modify bonus amount to prefer parallel logic
-            bonusAmount = (int) Math.max(0, bonusAmount - Math.log(multiplier) / LOG_4 * 2);
-
-            // Apply MEBF duration discount
-            duration *= 0.25;
 
             // Apply Super Overclocks for every 1800k above the base recipe temperature
             for (int i = bonusAmount; EUt <= GAValues.V[tier - 1] && duration >= 3 && i > 0; i--) {
                 if (i % 2 == 0) {
                     EUt *= 4;
-                    duration *= 0.15;
+                    duration /= 4;
                 }
             }
 
-            // Apply Regular Overclocking
+            // Apply Mega  Overclocking
             while (duration >= 3 && EUt <= GAValues.V[tier - 1]) {
                 EUt *= 4;
                 duration /= 2.8;
@@ -395,7 +388,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             List<FluidStack> newFluidInputs = new ArrayList<>();
             List<ItemStack> outputI = new ArrayList<>();
             List<FluidStack> outputF = new ArrayList<>();
-            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, multiplier);
+            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, minMultiplier);
 
             BlastRecipeBuilder newRecipe = (BlastRecipeBuilder) this.recipeMap.recipeBuilder();
             copyChancedItemOutputs(newRecipe, matchingRecipe, minMultiplier);
@@ -410,7 +403,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
                     .outputs(outputI)
                     .fluidOutputs(outputF)
                     .EUt((int) Math.max(1, EUt))
-                    .duration(duration)
+                    .duration((int)duration)
                     .blastFurnaceTemp(recipeTemp);
 
             return newRecipe.build().getResult();
