@@ -1,5 +1,6 @@
 package gregicadditions.machines.multi.mega;
 
+import gregicadditions.GAValues;
 import gregicadditions.item.GAMultiblockCasing;
 import gregicadditions.item.GAMultiblockCasing2;
 import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
@@ -106,8 +107,6 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
 
     public static class MegaMultiblockRecipeLogic extends LargeSimpleMultiblockRecipeLogic {
 
-        protected static final int OVERCLOCK_FACTOR = 8;
-        protected static final int MAX_ITEMS_LIMIT = 6144;
 
         public MegaMultiblockRecipeLogic(RecipeMapMultiblockController tileEntity, int EUtPercentage, int durationPercentage, int chancePercentage) {
             super(tileEntity, EUtPercentage, durationPercentage, chancePercentage, 256);
@@ -122,20 +121,22 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
         @Override
         protected Recipe createRecipe(long maxVoltage, IItemHandlerModifiable inputs, IMultipleTankHandler fluidInputs, Recipe matchingRecipe) {
             int EUt;
-            int duration;
+            double  duration;
             int minMultiplier = Integer.MAX_VALUE;
+            int tier = getOverclockingTier(maxVoltage);
+            int maxParallel = (int) Math.max(Math.pow(4, tier - 6 ), 1);
 
             Set<ItemStack> countIngredients = new HashSet<>();
             if (!matchingRecipe.getInputs().isEmpty()) {
                 this.findIngredients(countIngredients, inputs);
-                minMultiplier = this.getMinRatioItem(countIngredients, matchingRecipe, MAX_ITEMS_LIMIT);
+                minMultiplier = this.getMinRatioItem(countIngredients, matchingRecipe, maxParallel);
             }
 
             Object2IntMap<String> countFluid = new Object2IntOpenHashMap<>();
             if (!matchingRecipe.getFluidInputs().isEmpty()) {
 
                 this.findFluid(countFluid, fluidInputs);
-                minMultiplier = this.getMinRatioFluid(countFluid, matchingRecipe, MAX_ITEMS_LIMIT);
+                minMultiplier = this.getMinRatioFluid(countFluid, matchingRecipe, maxParallel);
             }
 
             if (minMultiplier == Integer.MAX_VALUE) {
@@ -147,19 +148,21 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
             duration = matchingRecipe.getDuration();
 
             // Get parallel recipes to run: [0, 256]
-            int multiplier = Math.min(minMultiplier, (int) (getMaxVoltage() / EUt));
+            // Apply Mega Overclocking
+            while (duration >= 1 && EUt <= GAValues.V[tier - 1]) {
+                EUt *= 4;
+                duration /= 2.8;
+            }
+            if (duration <= 0) {
+                duration = 1;
+            }
 
             List<CountableIngredient> newRecipeInputs = new ArrayList<>();
             List<FluidStack> newFluidInputs = new ArrayList<>();
             List<ItemStack> outputI = new ArrayList<>();
             List<FluidStack> outputF = new ArrayList<>();
-            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, multiplier);
+            this.multiplyInputsAndOutputs(newRecipeInputs, newFluidInputs, outputI, outputF, matchingRecipe, minMultiplier);
 
-            // Get EUt for the recipe, pre overclocking
-            long totalEUt = (long) multiplier * EUt;
-
-            EUt = (int) (totalEUt / OVERCLOCK_FACTOR);
-            duration /= OVERCLOCK_FACTOR;
 
             RecipeBuilder<?> newRecipe = recipeMap.recipeBuilder();
             copyChancedItemOutputs(newRecipe, matchingRecipe, minMultiplier);
