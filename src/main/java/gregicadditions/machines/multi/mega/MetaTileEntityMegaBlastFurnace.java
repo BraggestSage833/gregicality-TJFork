@@ -190,7 +190,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
     @Override
     protected void addDisplayText(List<ITextComponent> textList) {
         super.addDisplayText(textList);
-        if (isStructureFormed() && !hasProblems()) {
+        if (isStructureFormed()) {
             textList.add(new TextComponentTranslation("gregtech.multiblock.blast_furnace.max_temperature", blastFurnaceTemperature));
             textList.add(new TextComponentTranslation("gtadditions.multiblock.blast_furnace.additional_temperature", bonusTemperature));
         }
@@ -204,6 +204,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.1"));
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.2"));
         tooltip.add(I18n.format("gtadditions.multiblock.electric_blast_furnace.tooltip.3"));
+
     }
 
     @Override
@@ -379,7 +380,8 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
                 EUt *= 4;
                 duration /= 2.8;
             }
-            if (duration <= 0) {
+
+            if ((int)duration <= 0) {
                 duration = 1;
             }
 
@@ -403,7 +405,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
                     .outputs(outputI)
                     .fluidOutputs(outputF)
                     .EUt((int) Math.max(1, EUt))
-                    .duration((int)duration)
+                    .duration((duration <=0 ? 1: (int)duration))
                     .blastFurnaceTemp(recipeTemp);
 
             return newRecipe.build().getResult();

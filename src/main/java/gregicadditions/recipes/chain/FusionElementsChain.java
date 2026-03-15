@@ -301,7 +301,7 @@ public class FusionElementsChain {
         // Flerovium Production
         ADV_FUSION_RECIPES.recipeBuilder().duration(75).EUt(600000).coilTier(2).euStart(2500000000L).euReturn(50)
                 .fluidInputs(Uranium.getFluid(125 * 4))
-                .fluidInputs(Uranium.getFluid(125 * 4))
+                .fluidInputs(Uranium235Isotope.getMaterial().getFluid(125 * 4))
                 .fluidOutputs(QuassifissioningPlasma.getFluid(125 * 4))
                 .buildAndRegister();
 

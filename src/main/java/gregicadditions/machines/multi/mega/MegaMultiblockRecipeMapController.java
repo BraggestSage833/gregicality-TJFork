@@ -153,7 +153,7 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
                 EUt *= 4;
                 duration /= 2.8;
             }
-            if (duration <= 0) {
+            if ((int)duration <= 0) {
                 duration = 1;
             }
 

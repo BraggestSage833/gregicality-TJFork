@@ -72,6 +72,10 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
             resultEUt *= 4;
             resultDuration /= 2.8;
         }
+        if (resultDuration <= 0) {
+            resultDuration = 1;
+
+        }
         previousRecipeDuration = (int) resultDuration;
         return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
     }
