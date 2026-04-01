@@ -192,7 +192,7 @@ public class MetaTileEntityLargeMiner extends GAMultiblockWithDisplayBase implem
                 } else {
                     itemStacks.add(new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState)));
                 }
-                if (addItemsToItemHandler(outputInventory, true, itemStacks)) {
+                if (this.isItemInfSink() || addItemsToItemHandler(outputInventory, true, itemStacks)) {
                     addItemsToItemHandler(outputInventory, false, itemStacks);
                     if (this.getType() != Type.CREATIVE ){
                         world.setBlockState(blockPos1, Blocks.COBBLESTONE.getDefaultState());
