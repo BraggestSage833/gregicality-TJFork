@@ -1,6 +1,7 @@
 package gregicadditions.machines.multi.advance.hyper;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.client.ClientHandler;
 import gregicadditions.item.GAMetaBlocks;
@@ -43,7 +44,7 @@ public class MetaTileEntityHyperReactorIII extends GAFueledMultiblockController 
 
     public MetaTileEntityHyperReactorIII(ResourceLocation metaTileEntityId, long maxVoltage) {
         super(metaTileEntityId, GARecipeMaps.HYPER_REACTOR_FUELS, maxVoltage);
-        this.maxVoltage = maxVoltage;
+        this.maxVoltage = GAValues.VA[GAValues.MAX];
         if (getWorld() != null && !getWorld().isRemote)
             this.booster = getBooster();
     }

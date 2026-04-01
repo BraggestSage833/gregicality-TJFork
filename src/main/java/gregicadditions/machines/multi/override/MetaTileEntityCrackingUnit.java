@@ -203,13 +203,13 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
             MetaTileEntityCrackingUnit metaTileEntity = (MetaTileEntityCrackingUnit) getMetaTileEntity();
             int energyBonus = metaTileEntity.heatingCoilTier;
 
-            int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
+            long[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
             this.progressTime = 1;
 
             // apply energy bonus
             resultOverclock[0] -= (energyBonus * 5);
 
-            setMaxProgress(resultOverclock[1]);
+            setMaxProgress((int) resultOverclock[1]);
 
             this.recipeEUt = resultOverclock[0];
             this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());

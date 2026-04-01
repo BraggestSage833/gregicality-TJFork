@@ -288,7 +288,7 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			long maxVoltage = getMaxVoltage();
 			if (metaTileEntity instanceof TileEntityLargeThermalCentrifuge)
 				maxVoltage = ((TileEntityLargeThermalCentrifuge) metaTileEntity).maxVoltage;
-			int[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
+			long[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
 			this.progressTime = 1;
 
 			TileEntityLargeThermalCentrifuge metaTileEntity = (TileEntityLargeThermalCentrifuge) getMetaTileEntity();
@@ -297,7 +297,7 @@ public class TileEntityLargeThermalCentrifuge extends LargeSimpleRecipeMapMultib
 			// apply speed bonus
 			resultOverclock[1] -= (int) (resultOverclock[1] * speedBonus * 0.01f);
 
-			setMaxProgress(resultOverclock[1]);
+			setMaxProgress((int) resultOverclock[1]);
 			this.recipeEUt = resultOverclock[0];
 			this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
 			int tier = getMachineTierForRecipe(recipe);

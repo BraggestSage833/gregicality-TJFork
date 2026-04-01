@@ -348,13 +348,13 @@ public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController 
 			TileEntityChemicalPlant metaTileEntity = (TileEntityChemicalPlant) getMetaTileEntity();
 			int energyBonus = metaTileEntity.getEnergyBonus();
 
-			int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
+			long[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
 			this.progressTime = 1;
 
 			// apply energy bonus
 			resultOverclock[0] -= (int) (resultOverclock[0] * energyBonus * 0.01f);
 
-			setMaxProgress(resultOverclock[1]);
+			setMaxProgress((int) resultOverclock[1]);
 
 			this.recipeEUt = resultOverclock[0];
 			this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());

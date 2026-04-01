@@ -615,9 +615,9 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
             long maxVoltage = getMaxVoltage();
             if (metaTileEntity instanceof LargeSimpleRecipeMapMultiblockController)
                 maxVoltage = ((LargeSimpleRecipeMapMultiblockController) metaTileEntity).maxVoltage;
-            int[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
+            long[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
             this.progressTime = 1;
-            setMaxProgress(resultOverclock[1]);
+            setMaxProgress((int) resultOverclock[1]);
             this.recipeEUt = resultOverclock[0];
             this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
             int tier = getMachineTierForRecipe(recipe);

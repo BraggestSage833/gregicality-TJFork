@@ -2,6 +2,7 @@ package gregicadditions;
 
 
 import gregicadditions.utils.GALog;
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.recipes.CountableIngredient;
 import gregtech.api.recipes.Recipe;
@@ -21,12 +22,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import static gregtech.api.GTValues.VOC;
 
 public class GAUtility {
 
@@ -138,6 +142,55 @@ public class GAUtility {
             TextFormatting.DARK_BLUE.toString() + TextFormatting.BOLD, // UIV, 11
             TextFormatting.RED.toString() + TextFormatting.BOLD + TextFormatting.UNDERLINE, // UMV, 12
             TextFormatting.DARK_RED.toString() + TextFormatting.BOLD + TextFormatting.UNDERLINE, // UXV, 13
-            TextFormatting.WHITE.toString() + TextFormatting.BOLD + TextFormatting.UNDERLINE, // MAX, 14
+            GAValues.MAX_PLUS // MAX, 14
+
     };
+
+    public static int nearestLesserOrEqual(@NotNull long[] array, long value) {
+        int low = 0, high = array.length - 1;
+        while (true) {
+            int median = (low + high) / 2;
+            if (array[median] <= value) {
+                if (low == high) return low;
+                low = median + 1;
+            } else {
+                if (low == high) return low - 1;
+                high = median - 1;
+            }
+        }
+    }
+
+    /**
+     * @param array Array sorted with natural order
+     * @param value Value to search for
+     * @return Index of the nearest value lesser than {@code value},
+     *         or {@code -1} if there's no entry matching the condition
+     */
+    public static int nearestLesser(@NotNull long[] array, long value) {
+        int low = 0, high = array.length - 1;
+        while (true) {
+            int median = (low + high) / 2;
+            if (array[median] < value) {
+                if (low == high) return low;
+                low = median + 1;
+            } else {
+                if (low == high) return low - 1;
+                high = median - 1;
+            }
+        }
+    }
+
+    public static byte getOCTierByVoltage(long voltage) {
+        return (byte) Math.min(GTValues.MAX_TRUE, nearestLesser(VOC, voltage) + 1);
+    }
+
+    /**
+     * Ex: This method turns both 1024 and 512 into HV.
+     *
+     * @return the highest voltage tier with value below or equal to {@code voltage}, or
+     *         {@code ULV} if there's no tier below
+     */
+    public static byte getFloorTierByVoltage(long voltage) {
+        return (byte) Math.max(GTValues.ULV, nearestLesserOrEqual(VOC, voltage));
+    }
 }

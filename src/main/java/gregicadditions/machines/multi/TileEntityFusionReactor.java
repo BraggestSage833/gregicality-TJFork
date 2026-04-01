@@ -175,7 +175,7 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
                 textList.add(new TextComponentTranslation("gregtech.multiblock.work_paused"));
             } else if (this.recipeMapWorkable.isActive()) {
                 textList.add(new TextComponentTranslation("gregtech.multiblock.running"));
-                int currentProgress;
+                long currentProgress;
                 if (energyContainer.getEnergyCapacity() > 0) {
                     currentProgress = (int) (this.recipeMapWorkable.getProgressPercent() * 100.0D);
                     textList.add(new TextComponentTranslation("gregtech.multiblock.progress", currentProgress));
