@@ -24,9 +24,9 @@ public class QubitConsumeRecipeLogic extends GAMultiblockRecipeLogic {
     }
 
     @Override
-    protected int[] calculateOverclock(int EUt, long voltage, int duration) {
+    protected long[] calculateOverclock(long EUt, long voltage, int duration) {
         if (recipeQubit > 0) {
-            return new int[]{EUt, duration};
+            return new long[]{EUt, duration};
         }
         return super.calculateOverclock(EUt, voltage, duration);
     }

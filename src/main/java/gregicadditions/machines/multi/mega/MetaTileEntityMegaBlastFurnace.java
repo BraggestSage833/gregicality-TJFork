@@ -306,9 +306,9 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         @Override
         protected void setupRecipe(Recipe recipe) {
             long maxVoltage = ((MegaMultiblockRecipeMapController) metaTileEntity).maxVoltage;
-            int[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
+            long[] resultOverclock = calculateOverclock(recipe.getEUt(), maxVoltage, recipe.getDuration());
             this.progressTime = 1;
-            this.setMaxProgress(resultOverclock[1]);
+            this.setMaxProgress((int) resultOverclock[1]);
             this.recipeEUt = resultOverclock[0];
             this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
             int tier = this.getMachineTierForRecipe(recipe);

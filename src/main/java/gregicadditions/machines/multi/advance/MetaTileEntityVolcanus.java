@@ -141,7 +141,7 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
         }
 
         @Override
-        protected boolean drawEnergy(int recipeEUt) {
+        protected boolean drawEnergy(long recipeEUt) {
             if (!pyrotheum.isFluidStackIdentical(this.getInputTank().drain(pyrotheum, false)))
                 return false;
             this.getInputTank().drain(pyrotheum, true);

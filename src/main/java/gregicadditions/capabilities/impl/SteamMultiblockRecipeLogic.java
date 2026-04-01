@@ -87,7 +87,7 @@ public class SteamMultiblockRecipeLogic extends AbstractRecipeLogic {
     }
 
     @Override
-    protected boolean drawEnergy(int recipeEUt) {
+    protected boolean drawEnergy(long recipeEUt) {
         combineSteamTanks();
         int resultDraw = (int) Math.ceil(recipeEUt / conversionRate);
         return resultDraw >= 0 && steamFluidTankCombined.getFluidAmount() >= resultDraw &&
