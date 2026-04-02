@@ -294,7 +294,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
             EUt *= Math.pow(0.95, bonusAmount);
 
             int tier = getOverclockingTier(voltage);
-            if (GAValues.V[tier] <= EUt || tier == 0)
+            if (GAValues.VOC[tier] <= EUt || tier == 0)
                 return new int[]{EUt, durationModified};
             if (negativeEU)
                 EUt = -EUt;
@@ -311,7 +311,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
                 // Do not overclock further if duration is already too small
                 // Apply Super Overclocks for every 1800k above the base recipe temperature
-                for (int i = bonusAmount; resultEUt <= GAValues.V[tier - 1] && resultDuration >= 3 && i > 0; i--) {
+                for (int i = bonusAmount; resultEUt <= GAValues.VOC[tier - 1] && resultDuration >= 3 && i > 0; i--) {
                     if (i % 2 == 0) {
                         resultEUt *= 4;
                         resultDuration *= 0.25;
@@ -320,7 +320,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
                 // Do not overclock further if duration is already too small
                 // Apply Regular Overclocking
-                while (resultDuration >= 3 && resultEUt <= GAValues.V[tier - 1]) {
+                while (resultDuration >= 3 && resultEUt <= GAValues.VOC[tier - 1]) {
                     resultEUt *= 4;
                     resultDuration /= 2.8;
                 }

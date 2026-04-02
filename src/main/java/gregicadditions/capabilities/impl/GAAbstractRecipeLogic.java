@@ -24,7 +24,7 @@ public abstract class GAAbstractRecipeLogic extends AbstractRecipeLogic {
             long resultEUt = EUt;
             double resultDuration = duration;
             //do not overclock further if duration is already too small
-            while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
+            while (resultDuration >= 1 && resultEUt <= GAValues.VOC[tier - 1]) {
                 resultEUt *= 4;
                 resultDuration /= 2.8;
             }
