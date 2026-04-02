@@ -45,7 +45,7 @@ public class GARecipeLogicEnergy extends RecipeLogicEnergy {
             long resultEUt = EUt;
             double resultDuration = duration;
             //do not overclock further if duration is already too small
-            while (resultDuration >= 3 && resultEUt <= GAValues.V[tier - 1]) {
+            while (resultDuration >= 3 && resultEUt <= GAValues.VOC[tier - 1]) {
                 resultEUt *= 4;
                 resultDuration /= 2.8;
             }
