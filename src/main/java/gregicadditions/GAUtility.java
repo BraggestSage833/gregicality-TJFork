@@ -181,7 +181,10 @@ public class GAUtility {
     }
 
     public static byte getOCTierByVoltage(long voltage) {
-        return (byte) Math.min(GTValues.MAX_TRUE, nearestLesser(VOC, voltage) + 1);
+        if (voltage <= GTValues.V[GTValues.ULV]) {
+            return GTValues.ULV;
+        }
+        return (byte) ((62 - Long.numberOfLeadingZeros(voltage - 1)) >> 1);
     }
 
     /**
