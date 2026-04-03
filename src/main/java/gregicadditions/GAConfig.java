@@ -1417,6 +1417,11 @@ public class GAConfig {
             @Config.Name("MK3 Void Miner Blacklist")
             public String[] oreBlacklistUEV = new String[]{""};
 
+            @Config.Comment("The name of the ores to blacklist for the MK4 Void Miner")
+            @Config.RequiresMcRestart
+            @Config.Name("MK3 Void Miner Blacklist")
+            public String[] oreBlacklistUIV = new String[]{""};
+
             @Config.Comment("The name of items you wish to add to the MK1 Void Miner. Example: \"minecraft:wool:2\"")
             @Config.RequiresMcRestart
             @Config.Name("MK1 Void Miner Whitelist")
@@ -1431,6 +1436,11 @@ public class GAConfig {
             @Config.RequiresMcRestart
             @Config.Name("MK3 Void Miner Whitelist")
             public String[] oreWhitelistUEV = new String[]{""};
+
+            @Config.Comment("The name of items you wish to add to the MK4 Void Miner")
+            @Config.RequiresMcRestart
+            @Config.Name("MK3 Void Miner Whitelist")
+            public String[] oreWhitelistUIV = new String[]{""};
 
             @Config.Comment({"The step of ore processing that the Void Ore Miner will produce", "0 = ore, 1 = crushed, 2 = crushed Purified, 3 = dust", "Skipping steps of ore processing can help reduce lag at the cost of byproducts"})
             @Config.RangeInt(min = 0, max = 3)
