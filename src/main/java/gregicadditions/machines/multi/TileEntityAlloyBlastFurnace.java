@@ -260,9 +260,9 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
         @Override
         protected void setupRecipe(Recipe recipe) {
-            int[] resultOverclock = this.calculateOverclock(recipe.getEUt(), getMaxVoltage(), recipe.getDuration(), recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0));
+            long[] resultOverclock = this.calculateOverclock(recipe.getEUt(), getMaxVoltage(), recipe.getDuration(), recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0));
             this.progressTime = 1;
-            this.setMaxProgress(resultOverclock[1]);
+            this.setMaxProgress((int) resultOverclock[1]);
             this.recipeEUt = resultOverclock[0];
             this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
             int tier = this.getMachineTierForRecipe(recipe);
@@ -275,7 +275,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
         }
 
-        protected int[] calculateOverclock(int EUt, long voltage, int duration, int recipeTemp) {
+        protected long[] calculateOverclock(long EUt, long voltage, int duration, int recipeTemp) {
             int numMaintenanceProblems = (this.metaTileEntity instanceof GARecipeMapMultiblockController) ?
                     ((GARecipeMapMultiblockController) metaTileEntity).getNumProblems() : 0;
 
@@ -283,7 +283,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
             int durationModified = (int) (duration * maintenanceDurationMultiplier);
 
             if (!allowOverclocking) {
-                return new int[]{EUt, durationModified};
+                return new long[]{EUt, durationModified};
             }
             boolean negativeEU = EUt < 0;
 
@@ -295,17 +295,17 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
 
             int tier = getOverclockingTier(voltage);
             if (GAValues.VOC[tier] <= EUt || tier == 0)
-                return new int[]{EUt, durationModified};
+                return new long[]{EUt, durationModified};
             if (negativeEU)
                 EUt = -EUt;
             if (EUt <= 16) {
                 int multiplier = EUt <= 8 ? tier : tier - 1;
-                int resultEUt = EUt * (1 << multiplier) * (1 << multiplier);
+                long resultEUt = EUt * (1 << multiplier) * (1 << multiplier);
                 int resultDuration = durationModified / (1 << multiplier);
                 previousRecipeDuration = resultDuration;
-                return new int[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
+                return new long[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
             } else {
-                int resultEUt = EUt;
+                long resultEUt = EUt;
                 double resultDuration = durationModified;
                 previousRecipeDuration = (int) resultDuration;
 
@@ -328,7 +328,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
                 if (resultDuration < 3)
                     resultDuration = 3;
 
-                return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+                return new long[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
             }
         }
 

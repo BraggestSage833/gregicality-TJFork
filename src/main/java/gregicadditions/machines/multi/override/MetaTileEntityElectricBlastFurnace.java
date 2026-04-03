@@ -40,6 +40,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
+import static gregicadditions.GAUtility.getOCTierByVoltage;
 import static gregtech.api.render.Textures.HEAT_PROOF_CASING;
 
 public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockController {
@@ -245,9 +246,9 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 
 		@Override
 		protected void setupRecipe(Recipe recipe) {
-			int[] resultOverclock = this.calculateOverclock(recipe.getEUt(), getMaxVoltage(), recipe.getDuration(), recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0));
+			long[] resultOverclock = this.calculateOverclock(recipe.getEUt(), getMaxVoltage(), recipe.getDuration(), recipe.getRecipePropertyStorage().getRecipePropertyValue(BlastTemperatureProperty.getInstance(), 0));
 			this.progressTime = 1;
-			this.setMaxProgress(resultOverclock[1]);
+			this.setMaxProgress((int) resultOverclock[1]);
 			this.recipeEUt = resultOverclock[0];
 			this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
 			int tier = this.getMachineTierForRecipe(recipe);
@@ -260,7 +261,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 
 		}
 
-		protected int[] calculateOverclock(int EUt, long voltage, int duration, int recipeTemp) {
+		protected long[] calculateOverclock(long EUt, long voltage, int duration, int recipeTemp) {
 			int numMaintenanceProblems = (this.metaTileEntity instanceof GARecipeMapMultiblockController) ?
 					((GARecipeMapMultiblockController) metaTileEntity).getNumProblems() : 0;
 
@@ -268,7 +269,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 			int durationModified = (int) (duration * maintenanceDurationMultiplier);
 
 			if (!allowOverclocking) {
-				return new int[]{EUt, durationModified};
+				return new long[]{EUt, durationModified};
 			}
 			boolean negativeEU = EUt < 0;
 
@@ -277,19 +278,19 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 			// Apply EUt discount for every 900K above the base recipe temperature
 			EUt *= Math.pow(0.95, bonusAmount);
 
-			int tier = getOverclockingTier(voltage);
+			int tier = getOCTierByVoltage(voltage);
 			if (GAValues.VOC[tier] <= EUt || tier == 0)
-				return new int[]{EUt, durationModified};
+				return new long[]{EUt, durationModified};
 			if (negativeEU)
 				EUt = -EUt;
 			if (EUt <= 16) {
 				int multiplier = EUt <= 8 ? tier : tier - 1;
-				int resultEUt = EUt * (1 << multiplier) * (1 << multiplier);
+				long resultEUt = EUt * (1 << multiplier) * (1 << multiplier);
 				int resultDuration = durationModified / (1 << multiplier);
 				previousRecipeDuration = resultDuration;
-				return new int[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
+				return new long[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
 			} else {
-				int resultEUt = EUt;
+				long resultEUt = EUt;
 				double resultDuration = durationModified;
 
 				// Do not overclock further if duration is already too small
@@ -311,7 +312,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 
 
 				previousRecipeDuration = (int) resultDuration;
-				return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+				return new long[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
 			}
 		}
 
