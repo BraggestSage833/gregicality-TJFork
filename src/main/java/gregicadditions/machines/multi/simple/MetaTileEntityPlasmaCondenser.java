@@ -1,10 +1,12 @@
 package gregicadditions.machines.multi.simple;
 
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.item.components.PumpCasing;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.recipes.GARecipeMaps;
+import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import static gregicadditions.client.ClientHandler.HASTELLOY_N_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 
 public class MetaTileEntityPlasmaCondenser extends LargeSimpleRecipeMapMultiblockController {
 
@@ -75,7 +78,23 @@ public class MetaTileEntityPlasmaCondenser extends LargeSimpleRecipeMapMultibloc
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
         PumpCasing.CasingType pump = context.getOrDefault("Pump", PumpCasing.CasingType.PUMP_LV);
-        maxVoltage = (long) (Math.pow(4, pump.getTier()) * 8);
+        if (pump.getTier() >= GAValues.MAX) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = 8L << pump.getTier() * 2;
     }
 
     @Override

@@ -40,6 +40,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.*;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -206,7 +207,25 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
         SensorCasing.CasingType sensor = context.getOrDefault("Sensor", SensorCasing.CasingType.SENSOR_LV);
         FieldGenCasing.CasingType fieldGen = context.getOrDefault("FieldGen", FieldGenCasing.CasingType.FIELD_GENERATOR_LV);
         int min = Collections.min(Arrays.asList(emitter.getTier(), sensor.getTier(), fieldGen.getTier()));
-        maxVoltage = (long) (Math.pow(4, min) * 8);
+
+        if (min >= GAValues.MAX) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = 8L << min * 2;
+
         this.initializeAbilities();
         amount = getAmount();
     }

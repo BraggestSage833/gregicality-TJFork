@@ -50,10 +50,12 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregtech.api.recipes.RecipeMaps.BLAST_RECIPES;
 import static gregtech.api.unification.material.Materials.BlackSteel;
 import static gregtech.api.unification.material.Materials.BlueSteel;
+import gregtech.api.capability.IEnergyContainer;
 
 public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapController {
 
@@ -63,7 +65,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
-            MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.INPUT_ENERGY,
+            MultiblockAbility.IMPORT_FLUIDS, INPUT_ENERGY,
             GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.EXPORT_FLUIDS
     };
 
@@ -130,6 +132,28 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
         int energyTier = GAUtility.getTierByVoltage(getEnergyContainer().getInputVoltage());
         this.bonusTemperature = Math.max(0, 100 * Math.min(GAUtility.getTierByVoltage(this.maxVoltage), energyTier - 2));
         this.blastFurnaceTemperature += this.bonusTemperature;
+
+        int tier = context.getOrDefault("casingTier", -1);
+        if (tier < 0)
+            maxVoltage = 0;
+        else if (tier >= GAValues.MAX) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = 8L << tier * 2;
+
     }
 
     @Override
@@ -364,7 +388,7 @@ public class MetaTileEntityMegaBlastFurnace extends MegaMultiblockRecipeMapContr
             int bonusAmount = Math.max(0, (currentTemp - recipeTemp) / 900);
 
             // Apply EUt discount for every 900K above the base recipe temperature
-            EUt *= Math.pow(0.95, bonusAmount);
+            EUt *= (long) Math.pow(0.95, bonusAmount);
 
 
             // Apply Super Overclocks for every 1800k above the base recipe temperature

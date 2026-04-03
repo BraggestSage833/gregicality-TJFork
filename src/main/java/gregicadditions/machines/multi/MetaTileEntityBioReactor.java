@@ -1,5 +1,6 @@
 package gregicadditions.machines.multi;
 
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
@@ -27,12 +28,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 
 public class MetaTileEntityBioReactor extends GARecipeMapMultiblockController {
 
@@ -49,7 +53,7 @@ public class MetaTileEntityBioReactor extends GARecipeMapMultiblockController {
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.IMPORT_FLUIDS,
             MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.EXPORT_FLUIDS,
-            MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH
+            INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH
     };
 
     public long maxVoltage = 0;
@@ -146,7 +150,25 @@ public class MetaTileEntityBioReactor extends GARecipeMapMultiblockController {
         PumpCasing.CasingType pump = context.getOrDefault("Pump", PumpCasing.CasingType.PUMP_LV);
         FieldGenCasing.CasingType fieldGen = context.getOrDefault("FieldGen", FieldGenCasing.CasingType.FIELD_GENERATOR_LV);
         int min = Collections.min(Arrays.asList(emitter.getTier(), sensor.getTier(), pump.getTier(), fieldGen.getTier()));
-        maxVoltage = (long) (Math.pow(4, min) * 8);
+
+        if (min >= GAValues.MAX) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = 8L << min * 2;
+
     }
 
     @Override

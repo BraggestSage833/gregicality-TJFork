@@ -2,6 +2,7 @@ package gregicadditions.machines.multi.advance;
 
 import gregicadditions.GAConfig;
 import gregicadditions.GAUtility;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.multi.CasingUtils;
@@ -33,6 +34,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,13 +44,14 @@ import java.util.stream.Collectors;
 
 import static gregicadditions.client.ClientHandler.BABBITT_ALLOY_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 
 public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMultiblockController {
 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
-            MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.IMPORT_FLUIDS
+            INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.IMPORT_FLUIDS
     };
 
     public MetaTileEntityAdvancedDistillationTower(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
@@ -90,7 +93,26 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        maxVoltage = this.energyContainer.getInputVoltage();
+
+        if (maxVoltage >= GAValues.VOC[GAValues.MAX]) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = this.energyContainer.getInputVoltage();
+
+
     }
 
     private static final IBlockState defaultCasingState = METAL_CASING_1.getState(MetalCasing1.CasingType.BABBITT_ALLOY);

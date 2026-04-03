@@ -291,7 +291,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
             int bonusAmount = Math.max(0, ((TileEntityAlloyBlastFurnace) metaTileEntity).getBlastFurnaceTemperature() - recipeTemp) / 900;
 
             // Apply EUt discount for every 900K above the base recipe temperature
-            EUt *= Math.pow(0.95, bonusAmount);
+            EUt *= (long) Math.pow(0.95, bonusAmount);
 
             int tier = getOverclockingTier(voltage);
             if (GAValues.VOC[tier] <= EUt || tier == 0)

@@ -1,6 +1,7 @@
 package gregicadditions.machines.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.client.ClientHandler;
 import gregicadditions.item.GAHeatingCoil;
@@ -39,11 +40,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
+
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.*;
 
 public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController {
 
@@ -142,7 +146,24 @@ public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController 
 		super.formStructure(context);
 		MotorCasing.CasingType motor = context.getOrDefault("Motor", MotorCasing.CasingType.MOTOR_LV);
 		int min = motor.getTier();
-		maxVoltage = (long) (Math.pow(4, min) * 8);
+
+         if (min >= GAValues.MAX) {
+			this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+					.mapToLong(IEnergyContainer::getInputVoltage)
+					.max()
+					.orElse(0);
+			long amps = this.getAbilities(INPUT_ENERGY).stream()
+					.filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+					.mapToLong(IEnergyContainer::getInputAmperage)
+					.sum();
+			amps = Math.min(1024, amps);
+			while (amps >= 4) {
+				amps /= 4;
+				this.maxVoltage *= 4;
+			}
+			if (this.maxVoltage >= Integer.MAX_VALUE)
+				this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+		} else this.maxVoltage = 8L << min * 2;
 
 		int temperature = context.getOrDefault("blastFurnaceTemperature", 0);
 

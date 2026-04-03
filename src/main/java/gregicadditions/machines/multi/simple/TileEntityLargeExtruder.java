@@ -1,6 +1,7 @@
 package gregicadditions.machines.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.item.components.PistonCasing;
 import gregicadditions.item.metal.MetalCasing1;
@@ -20,17 +21,19 @@ import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 
 import static gregicadditions.client.ClientHandler.INCONEL_625_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_1;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.INPUT_ENERGY;
 
 public class TileEntityLargeExtruder extends LargeSimpleRecipeMapMultiblockController {
 
 	private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
 			MultiblockAbility.IMPORT_ITEMS, MultiblockAbility.EXPORT_ITEMS,
-			MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
+			INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
 
 	public TileEntityLargeExtruder(ResourceLocation metaTileEntityId) {
@@ -76,7 +79,25 @@ public class TileEntityLargeExtruder extends LargeSimpleRecipeMapMultiblockContr
 		super.formStructure(context);
 		PistonCasing.CasingType piston = context.getOrDefault("Piston", PistonCasing.CasingType.PISTON_LV);
 		int min = piston.getTier();
-		maxVoltage = (long) (Math.pow(4, min) * 8);
+
+		if (min >= GAValues.MAX) {
+			this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+					.mapToLong(IEnergyContainer::getInputVoltage)
+					.max()
+					.orElse(0);
+			long amps = this.getAbilities(INPUT_ENERGY).stream()
+					.filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+					.mapToLong(IEnergyContainer::getInputAmperage)
+					.sum();
+			amps = Math.min(1024, amps);
+			while (amps >= 4) {
+				amps /= 4;
+				this.maxVoltage *= 4;
+			}
+			if (this.maxVoltage >= Integer.MAX_VALUE)
+				this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+		} else this.maxVoltage = 8L << min * 2;
+
 	}
 
 	@Nonnull
