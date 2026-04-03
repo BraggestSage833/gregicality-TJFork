@@ -38,7 +38,7 @@ public class GARecipeLogicEnergy extends RecipeLogicEnergy {
             EUt = -EUt;
         if (EUt <= 16) {
             int multiplier = EUt <= 8 ? tier : tier - 1;
-            long resultEUt = EUt * (1L << multiplier) * (1l << multiplier);
+            long resultEUt = EUt * (1L << multiplier) * (1L << multiplier);
             int resultDuration = duration / (1 << multiplier);
             return new long[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
         } else {
