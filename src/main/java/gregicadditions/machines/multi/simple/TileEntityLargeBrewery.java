@@ -122,7 +122,7 @@ public class TileEntityLargeBrewery extends MultiRecipeMapMultiblockController {
             if (this.maxVoltage >= Integer.MAX_VALUE)
                 this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
         } else this.maxVoltage = 8L << min * 2;
-    }
+
     }
 
     @Nonnull
