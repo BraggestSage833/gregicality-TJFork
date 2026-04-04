@@ -12,6 +12,7 @@ import gregtech.api.items.metaitem.MetaItem;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.type.IngotMaterial;
+import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.blocks.BlockMachineCasing;
@@ -833,6 +834,7 @@ public class CasingRecipes {
 
         ItemStack stack = ((MetaItem<?>.MetaValueItem) inputStack.getIngredient(tier)).getStackForm(2);
         ItemStack hull = (ItemStack) GACraftingComponents.HULL.getIngredient(tier);
+        UnificationEntry circuit =  (UnificationEntry) GACraftingComponents.BETTER_CIRCUIT.getIngredient(tier);
         UnificationEntry cable = (UnificationEntry) GACraftingComponents.CABLE_SINGLE.getIngredient(tier);
 
         ASSEMBLER_RECIPES.recipeBuilder().EUt((int) (30 * Math.pow(4, tier - 1))).duration(200)
@@ -840,6 +842,16 @@ public class CasingRecipes {
                 .inputs(hull)
                 .input(cableGtSingle, cable.material, 8)
                 .fluidInputs(SolderingAlloy.getFluid(L * 2))
+                .outputs(outputCasing.getItemVariant(inputComponent))
+                .buildAndRegister();
+
+        ASSEMBLY_LINE_RECIPES.recipeBuilder().EUt((int) (90 * Math.pow(4, tier - 1))).duration(400)
+                .inputs(stack)
+                .inputs(hull)
+                .input(OrePrefix.circuit, circuit.material, 1)
+                .input(cableGtSingle, cable.material, 4)
+                .input(cableGtDouble, cable.material, 2)
+                .fluidInputs(SolderingAlloy.getFluid(L * 16))
                 .outputs(outputCasing.getItemVariant(inputComponent))
                 .buildAndRegister();
     }

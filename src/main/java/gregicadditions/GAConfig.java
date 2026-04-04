@@ -1417,7 +1417,7 @@ public class GAConfig {
             @Config.Name("MK3 Void Miner Blacklist")
             public String[] oreBlacklistUEV = new String[]{""};
 
-            @Config.Comment("The name of the ores to blacklist for the MK4 Void Miner")
+            @Config.Comment("The name of the ores to blacklist for the MK4 Void Miner : Implemented by TJAdditions")
             @Config.RequiresMcRestart
             @Config.Name("MK3 Void Miner Blacklist")
             public String[] oreBlacklistUIV = new String[]{""};
@@ -1437,7 +1437,7 @@ public class GAConfig {
             @Config.Name("MK3 Void Miner Whitelist")
             public String[] oreWhitelistUEV = new String[]{""};
 
-            @Config.Comment("The name of items you wish to add to the MK4 Void Miner")
+            @Config.Comment("The name of items you wish to add to the MK4 Void Miner: Implemented by TJAdditions")
             @Config.RequiresMcRestart
             @Config.Name("MK3 Void Miner Whitelist")
             public String[] oreWhitelistUIV = new String[]{""};
