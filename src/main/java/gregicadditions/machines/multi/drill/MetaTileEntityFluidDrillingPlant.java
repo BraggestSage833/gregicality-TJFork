@@ -198,11 +198,8 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
                 // Produce the fluid
                 exportFluidHandler.fill(out, true);
 
-                //exclude tier 3 rigs from  depleting
-                if (this.rigTier != 4) {
                     // Deplete the vein's fluid
                     depleteFluid(depleted);
-                }
             }
         }
     }
@@ -335,11 +332,9 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
             } else {
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.rig_production", getAvailableFluidAmount() <= 0 ? getResidualFluidAmount() * this.rigTier : overclockFluidProduction()));
 
-                if (this.rigTier != 4) {
 
                     textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid_drain", getFluidAmountToDrain(getFluidAmountForUse(getAvailableFluidAmount()))));
-
-                }
+                    
 
                 ITextComponent fluidName = new TextComponentTranslation(oilWorldInfo.getType().getFluid().getUnlocalizedName());
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid", fluidName));
