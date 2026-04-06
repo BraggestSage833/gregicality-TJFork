@@ -334,7 +334,7 @@ public class MetaTileEntityFluidDrillingPlant extends MultiblockWithDisplayBase 
 
 
                     textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid_drain", getFluidAmountToDrain(getFluidAmountForUse(getAvailableFluidAmount()))));
-                    
+
 
                 ITextComponent fluidName = new TextComponentTranslation(oilWorldInfo.getType().getFluid().getUnlocalizedName());
                 textList.add(new TextComponentTranslation("gtadditions.multiblock.drilling_rig.fluid", fluidName));
