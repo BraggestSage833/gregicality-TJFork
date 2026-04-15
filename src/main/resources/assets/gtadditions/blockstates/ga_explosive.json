@@ -51,6 +51,13 @@
           "bottom": "gregtech:blocks/explosives/leptonic_charge/leptonic_charge_top_bottom",
           "top": "gregtech:blocks/explosives/leptonic_charge/leptonic_charge_top_bottom"
         }
+      },
+      "infinity_charge": {
+        "textures": {
+          "side": "gregtech:blocks/explosives/infinity_charge/infinity_charge",
+          "bottom": "gregtech:blocks/explosives/infinity_charge/infinity_charge",
+          "top": "gregtech:blocks/explosives/infinity_charge/infinity_charge"
+        }
       }
     }
   }

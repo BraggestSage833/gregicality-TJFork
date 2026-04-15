@@ -230,4 +230,8 @@ public class GARecipeMaps {
 
     @ZenProperty
     public static final HotCoolantRecipeMap HOT_COOLANT_TURBINE_FUELS = new HotCoolantRecipeMap("hot_coolant_turbine");
+
+    @ZenProperty
+    public static final FuelRecipeMap BLACK_HOLE_GENERATOR = new FuelRecipeMap("black_hole_generator");
+
 }

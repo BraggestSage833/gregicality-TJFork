@@ -4646,3 +4646,10 @@ gregtech.multiblock.cryogenic_freezer.description=The Cryogenic Freezer is built
 gtadditions.machine.cryogenic_freezer.name=Cryogenic Freezer
 recipemap.cryogenic_freezer=Cryogenic Freezer
 gregtech.multiblock.vol_cryo.description=This multiblock parallels four times per overlock
+
+gregtech.multiblock.black.hole.cycle=Black Hole Size Currently %s
+gregtech.multiblock.black.hole.charges=Charge Amount: %s (%s)
+gtadditions.machine.black.hole.generator.name=Black Hole Generator
+material.infinity=Infinity
+tile.ga_explosive.infinity_charge.name=Infinity Charge
+gregtech.multiblock.black.hole.fuel_amount=Fuel Amount: %s

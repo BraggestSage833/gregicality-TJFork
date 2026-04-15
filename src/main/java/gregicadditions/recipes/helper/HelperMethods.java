@@ -477,6 +477,10 @@ public class HelperMethods {
                 .buildAndRegister();
     }
 
+    public static void registerBlackHoleFuel(FluidStack fuelStack, int duration, int tier) {
+        GARecipeMaps.BLACK_HOLE_GENERATOR.addRecipe(new FuelRecipe(fuelStack, duration, GAValues.V[tier]));
+    }
+
     /**
      * Small Helper class useful for Forestry compatibility. If we are generating a recipe with either a
      * GT Fluid or a Forestry Fluid, we can use this class to make it easier to code.
