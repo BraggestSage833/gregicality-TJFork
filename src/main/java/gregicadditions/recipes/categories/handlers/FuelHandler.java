@@ -2,6 +2,7 @@ package gregicadditions.recipes.categories.handlers;
 
 import forestry.core.fluids.Fluids;
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.recipes.FuelRecipe;
@@ -153,5 +154,8 @@ public class FuelHandler {
         registerQubitGeneratorFuel(circuit, MAX,            51_200, UV, 64);
         //removals
         //RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
+
+        //Black Hole Gen
+        registerBlackHoleFuel(FreeAlphaGas.getFluid(1000),500, GAValues.MAX);
     }
 }

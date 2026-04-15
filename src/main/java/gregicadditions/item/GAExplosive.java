@@ -24,7 +24,8 @@ public class GAExplosive extends VariantBlock<GAExplosive.ExplosiveType> {
         LEPTONIC_CHARGE("leptonic_charge"),
         QCD_CHARGE("qcd_charge"),
         ITNT("industrial_tnt"),
-        POWDER_BARREL("powder_barrel");
+        POWDER_BARREL("powder_barrel"),
+        INFINITY_CHARGE("infinity_charge");
 
 
         private final String name;
