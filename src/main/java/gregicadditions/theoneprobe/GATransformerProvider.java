@@ -27,8 +27,8 @@ public class GATransformerProvider extends ElectricContainerInfoProvider {
             MetaTileEntity metaTileEntity = ((MetaTileEntityHolder) tileEntity).getMetaTileEntity();
             if (metaTileEntity instanceof GAMetaTileEntityTransformer) {
                 GAMetaTileEntityTransformer mteTransformer = (GAMetaTileEntityTransformer)metaTileEntity;
-                String inputVoltageN = GAValues.VN[GAUtility.getTierByVoltage(capability.getInputVoltage())];
-                String outputVoltageN = GAValues.VN[GAUtility.getTierByVoltage(capability.getOutputVoltage())];
+                String inputVoltageN = GAValues.VN2[GAUtility.getTierByVoltage(capability.getInputVoltage())];
+                String outputVoltageN = GAValues.VN2[GAUtility.getTierByVoltage(capability.getOutputVoltage())];
                 long inputAmperage = capability.getInputAmperage();
                 long outputAmperage = capability.getOutputAmperage();
                 IProbeInfo horizontalPane = probeInfo.vertical(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));

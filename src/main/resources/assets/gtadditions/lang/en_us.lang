@@ -4653,3 +4653,4 @@ gtadditions.machine.black.hole.generator.name=Black Hole Generator
 material.infinity=Infinity
 tile.ga_explosive.infinity_charge.name=Infinity Charge
 gregtech.multiblock.black.hole.fuel_amount=Fuel Amount: %s
+fluid.quark_enriched_hydrogen_plasma=Quark Enriched Hydrogen Plasma

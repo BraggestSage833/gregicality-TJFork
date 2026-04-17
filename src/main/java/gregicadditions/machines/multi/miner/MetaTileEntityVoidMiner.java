@@ -277,7 +277,7 @@ public class MetaTileEntityVoidMiner extends GAMultiblockWithDisplayBase { //tod
         if (this.isStructureFormed() && !this.hasProblems()) {
             if (energyContainer != null && energyContainer.getEnergyCapacity() > 0) {
                 long maxVoltage = energyContainer.getInputVoltage();
-                String voltageName = GAValues.VN[GAUtility.getTierByVoltage(maxVoltage)];
+                String voltageName = GAValues.VN2[GAUtility.getTierByVoltage(maxVoltage)];
                 textList.add(new TextComponentTranslation("gregtech.multiblock.max_energy_per_tick", maxVoltage, voltageName));
             }
             textList.add(new TextComponentTranslation("gregtech.multiblock.universal.energy_used", energyDrain));
