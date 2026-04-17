@@ -265,7 +265,8 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
                     }
                 }
             }
-            return (currentRecipe.getMinVoltage()) * currentCycle * 4;
+            currentCycle = 200;
+            return (currentRecipe.getMinVoltage()) * currentCycle * 2;
         }
 
         @Override

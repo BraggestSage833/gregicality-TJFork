@@ -195,9 +195,9 @@ public class MetaTileEntityEnergyConverter extends GATieredMetaTileEntity implem
             tooltip.add(I18n.format("gtadditions.converter.disabled"));
         } else {
             if (this.type.getInput() == Energy.GTEU) {
-                tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", this.energyStorage.getInputVoltage(), GAValues.VN[this.getTier()]));
+                tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", this.energyStorage.getInputVoltage(), GAValues.VN2[this.getTier()]));
             } else {
-                tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", this.energyStorage.getOutputVoltage(), GAValues.VN[this.getTier()]));
+                tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_out", this.energyStorage.getOutputVoltage(), GAValues.VN2[this.getTier()]));
             }
             tooltip.add(I18n.format(this.isGTEU() ? "gtadditions.converter.energy_out" : "gtadditions.converter.energy_in", this.type.getConverterType().getEnergyOutput(), this.ratioGteuAsInput().convert(GAValues.V[this.getTier()] * this.invSize, this.type.getConverterType().getEnergyOutput().getNumberType())));
             tooltip.add(I18n.format("gregtech.universal.tooltip.energy_storage_capacity", this.energyStorage.getEnergyCapacity()));

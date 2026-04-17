@@ -143,7 +143,7 @@ public class GAMetaTileEntityBatteryBuffer extends GATieredMetaTileEntity implem
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        String tierName = GAValues.VN[getTier()];
+        String tierName = GAValues.VN2[getTier()];
 
         tooltip.add(I18n.format("gregtech.universal.tooltip.item_storage_capacity", inventorySize));
         tooltip.add(I18n.format("gregtech.universal.tooltip.voltage_in", energyContainer.getInputVoltage(), GAUtility.TIER_COLOR[getTier()], tierName));

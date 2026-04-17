@@ -1472,7 +1472,7 @@ public class GAMaterials implements IMaterialHandler {
 
     public static final IngotMaterial Infinity = new IngotMaterial(535, "infinity",0xFFFFFF, MaterialIconSet.INFINITY,10,of(),CUSTOM_FLUID_TEXTURE | SMELT_INTO_FLUID  | GENERATE_BOLT_SCREW | GENERATE_PLATE | GENERATE_ROD,null,14300);
 
-
+    public static final SimpleFluidMaterial Quark_Enriched_Hydrogen_plasma = new SimpleFluidMaterial("quark_enriched_hydrogen_plasma", Hydrogen.materialRGB);
 
     public static Material UEV = new MarkerMaterial("UEV");
     public static Material UIV = new MarkerMaterial("UIV");

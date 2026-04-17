@@ -3,9 +3,6 @@ package gregicadditions.recipes.categories.handlers;
 import forestry.core.fluids.Fluids;
 import gregicadditions.GAConfig;
 import gregicadditions.GAValues;
-import gregtech.api.GTValues;
-import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.recipes.recipes.FuelRecipe;
 import gregtech.api.unification.material.Materials;
 import net.minecraftforge.fml.common.Loader;
 
@@ -156,6 +153,6 @@ public class FuelHandler {
         //RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
 
         //Black Hole Gen
-        registerBlackHoleFuel(FreeAlphaGas.getFluid(1000),500, GAValues.MAX);
+        registerBlackHoleFuel(Quark_Enriched_Hydrogen_plasma.getFluid(1000),500, GAValues.MAX);
     }
 }
