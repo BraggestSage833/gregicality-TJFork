@@ -36,7 +36,7 @@ public class MetaTileEntityPolymerSynthesizer extends MultiRecipeMapMultiblockCo
     public MetaTileEntityPolymerSynthesizer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId,
                 GARecipeMaps.POLYMERS_SYN,
-                60,
+                80,
                 60,
                 60,
                 16,
@@ -83,7 +83,7 @@ public class MetaTileEntityPolymerSynthesizer extends MultiRecipeMapMultiblockCo
 
     @Override
     protected void formStructure(PatternMatchContext context) {
-
+        super.formStructure(context);
         MotorCasing.CasingType motor = context.getOrDefault("Motor", MotorCasing.CasingType.MOTOR_LV);
         PumpCasing.CasingType pump = context.getOrDefault("Pump", PumpCasing.CasingType.PUMP_LV);
         int min = Collections.min(Arrays.asList(motor.getTier(), pump.getTier()));
