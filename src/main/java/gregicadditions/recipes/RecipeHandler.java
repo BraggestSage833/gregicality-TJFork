@@ -169,6 +169,7 @@ public class RecipeHandler {
         HNIWChain.init();
         TriniumChain.init();
         TaraniumChain.init();
+        Pcb_PolySyn.init();
     }
 
     /**

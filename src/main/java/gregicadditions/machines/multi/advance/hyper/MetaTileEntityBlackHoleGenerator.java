@@ -250,22 +250,22 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
 
                 for (int i = 0; i < sizeInventory; i++) {
                     ItemStack slot = importHandler.get().getStackInSlot(i);
-                    if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE)) && currentCycle < 100 ) {
+                    if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE)) ) {
+                        importHandler.get().extractItem(i, 1, false);
+                        if(currentCycle < 50) {
+                            this.currentCycle += 1;
+                            }
+                    }
+                     if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE)) && currentCycle >= 100 ) {
                         importHandler.get().extractItem(i, 1, false);
                         this.currentCycle += 1;
                         break;
                     }
-                    else if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE)) && currentCycle >= 100 ) {
-                        importHandler.get().extractItem(i, 1, false);
-                        this.currentCycle += 1;
-                        break;
-                    }
-                    else if (currentCycle < 200){
+                    else if (currentCycle > 200){
                         this.currentCycle -= 1;
                     }
                 }
             }
-            currentCycle = 200;
             return (currentRecipe.getMinVoltage()) * currentCycle * 2;
         }
 
