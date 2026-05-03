@@ -30,7 +30,7 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
     @Override
     public void render(RenderingTileEntityBlackhole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 
-        float time = (te.getWorld().getTotalWorldTime() + partialTicks) * ROTATION_SPEED;
+        float time = (te.getTickCounter() + partialTicks) * ROTATION_SPEED;
 
         float expand = 0.5f + 0.5f * (float) Math.sin(time * 0.5);
 
