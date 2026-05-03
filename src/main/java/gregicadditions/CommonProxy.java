@@ -285,10 +285,6 @@ public class CommonProxy {
 
 
     @SubscribeEvent
-    public void init(FMLInitializationEvent event) {
-    }
-
-    @SubscribeEvent
     public static void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
         GTSounds.registerSounds();
     }

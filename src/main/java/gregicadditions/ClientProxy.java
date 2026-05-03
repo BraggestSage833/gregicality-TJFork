@@ -81,6 +81,8 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event) {
         GAMetaBlocks.registerStateMappers();
         GAMetaBlocks.registerItemModels();
+        ClientRegistry.bindTileEntitySpecialRenderer(RenderingTileEntityBlackhole.class, new RenderBlackHole());
+
     }
 
     @SubscribeEvent
@@ -100,8 +102,4 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @Override
-    public void init(FMLInitializationEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(RenderingTileEntityBlackhole.class, new RenderBlackHole());
-    }
 }
