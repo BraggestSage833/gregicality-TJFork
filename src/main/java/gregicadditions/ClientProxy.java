@@ -5,10 +5,13 @@ import gregicadditions.blocks.GABlockOre;
 import gregicadditions.blocks.GAMetalCasing;
 import gregicadditions.client.model.ReTexturedModelLoader;
 import gregicadditions.client.renderer.OpticalFiberRenderer;
+import gregicadditions.client.renderer.RenderBlackHole;
+import gregicadditions.client.renderer.RenderingTileEntityBlackhole;
 import gregicadditions.fluid.GAMetaFluids;
 import gregicadditions.input.Keybinds;
 import gregicadditions.item.GADustItem;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorII;
 import gregicadditions.materials.SimpleDustMaterial;
 import gregicadditions.utils.GALog;
 import gregtech.api.unification.OreDictUnifier;
@@ -24,7 +27,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -93,5 +98,10 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(RenderingTileEntityBlackhole.class, new RenderBlackHole());
     }
 }

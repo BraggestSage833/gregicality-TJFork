@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "normal": {
+      "model": "gtadditions:black_hole"
+      },
+      "inventory":{
+        "model": "gtadditions:black_hole"
+      }
+    }
+  }
+
