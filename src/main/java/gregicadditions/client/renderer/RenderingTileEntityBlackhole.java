@@ -10,11 +10,10 @@ public class RenderingTileEntityBlackhole extends TileEntity implements ITickabl
     public RenderingTileEntityBlackhole() {
     }
 
-    private int tickCounter = 0;
-
+    public int tickCount = 1;
     @Override
     public void update() {
-        tickCounter++;
+        tickCount += 1;
         if (!world.isRemote) return;
         if (world.getTotalWorldTime() % 580 == 0) { // every 4 seconds
             world.playSound(
@@ -30,7 +29,4 @@ public class RenderingTileEntityBlackhole extends TileEntity implements ITickabl
         }
     }
 
-    public int getTickCounter() {
-        return tickCounter;
-    }
 }
