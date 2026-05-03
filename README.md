@@ -31,3 +31,5 @@ Gregicality is under the LGPL3.0 License.
 Credited Works
 
 Infinity Coil Textures are from the [GregTech: New Horizons Modpack.](https://www.curseforge.com/minecraft/modpacks/gt-new-horizons)
+
+Black Hole Render based on code for [AE2Enhanced](https://www.curseforge.com/minecraft/mc-mods/ae2enhanced) by aeddddd

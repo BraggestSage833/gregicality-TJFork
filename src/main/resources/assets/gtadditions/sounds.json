@@ -1,0 +1,8 @@
+{
+  "black_hole_ambient": {
+    "category": "ambient",
+    "sounds": [
+      { "name": "gtadditions:black_hole_ambient", "stream": true }
+    ]
+  }
+}

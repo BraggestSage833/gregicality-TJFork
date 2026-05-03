@@ -3,6 +3,8 @@ package gregicadditions;
 import com.blakebr0.mysticalagradditions.MysticalAgradditions;
 import gregicadditions.blocks.GAMetalCasingItemBlock;
 import gregicadditions.blocks.GAOreItemBlock;
+import gregicadditions.client.renderer.RenderBlackHole;
+import gregicadditions.client.renderer.RenderingTileEntityBlackhole;
 import gregicadditions.fluid.GAMetaFluids;
 import gregicadditions.integrations.mysticalagriculture.items.MysticalAgricultureItems;
 import gregicadditions.item.GAHeatingCoil;
@@ -21,14 +23,17 @@ import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregicadditions.worldgen.StoneGenEvents;
 import gregicadditions.worldgen.WorldGenRegister;
+import gregtech.api.GTValues;
 import gregtech.api.recipes.recipeproperties.BlastTemperatureProperty;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.util.FluidTooltipUtil;
 import gregtech.common.blocks.VariantItemBlock;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -36,12 +41,16 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import gregicadditions.item.render.blockBlackhole;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -122,6 +131,9 @@ public class CommonProxy {
         GAMetaBlocks.METAL_CASING.values().stream().distinct().forEach(registry::register);
         GA_ORES.forEach(registry::register);
         registry.register(GAMetaBlocks.GA_CABLE);
+
+        registry.register(GAMetaBlocks.blackhole);
+        //GameRegistry.registerTileEntity(RenderingTileEntityBlackhole.class, Gregicality.MODID + ":black_hole_render");
     }
 
 
@@ -157,7 +169,6 @@ public class CommonProxy {
         registry.register(createItemBlock(GAMetaBlocks.METAL_CASING_1, VariantItemBlock::new));
         registry.register(createItemBlock(GAMetaBlocks.METAL_CASING_2, VariantItemBlock::new));
         registry.register(createItemBlock(GAMetaBlocks.NUCLEAR_CASING, VariantItemBlock::new));
-
         GAMetaBlocks.METAL_CASING.values()
                 .stream().distinct()
                 .map(block -> createItemBlock(block, GAMetalCasingItemBlock::new))
@@ -166,6 +177,8 @@ public class CommonProxy {
         GA_ORES.stream()
                 .map(block -> createItemBlock(block, GAOreItemBlock::new))
                 .forEach(registry::register);
+
+        registry.register(new ItemBlock(GAMetaBlocks.blackhole).setRegistryName(GAMetaBlocks.blackhole.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -269,4 +282,14 @@ public class CommonProxy {
         IPSaveData.setDirty(0);
     }
 
+
+
+    @SubscribeEvent
+    public void init(FMLInitializationEvent event) {
+    }
+
+    @SubscribeEvent
+    public static void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
+        GTSounds.registerSounds();
+    }
 }

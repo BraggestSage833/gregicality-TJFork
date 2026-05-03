@@ -15,6 +15,7 @@ import gregicadditions.item.fusion.GAVacuumCasing;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.item.metal.NuclearCasing;
+import gregicadditions.item.render.blockBlackhole;
 import gregicadditions.pipelike.opticalfiber.BlockOpticalFiber;
 import gregicadditions.pipelike.opticalfiber.OpticalFiberSize;
 import gregicadditions.pipelike.opticalfiber.tile.TileEntityOpticalFiber;
@@ -103,6 +104,8 @@ public class GAMetaBlocks {
 
 
     public static BlockOpticalFiber OPTICAL_FIBER;
+
+    public static blockBlackhole blackhole = new blockBlackhole();
 
 
     public static void init() {
