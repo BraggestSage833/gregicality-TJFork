@@ -3,13 +3,12 @@ package gregicadditions;
 import com.blakebr0.mysticalagradditions.MysticalAgradditions;
 import gregicadditions.blocks.GAMetalCasingItemBlock;
 import gregicadditions.blocks.GAOreItemBlock;
-import gregicadditions.client.renderer.RenderBlackHole;
-import gregicadditions.client.renderer.RenderingTileEntityBlackhole;
 import gregicadditions.fluid.GAMetaFluids;
 import gregicadditions.integrations.mysticalagriculture.items.MysticalAgricultureItems;
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMetaItems;
+import gregicadditions.machines.renderTileEntities.RenderingTileEntityBlackhole;
 import gregicadditions.network.IPSaveData;
 import gregicadditions.network.MessageReservoirListSync;
 import gregicadditions.network.NetworkHandler;
@@ -18,15 +17,12 @@ import gregicadditions.pipelike.opticalfiber.ItemBlockOpticalFiber;
 import gregicadditions.recipes.*;
 import gregicadditions.recipes.categories.handlers.*;
 import gregicadditions.recipes.compat.ForestryCompat;
-import gregicadditions.recipes.categories.machines.MachineCraftingRecipes;
 import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregicadditions.worldgen.StoneGenEvents;
 import gregicadditions.worldgen.WorldGenRegister;
-import gregtech.api.GTValues;
 import gregtech.api.recipes.recipeproperties.BlastTemperatureProperty;
 import gregtech.api.unification.ore.OrePrefix;
-import gregtech.api.util.FluidTooltipUtil;
 import gregtech.common.blocks.VariantItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -41,16 +37,13 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
-import gregicadditions.item.render.blockBlackhole;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -133,7 +126,7 @@ public class CommonProxy {
         registry.register(GAMetaBlocks.GA_CABLE);
 
         registry.register(GAMetaBlocks.blackhole);
-        //GameRegistry.registerTileEntity(RenderingTileEntityBlackhole.class, Gregicality.MODID + ":black_hole_render");
+        GameRegistry.registerTileEntity(RenderingTileEntityBlackhole.class, Gregicality.MODID + "black_hole_render");
     }
 
 

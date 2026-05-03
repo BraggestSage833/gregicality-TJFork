@@ -1,9 +1,10 @@
-package gregicadditions.client.renderer;
+package gregicadditions.machines.renderTileEntities;
 
 import gregicadditions.GTSounds;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+
 
 
 public class RenderingTileEntityBlackhole extends TileEntity implements ITickable {
@@ -14,7 +15,7 @@ public class RenderingTileEntityBlackhole extends TileEntity implements ITickabl
     @Override
     public void update() {
         tickCount += 1;
-        if (!world.isRemote) return;
+        if (!world.isRemote || world == null) return;
         if (world.getTotalWorldTime() % 580 == 0) { // every 4 seconds
             world.playSound(
                     pos.getX() + 0.5,
