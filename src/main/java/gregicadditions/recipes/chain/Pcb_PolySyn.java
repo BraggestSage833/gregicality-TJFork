@@ -136,7 +136,7 @@ public class Pcb_PolySyn {
                 .notConsumable(new IntCircuitIngredient(11))
                 .fluidOutputs(Zylon.getFluid(1000 * 16))
                 .duration(200)
-                .EUt((GAValues.V[GAValues.UXV]) - (GAValues.V[GAValues.UEV]))
+                .EUt((GAValues.V[GAValues.UMV]) - (GAValues.V[GAValues.UV]))
                 .buildAndRegister();
 
         POLYMERS_SYN.recipeBuilder()
@@ -148,7 +148,7 @@ public class Pcb_PolySyn {
                 .fluidInputs(Oxygen.getFluid(2000 * 16))
                 .notConsumable(new IntCircuitIngredient(12))
                 .fluidOutputs(FullerenePolymerMatrix.getFluid(1000 * 16))
-                .duration(200 * 4) 
+                .duration(200 * 4)
                 .EUt((GAValues.V[GAValues.UXV]) - (GAValues.V[GAValues.UV]))
                 .buildAndRegister();
 
@@ -176,7 +176,7 @@ public class Pcb_PolySyn {
 
         PCB_FACTORY.recipeBuilder()
                 .input(dust, Wood, 8)
-                .input(foil, Copper, (8 * 4))
+                .input(foil, Bronze, (8 * 4))
                 .fluidInputs(IronChloride.getFluid(500))
                 .fluidInputs(Glue.getFluid(500))
                 .notConsumable(new IntCircuitIngredient(1))
@@ -187,7 +187,7 @@ public class Pcb_PolySyn {
 
         PCB_FACTORY.recipeBuilder()
                 .input(dust, Wood, 8)
-                .input(foil, Copper, (8 * 4))
+                .input(foil, Bronze, (8 * 4))
                 .fluidInputs(IronChloride.getFluid(500))
                 .fluidInputs(Glue.getFluid(500))
                 .notConsumable(new IntCircuitIngredient(1))
@@ -225,7 +225,7 @@ public class Pcb_PolySyn {
         for (int i = 1; i < polymer.length; i++) {
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, Copper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(IronChloride.getFluid(Math.max(250, 250 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 1))
@@ -236,7 +236,7 @@ public class Pcb_PolySyn {
 
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, Copper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(SodiumPersulfate.getFluid(Math.max(500, 500 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 2))
@@ -273,7 +273,7 @@ public class Pcb_PolySyn {
         for (int i = 3; i < polymer.length; i++) {
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Palladium, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(IronChloride.getFluid(Math.max(250, 250 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 1))
@@ -284,7 +284,7 @@ public class Pcb_PolySyn {
 
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Palladium, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(SodiumPersulfate.getFluid(Math.max(500, 500 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 2))
@@ -321,7 +321,7 @@ public class Pcb_PolySyn {
         for (int i = 5; i < polymer.length; i++) {
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Iridium, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(IronChloride.getFluid(Math.max(250, 250 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 1))
@@ -332,7 +332,7 @@ public class Pcb_PolySyn {
 
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, AnnealedCopper, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Iridium, (8 * Math.max(4, 4 * i)))
                     .fluidInputs(SodiumPersulfate.getFluid(Math.max(500, 500 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 2))
@@ -346,7 +346,7 @@ public class Pcb_PolySyn {
         for (int i = 6; i < polymer.length; i++) {
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, Platinum, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Osmium, (8 * Math.max(4, 4 * i)))
                     .input(foil, NiobiumTitanium, (8 * Math.max(4, 4 * i)))
                     .notConsumable(new IntCircuitIngredient(i + 1))
                     .inputs(GAMetaItems.PETRI_DISH.getStackForm(Math.max(4, 4 * i)))
@@ -363,14 +363,14 @@ public class Pcb_PolySyn {
 
             PCB_FACTORY.recipeBuilder()
                     .input(plate, polymer[i], Math.max(4, 4 * i))
-                    .input(foil, Platinum, (8 * Math.max(4, 4 * i)))
+                    .input(foil, Osmium, (8 * Math.max(4, 4 * i)))
                     .input(foil, NiobiumTitanium, (8 * Math.max(4, 4 * i)))
-                    .notConsumable(new IntCircuitIngredient(i + 1))
+                    .notConsumable(new IntCircuitIngredient(i + 2))
                     .inputs(GAMetaItems.PETRI_DISH.getStackForm(Math.max(4, 4 * i)))
                     .inputs(MetaItems.ELECTRIC_PUMP_LV.getStackForm(Math.max(4, 4 * i)))
                     .inputs(MetaItems.SENSOR_LV.getStackForm(Math.max(4, 4 * i)))
                     .input(circuit, MarkerMaterials.Tier.Good, Math.max(4, 4 * i))
-                    .fluidInputs(IronChloride.getFluid(Math.max(250, 250 * i)))
+                    .fluidInputs(SodiumPersulfate.getFluid(Math.max(500, 500 * i)))
                     .fluidInputs(SulfuricAcid.getFluid(Math.max(500, 500 * i)))
                     .fluidInputs(SterileGrowthMedium.getFluid(Math.max(250, 250 * i)))
                     .outputs(GAMetaItems.MASTER_BOARD.getStackForm(Math.max(8, 8 * i)))

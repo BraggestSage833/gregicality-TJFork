@@ -1,6 +1,7 @@
 package gregicadditions.client.renderer;
 
 
+import gregicadditions.machines.renderTileEntities.RenderingTileEntityBlackhole;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,10 +16,6 @@ Code originally made by aeddddd for the mod AE2Enhanced
 
 public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEntityBlackhole> {
 
-    @Override
-    public boolean isGlobalRenderer(RenderingTileEntityBlackhole te) {
-        return true;
-    }
 
     private static final double EVENT_HORIZON_RADIUS = 3.5;
     private static final double INNER_HALO_BASE = 3.2;
@@ -34,6 +31,10 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
 
     @Override
     public void render(RenderingTileEntityBlackhole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+
+        if (te == null || te.getWorld() == null || !(te.getWorld().isRemote)) {
+            return;
+        }
 
         float time = (te.tickCount + partialTicks) * ROTATION_SPEED;
 

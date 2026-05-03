@@ -1,6 +1,3 @@
 {
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "gtadditions:blocks/casings/quantum"
-  }
+  "parent": "builtin/empty"
 }
