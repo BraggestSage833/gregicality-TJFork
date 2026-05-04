@@ -2,11 +2,13 @@ package gregicadditions.client.renderer;
 
 
 import gregicadditions.machines.renderTileEntities.RenderingTileEntityBlackhole;
+import gregtech.api.render.scene.WorldSceneRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 
@@ -32,7 +34,7 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
     @Override
     public void render(RenderingTileEntityBlackhole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 
-        if (te == null || te.getWorld() == null || !(te.getWorld().isRemote)) {
+        if (te == null || !te.getWorld().isRemote || getWorld() instanceof WorldSceneRenderer.TrackedDummyWorld) {
             return;
         }
 

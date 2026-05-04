@@ -15,7 +15,7 @@ public class RenderingTileEntityBlackhole extends TileEntity implements ITickabl
     @Override
     public void update() {
         tickCount += 1;
-        if (!world.isRemote || world == null) return;
+        if (!world.isRemote) return;
         if (world.getTotalWorldTime() % 580 == 0) { // every 4 seconds
             world.playSound(
                     pos.getX() + 0.5,
