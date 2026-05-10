@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class blockBlackhole extends Block{
+public class renderBlockBlackHole extends Block {
 
     private static final AxisAlignedBB TINY_AABB =
             new AxisAlignedBB(0.45, 0.45, 0.45, 0.55, 0.55, 0.55);
@@ -28,13 +29,18 @@ public class blockBlackhole extends Block{
 
 
 
-    public blockBlackhole() {
+    public renderBlockBlackHole() {
         super(Material.IRON);
         setRegistryName(Gregicality.MODID, "black_hole");
         setTranslationKey(Gregicality.MODID + ".black_hole");
         this.setBlockUnbreakable();
         this.setResistance(6000000.0F);
         setCreativeTab(net.minecraft.creativetab.CreativeTabs.BUILDING_BLOCKS);
+    }
+
+    @Override
+    public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos, EntityLiving.SpawnPlacementType type) {
+        return false;
     }
 
     @Override
@@ -112,4 +118,7 @@ public class blockBlackhole extends Block{
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
         return TINY_AABB.offset(pos);
     }
+
+
+
 }
