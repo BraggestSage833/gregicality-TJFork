@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi;
 
+import gregicadditions.GAConfig;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -26,7 +27,8 @@ public class LargeTransformerInfo extends MultiblockInfoPage {
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("ISO")
                 .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST);
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('O', GATileEntities.getEnergyHatch(tier, true), EnumFacing.SOUTH)
                     .where('I', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
                     .build());

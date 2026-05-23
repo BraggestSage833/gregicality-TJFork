@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
@@ -39,7 +40,8 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
                 .where('c', METAL_CASING_2.getState(MetalCasing2.CasingType.STABALLOY))
                 .where('X', METAL_CASING_1.getState(MetalCasing1.CasingType.ZIRCONIUM_CARBIDE))
                 .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP);
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)

@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.advance;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
@@ -43,7 +44,8 @@ public class LargeRocketEngineInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', METAL_CASING_1.getState(MetalCasing1.CasingType.NITINOL_60))
                 .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
                     .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
                     .build());

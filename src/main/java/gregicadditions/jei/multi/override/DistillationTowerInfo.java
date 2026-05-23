@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.override;
 
+import gregicadditions.GAConfig;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
@@ -32,7 +33,8 @@ public class DistillationTowerInfo extends MultiblockInfoPage {
 				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 				.where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
 				.where('S', GATileEntities.DISTILLATION_TOWER, EnumFacing.WEST);
-		for (int tier = 0; tier < 15; tier++) {
+		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+		for (int tier = 0; tier < maxTier; tier++) {
 			shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
 					.where('I', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
 					.where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.DOWN)

@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.jei.GAMultiblockShapeInfo;
@@ -35,7 +36,8 @@ public class ElectricImplosionInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('X', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_MA956))
                 .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP);
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
                     .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)

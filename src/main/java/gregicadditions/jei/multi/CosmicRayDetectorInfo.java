@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi;
 
+import gregicadditions.GAConfig;
 import gregicadditions.GAMaterials;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.EmitterCasing;
@@ -55,7 +56,8 @@ public class CosmicRayDetectorInfo extends MultiblockInfoPage {
                 .where('x', GAMetaBlocks.METAL_CASING_2.getState(MetalCasing2.CasingType.TRITANIUM))
                 .where('C', MetaBlocks.FRAMES.get(GAMaterials.BlackTitanium).getDefaultState())
                 .where('c', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.SUPERCONDUCTOR));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('e', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('f', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
                     .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[Math.max(0, tier - 1)]))

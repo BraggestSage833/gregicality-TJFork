@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.components.PumpCasing;
@@ -40,7 +41,8 @@ public class LargeExtractorInfo extends MultiblockInfoPage {
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeExtractor.casingState)
                 .where('p', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
                     .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)

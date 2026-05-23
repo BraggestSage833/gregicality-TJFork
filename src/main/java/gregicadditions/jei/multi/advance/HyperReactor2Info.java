@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.advance;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAReactorCasing;
 import gregicadditions.jei.GAMultiblockShapeInfo;
@@ -48,7 +49,8 @@ public class HyperReactor2Info extends MultiblockInfoPage {
                 .where('C', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CASING))
                 .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE_2))
                 .where('F', MetaBlocks.FRAMES.get(Naquadria).getDefaultState());
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder .where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
                     .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
                     .build());

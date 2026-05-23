@@ -1,6 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
-import com.google.common.collect.Lists;
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.components.PistonCasing;
@@ -36,7 +36,8 @@ public class LargeBenderAndFormingInfo extends MultiblockInfoPage {
     public List<MultiblockShapeInfo> getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder;
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                     .aisle("XXXX", "XXXX", "XXIX");
             for (int j = -2; j < Math.min(tier, 6); j++) {

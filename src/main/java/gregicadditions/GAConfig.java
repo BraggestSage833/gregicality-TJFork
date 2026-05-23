@@ -20,6 +20,11 @@ public class GAConfig {
         @Config.Name("Advanced Casing Model")
         @Config.RequiresMcRestart
         public boolean AdvancedCasingModel = true;
+
+        @Config.Name("Disable Layers In JEI")
+        @Config.Comment("Voltage layers won't be shown in multiblock previews if this is set true.")
+        @Config.RequiresMcRestart
+        public boolean disableLayersInJEI = false;
     }
 
     @Config.Comment("Config Options for Native EU to FE conversion")

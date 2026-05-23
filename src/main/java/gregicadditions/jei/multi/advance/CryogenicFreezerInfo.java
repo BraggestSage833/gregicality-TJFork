@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.advance;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -30,7 +31,8 @@ public class CryogenicFreezerInfo  extends MultiblockInfoPage {
                 .where('C', GATileEntities.CRYOGENIC_FREEZER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_MA956));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
                     .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)

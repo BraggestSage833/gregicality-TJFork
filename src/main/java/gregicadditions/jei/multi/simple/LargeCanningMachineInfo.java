@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.PumpCasing;
 import gregicadditions.jei.GAMultiblockShapeInfo;
@@ -29,7 +30,8 @@ public class LargeCanningMachineInfo extends MultiblockInfoPage {
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
         ArrayList<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                     .aisle("XHX", "XEX", "XXX");
             for (int j = -2; j < Math.min(tier, 6); j++) {

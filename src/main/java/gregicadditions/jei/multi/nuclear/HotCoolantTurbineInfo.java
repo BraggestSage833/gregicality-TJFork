@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.nuclear;
 
+import gregicadditions.GAConfig;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.impl.MetaTileEntityRotorHolderForNuclearCoolant;
 import gregicadditions.machines.multi.nuclear.MetaTileEntityHotCoolantTurbine;
@@ -50,7 +51,8 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('C', turbine.turbineType.casingState)
                 .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('D', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
                     .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
                     .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)

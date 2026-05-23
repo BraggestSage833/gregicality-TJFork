@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.quantum;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAQuantumCasing;
 import gregicadditions.machines.GATileEntities;
@@ -31,7 +32,8 @@ public class QubitComputerInfo extends MultiblockInfoPage {
                 .where('S', GATileEntities.QUBIT_COMPUTER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER));
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
                     .where('O', GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)

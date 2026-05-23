@@ -1,5 +1,6 @@
 package gregicadditions.jei;
 
+import gregicadditions.GAConfig;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.centralmonitor.MetaTileEntityCentralMonitor;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -23,7 +24,8 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             int height = 3;
             GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
             String[] start = new String[height];

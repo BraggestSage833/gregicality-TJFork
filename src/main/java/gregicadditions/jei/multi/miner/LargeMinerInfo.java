@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.miner;
 
+import gregicadditions.GAConfig;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.miner.MetaTileEntityLargeMiner;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -39,7 +40,8 @@ public class LargeMinerInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('P', largeMiner.getCasingState())
                 .where('F', largeMiner.getFrameState());
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
                     .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.EAST)
                     .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)

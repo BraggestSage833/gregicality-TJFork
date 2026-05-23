@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.override;
 
+import gregicadditions.GAConfig;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -39,7 +40,8 @@ public class LargeCombustionEngineInfo extends MultiblockInfoPage {
 				.where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING))
 				.where('C', GATileEntities.LARGE_COMBUSTION_ENGINE[0], EnumFacing.WEST)
 				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH);
-		for (int tier = 0; tier < 15; tier++) {
+		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+		for (int tier = 0; tier < maxTier; tier++) {
 			shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
 					.where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
 					.build());

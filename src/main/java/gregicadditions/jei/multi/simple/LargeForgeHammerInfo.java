@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.PistonCasing;
 import gregicadditions.jei.GAMultiblockShapeInfo;
@@ -32,7 +33,8 @@ public class LargeForgeHammerInfo extends MultiblockInfoPage {
                 .where('S', GATileEntities.LARGE_FORGE_HAMMER, EnumFacing.WEST)
                 .where('X', TileEntityLargeForgeHammer.casingState)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST);
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.SOUTH)
                     .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
                     .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)

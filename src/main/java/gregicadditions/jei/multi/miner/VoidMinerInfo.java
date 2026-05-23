@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.miner;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.GATileEntities;
@@ -43,7 +44,8 @@ public class VoidMinerInfo extends MultiblockInfoPage {
                 .where('C', METAL_CASING_1.getState(MetalCasing1.CasingType.HASTELLOY_N))
                 .where('D', METAL_CASING_2.getState(MetalCasing2.CasingType.STABALLOY))
                 .where('F', MetaBlocks.FRAMES.get(TungstenSteel).getDefaultState());
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
                     .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
                     .where('o', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)

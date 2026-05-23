@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.components.PumpCasing;
@@ -30,7 +31,8 @@ public class LargeElectrolyzerInfo extends MultiblockInfoPage {
 	@Override
 	public List<MultiblockShapeInfo> getMatchingShapes() {
 		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		for (int tier = 0; tier < 15; tier++) {
+		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+		for (int tier = 0; tier < maxTier; tier++) {
 			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 					.aisle("XXCXX", "XXCXX", "XXCXX", "XX#XX");
 			for (int j = -1; j < Math.min(5, tier); j++) {

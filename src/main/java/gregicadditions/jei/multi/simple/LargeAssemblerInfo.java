@@ -1,5 +1,6 @@
 package gregicadditions.jei.multi.simple;
 
+import gregicadditions.GAConfig;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
 import gregicadditions.item.GATransparentCasing;
@@ -32,7 +33,8 @@ public class LargeAssemblerInfo extends MultiblockInfoPage {
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        for (int tier = 0; tier < 15; tier++) {
+        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+        for (int tier = 0; tier < maxTier; tier++) {
             MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
                     .aisle("EOXX", "OXXX", "IXXX", "FXXX")
                     .aisle("MXXX", "SCRX", "XPPX", "XXXX");

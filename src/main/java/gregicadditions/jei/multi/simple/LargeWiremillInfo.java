@@ -38,7 +38,8 @@ public class LargeWiremillInfo extends MultiblockInfoPage {
 	@Override
 	public List<MultiblockShapeInfo> getMatchingShapes() {
 		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		for (int tier = 0; tier < 15; tier++) {
+		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
+		for (int tier = 0; tier < maxTier; tier++) {
 			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 					.aisle("XXXXX", "XXXXX", "XXXXX");
 			for (int j = -2; j < Math.min(4, tier); j++) {
