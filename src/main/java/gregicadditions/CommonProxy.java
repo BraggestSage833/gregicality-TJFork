@@ -17,6 +17,7 @@ import gregicadditions.recipes.*;
 import gregicadditions.recipes.categories.handlers.*;
 import gregicadditions.recipes.compat.ForestryCompat;
 import gregicadditions.recipes.categories.machines.MachineCraftingRecipes;
+import gregicadditions.sound.RecipeMapSoundFixer;
 import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregicadditions.worldgen.StoneGenEvents;
@@ -185,6 +186,7 @@ public class CommonProxy {
         // This is called AFTER GregTech registers recipes, so
         // anything here is safe to call removals in
         RecipeHandler.initRecipes();
+        RecipeMapSoundFixer.apply();
 
         // Run some late recipe addition that depends on other
         // recipes of ours already being added

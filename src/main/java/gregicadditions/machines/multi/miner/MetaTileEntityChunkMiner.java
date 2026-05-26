@@ -20,6 +20,8 @@ import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.TieredMetaTileEntity;
 import gregtech.api.render.Textures;
 import gregtech.api.unification.material.Materials;
+import gregtech.common.sound.GTSoundEvents;
+import gregtech.common.sound.MachineSoundManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -28,15 +30,19 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.ArrayUtils;
@@ -53,6 +59,7 @@ public class MetaTileEntityChunkMiner extends TieredMetaTileEntity implements Mi
     public final Miner.Type type;
     private AtomicLong x = new AtomicLong(Long.MAX_VALUE), y = new AtomicLong(Long.MAX_VALUE), z = new AtomicLong(Long.MAX_VALUE);
     private final ItemStackHandler containerInventory;
+    private boolean isWorking = false;
 
     public MetaTileEntityChunkMiner(ResourceLocation metaTileEntityId, Miner.Type type, int tier) {
         super(metaTileEntityId, tier);
@@ -124,6 +131,18 @@ public class MetaTileEntityChunkMiner extends TieredMetaTileEntity implements Mi
         return builder.build(getHolder(), entityPlayer);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean shouldPlaySound() {
+        return isWorking;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public SoundEvent getSound() {
+        return GTSoundEvents.MINER;
+    }
+
     @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         super.renderMetaTileEntity(renderState, translation, pipeline);
@@ -166,41 +185,72 @@ public class MetaTileEntityChunkMiner extends TieredMetaTileEntity implements Mi
         return false;
     }
 
+    @Override
+    public void writeInitialSyncData(PacketBuffer buf) {
+        super.writeInitialSyncData(buf);
+        buf.writeBoolean(isWorking);
+    }
+
+    @Override
+    public void receiveInitialSyncData(PacketBuffer buf) {
+        super.receiveInitialSyncData(buf);
+        isWorking = buf.readBoolean();
+    }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            fillInternalTankFromFluidContainer(containerInventory, containerInventory, 0, 1);
 
-            if (y.get() >= 0 && drainEnergy()) {
-                WorldServer world = (WorldServer) this.getWorld();
-                Chunk chuck = world.getChunk(getPos());
-                ChunkPos chunkPos = chuck.getPos();
-
-                // reset coordinates if they are outside of normal working range
-                if (x.get() < chunkPos.getXStart() || x.get() > chunkPos.getXEnd()+1 || z.get() < chunkPos.getZStart() || z.get() > chunkPos.getZEnd()+1 || y.get() > getPos().getY()) {
-                    x.set(chunkPos.getXStart());
-                    z.set(chunkPos.getZStart());
-                    y.set(getPos().getY());
-                }
-
-                List<BlockPos> blockPos = Miner.getBlockToMinePerChunk(this, x, y, z, chuck.getPos());
-                blockPos.forEach(blockPos1 -> {
-                    NonNullList<ItemStack> itemStacks = NonNullList.create();
-                    IBlockState blockState = this.getWorld().getBlockState(blockPos1);
-                    blockState.getBlock().getDrops(itemStacks, world, blockPos1, blockState, 0);
-                    if (addItemsToItemHandler(exportItems, true, itemStacks)) {
-                        addItemsToItemHandler(exportItems, false, itemStacks);
-                        world.setBlockState(blockPos1, Blocks.COBBLESTONE.getDefaultState());
-                    }
-                });
-            }
-
-            if (!getWorld().isRemote && getTimer() % 5 == 0) {
-                pushItemsIntoNearbyHandlers(getFrontFacing());
-            }
+        if (getWorld().isRemote) {
+            return;
         }
+
+        fillInternalTankFromFluidContainer(containerInventory, containerInventory, 0, 1);
+
+        boolean canWork = y.get() >= 0 && drainEnergy();
+
+        if (canWork) {
+            WorldServer world = (WorldServer) this.getWorld();
+            Chunk chunk = world.getChunk(getPos());
+            ChunkPos chunkPos = chunk.getPos();
+
+            if (x.get() < chunkPos.getXStart() || x.get() > chunkPos.getXEnd() + 1 ||
+                    z.get() < chunkPos.getZStart() || z.get() > chunkPos.getZEnd() + 1 ||
+                    y.get() > getPos().getY()) {
+
+                x.set(chunkPos.getXStart());
+                z.set(chunkPos.getZStart());
+                y.set(getPos().getY());
+            }
+
+            List<BlockPos> blockPos = Miner.getBlockToMinePerChunk(this, x, y, z, chunkPos);
+
+            blockPos.forEach(pos -> {
+                NonNullList<ItemStack> drops = NonNullList.create();
+                IBlockState state = world.getBlockState(pos);
+
+                state.getBlock().getDrops(drops, world, pos, state, 0);
+
+                if (addItemsToItemHandler(exportItems, true, drops)) {
+                    addItemsToItemHandler(exportItems, false, drops);
+                    world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+                }
+            });
+        }
+        isWorking = canWork;
+
+        if (getTimer() % 5 == 0) {
+            pushItemsIntoNearbyHandlers(getFrontFacing());
+        }
+    }
+
+
+
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateSound() {
+        MachineSoundManager.update(this);
     }
 
     @Override

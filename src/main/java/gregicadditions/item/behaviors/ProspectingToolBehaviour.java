@@ -22,8 +22,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import gregtech.common.sound.GTSoundEvents;
+
 
 import java.awt.*;
 import java.util.List;
@@ -73,6 +76,7 @@ public class ProspectingToolBehaviour implements IItemBehaviour, ItemUIFactory {
     }
 
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        player.world.playSound(player,player.getPosition(), GTSoundEvents.PORTABLE_SCANNER, SoundCategory.PLAYERS,1F,1F);
         ItemStack itemStack = player.getHeldItem(hand);
         ProspectingToolBehaviour behavior = getInstanceFor(itemStack);
         if (!world.isRemote && behavior!= null) {

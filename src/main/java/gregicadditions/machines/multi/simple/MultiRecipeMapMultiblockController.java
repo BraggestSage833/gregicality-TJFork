@@ -15,6 +15,7 @@ import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeBuilder;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
+import gregtech.common.sound.GTSoundEvents;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.resources.I18n;
@@ -26,6 +27,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -77,6 +79,8 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
             if (!isEmpty) {
                 return false;
             }
+
+            getWorld().playSound(null,getPos(), GTSoundEvents.SCREWDRIVER, SoundCategory.PLAYERS,1F,1F);
 
             int index;
             if (playerIn.isSneaking()) // cycle recipemaps backwards
