@@ -4,6 +4,7 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.client.ClientHandler;
+import gregicadditions.gui.GAGuiTextures;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
@@ -100,7 +101,8 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         if (shouldRenderOverlay()) {
             SimpleOverlayRenderer renderer = Textures.PIPE_IN_OVERLAY;
             renderer.renderSided(getFrontFacing(), renderState, translation, pipeline);
-            SimpleOverlayRenderer renderer2 = Textures.ITEM_HATCH_INPUT_OVERLAY;
+            renderState.reset();
+            SimpleOverlayRenderer renderer2 = Textures.BUFFER_INPUT_OVERLAY;
             renderer2.renderSided(getFrontFacing(), renderState, translation, pipeline);
         }
     }
