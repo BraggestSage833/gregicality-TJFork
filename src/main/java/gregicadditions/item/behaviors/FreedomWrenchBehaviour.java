@@ -85,7 +85,16 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
                                             , map.indexOf(map.stream().filter(stack::isItemEqual).findFirst().orElse(stack))
                                             , metaTileEntity != null ? BlockPatternChecker.getActualFrontFacing(refFacing, frontFacing, spin, metaTileEntity.getFrontFacing()): EnumFacing.SOUTH));
                                 }
-                                NetworkHandler.channel.sendToServer(new CPacketMultiBlockStructure(map, blockInfos, world.provider.getDimension()).toFMLPacket());
+                                //NetworkHandler.channel.sendToServer(new CPacketMultiBlockStructure(map, blockInfos, world.provider.getDimension()).toFMLPacket());
+                                // Send in chunks of 30
+                                List<List<CPacketMultiBlockStructure.BlockInfo>> chunks = chunkMultiStructure(blockInfos);
+
+                                for (List<CPacketMultiBlockStructure.BlockInfo> chunk : chunks) {
+                                    NetworkHandler.channel.sendToServer(
+                                            new CPacketMultiBlockStructure(map, chunk, world.provider.getDimension()).toFMLPacket()
+                                    );
+                                }
+
                             }
                         }
                     } else { // projection, perspective, debug
@@ -161,6 +170,15 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
         }
         return EnumActionResult.FAIL;
     }
+
+    private <T> List<List<T>> chunkMultiStructure(List<T> list) {
+        List<List<T>> chunks = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += 30) {
+            chunks.add(list.subList(i, Math.min(list.size(), i + 30)));
+        }
+        return chunks;
+    }
+
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
