@@ -63,7 +63,7 @@ public class TileEntityLargeCanningMachine extends MultiRecipeMapMultiblockContr
                 .setAmountAtLeast('L', 8)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('p', pumpPredicate())
                 .where('P', statePredicate(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE)))
                 .build();

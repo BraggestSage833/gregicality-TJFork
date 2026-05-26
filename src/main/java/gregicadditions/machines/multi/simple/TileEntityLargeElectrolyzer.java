@@ -50,7 +50,7 @@ public class TileEntityLargeElectrolyzer extends LargeSimpleRecipeMapMultiblockC
 				.setAmountAtLeast('L', 12)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('C', statePredicate(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE)))
 				.where('#', isAirPredicate())
 				.where('M', motorPredicate())

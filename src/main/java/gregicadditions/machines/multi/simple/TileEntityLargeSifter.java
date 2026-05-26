@@ -52,7 +52,7 @@ public class TileEntityLargeSifter extends LargeSimpleRecipeMapMultiblockControl
 				.setAmountAtLeast('L', 9)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('C', MetaTileEntityElectricBlastFurnace.heatingCoilPredicate())
 				.where('G', statePredicate(MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING)))
 				.where('#', isAirPredicate())

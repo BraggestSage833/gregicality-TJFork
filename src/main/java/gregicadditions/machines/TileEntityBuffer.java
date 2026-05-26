@@ -4,7 +4,6 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.client.ClientHandler;
-import gregicadditions.gui.GAGuiTextures;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
@@ -19,14 +18,17 @@ import gregtech.api.render.Textures;
 import gregtech.common.metatileentities.electric.multiblockpart.MetaTileEntityMultiblockPart;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements ITieredMetaTileEntity, IMultiAbilityProvider {
@@ -48,7 +50,7 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         super.initializeInventory();
         FluidTank[] tanks = new FluidTank[this.tier];
         for (int i = 0; i < this.tier; i++) {
-            tanks[i] = new FluidTank(16000 * tier * tier);
+            tanks[i] = new FluidTank(8000 * (1 << getTier()));
         }
         this.fluids = new FluidTankList(false, tanks);
         this.fluidInventory = fluids;
@@ -157,6 +159,17 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
                 }
             }
         }
+    }
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
+        tooltip.add(I18n.format("gregtech.universal.tooltip.item_storage_capacity", (tier * tier)));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.fluid_storage_capacity", (8000 * (1 << getTier()))));
+        tooltip.add(I18n.format("gtadditions.machine.multi_fluid_hatch_universal.tooltip.2", (int) fluids.getTanks()));
+        tooltip.add(I18n.format("gregtech.universal.enabled"));
+        tooltip.add(I18n.format("gregtech.universal.no_import"));
+
+
+
     }
 
 }

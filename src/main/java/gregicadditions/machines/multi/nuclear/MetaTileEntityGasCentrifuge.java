@@ -37,7 +37,7 @@ public class MetaTileEntityGasCentrifuge extends GARecipeMapMultiblockController
                 .aisle("YYYYY", "YYYYY", "#ZCZ#", "#Z#Z#", "#Z#Z#", "#Z#Z#", "#Z#Z#")
                 .aisle("#YYY#", "#YSY#", "#####", "#####", "#####", "#####", "#####")
                 .where('S', selfPredicate())
-                .where('Y', statePredicate(getBaseState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('Y', statePredicate(getBaseState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('Z', statePredicate(getCasingState()))
                 .where('C', statePredicate(getVentCasing()))
                 .where('#', (tile) -> true)

@@ -74,7 +74,7 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
                 .aisle("XXX", "XPX", "XXX").setRepeatable(0, 11)
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
-                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('X', fluidExportPredicate.or(statePredicate(getCasingState())).or(abilityPartPredicate(GregicAdditionsCapabilities.MAINTENANCE_HATCH)))
                 .where('P', statePredicate(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE)))
                 .validateLayer(1, exactlyOneHatch)

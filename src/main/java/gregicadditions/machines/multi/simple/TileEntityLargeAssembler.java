@@ -55,7 +55,7 @@ public class TileEntityLargeAssembler extends LargeSimpleRecipeMapMultiblockCont
 				.setAmountAtLeast('L', 25)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('#', state -> true)
 				.where('R', robotArmPredicate())
 				.where('C', conveyorPredicate())
