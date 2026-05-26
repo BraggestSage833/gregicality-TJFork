@@ -11,15 +11,13 @@ import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.net.NetworkHandler;
 import gregtech.api.render.scene.WorldSceneRenderer;
+import gregtech.common.sound.GTSoundEvents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -140,6 +138,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
                 if (rotateSpin) {
                     EnumFacing next = BlockPatternChecker.getSpin(mte).rotateY();
                     if (!world.isRemote) {
+                        world.playSound(null, player.getPosition(), GTSoundEvents.WRENCH, SoundCategory.PLAYERS,1F,1F);
                         BlockPatternChecker.setSpin(mte, next);
                         if (facing != EnumFacing.DOWN && facing != EnumFacing.UP) {
                             player.sendMessage(new TextComponentTranslation("metaitem.freedom_wrench.spin", (next == EnumFacing.NORTH ?
@@ -152,6 +151,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
                     }
                 } else if (facing != mte.getFrontFacing()) {
                     if (!world.isRemote) {
+                        world.playSound(null, player.getPosition(), GTSoundEvents.WRENCH, SoundCategory.PLAYERS,1F,1F);
                         mte.setFrontFacing(facing);
                         player.sendMessage(new TextComponentTranslation("metaitem.freedom_wrench.facing", facing));
                     }
@@ -164,6 +164,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        world.playSound(null, player.getPosition(), GTSoundEvents.WRENCH, SoundCategory.PLAYERS, 1F, 1F);
         NBTTagCompound nbt = player.getHeldItem(hand).getOrCreateSubCompound("GT.Detrav");
         byte mode = nbt.hasKey("mode") ? nbt.getByte("mode") : 0;
         if (player.isSneaking()) {
