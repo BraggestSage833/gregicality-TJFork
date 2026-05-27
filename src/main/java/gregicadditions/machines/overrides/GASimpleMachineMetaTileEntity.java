@@ -69,20 +69,6 @@ public class GASimpleMachineMetaTileEntity extends GAWorkableTieredMetaTileEntit
         return new GASimpleMachineMetaTileEntity(metaTileEntityId, workable.recipeMap, renderer, getTier(), hasFrontFacing);
     }
 
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public SoundEvent getSound() {
-        return workable.recipeMap.getSound();
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public boolean shouldPlaySound() {
-        return isValid() && workable.isActive();
-    }
-
-
     @Override
     protected void initializeInventory() {
         super.initializeInventory();
