@@ -4,8 +4,10 @@ import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.FluidKey;
+import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.recipes.FuelRecipe;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class HotCoolantRecipeMap {
@@ -23,6 +26,10 @@ public class HotCoolantRecipeMap {
 
     private final Map<FluidKey, HotCoolantRecipe> recipeFluidMap = new HashMap<>();
     private final List<HotCoolantRecipe> recipeList = new ArrayList<>();
+
+
+    @Nullable
+    protected SoundEvent sound;
 
     public HotCoolantRecipeMap(String unlocalizedName) {
         this.unlocalizedName = unlocalizedName;
@@ -84,6 +91,16 @@ public class HotCoolantRecipeMap {
     @ZenGetter("unlocalizedName")
     public String getUnlocalizedName() {
         return unlocalizedName;
+    }
+
+    public HotCoolantRecipeMap setSound(SoundEvent sound) {
+        this.sound = sound;
+        return this;
+    }
+
+    @Nullable
+    public SoundEvent getSound() {
+        return sound;
     }
 
 }

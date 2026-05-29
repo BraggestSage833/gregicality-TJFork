@@ -231,5 +231,5 @@ public class GARecipeMaps {
 
 
     @ZenProperty
-    public static final HotCoolantRecipeMap HOT_COOLANT_TURBINE_FUELS = new HotCoolantRecipeMap("hot_coolant_turbine");
+    public static final HotCoolantRecipeMap HOT_COOLANT_TURBINE_FUELS = new HotCoolantRecipeMap("hot_coolant_turbine").setSound(GTSoundEvents.TURBINE);
 }
