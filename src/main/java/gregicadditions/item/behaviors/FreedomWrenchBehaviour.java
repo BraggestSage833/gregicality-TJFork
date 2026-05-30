@@ -217,6 +217,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
             }
         }
 
+
         for (BlockPos blockPos : renderedBlocks) {
             if (blockPos.equals(referencePos)) {
                 continue;
@@ -257,7 +258,21 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
                     metaTileEntity != null ? BlockPatternChecker.getActualFrontFacing(referenceFacing, frontFacing, spin, metaTileEntity.getFrontFacing()) : EnumFacing.SOUTH));
         }
 
-        NetworkHandler.channel.sendToServer(new CPacketMultiBlockStructure(map, blockInfos, world.provider.getDimension()).toFMLPacket());
+        List<List<CPacketMultiBlockStructure.BlockInfo>> chunks = chunkMultiStructure(blockInfos);
+
+        for (List<CPacketMultiBlockStructure.BlockInfo> chunk : chunks) {
+            NetworkHandler.channel.sendToServer(
+                    new CPacketMultiBlockStructure(map, chunk, world.provider.getDimension()).toFMLPacket()
+            );
+        }
+    }
+
+    private <T> List<List<T>> chunkMultiStructure(List<T> list) {
+        List<List<T>> chunks = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += 30) {
+            chunks.add(list.subList(i, Math.min(list.size(), i + 30)));
+        }
+        return chunks;
     }
 
     private int getStackIndex(List<ItemStack> stacks, ItemStack target) {
