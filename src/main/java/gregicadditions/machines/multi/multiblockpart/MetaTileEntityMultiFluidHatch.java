@@ -10,6 +10,7 @@ import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.TankWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregtech.api.metatileentity.multiblock.IChanneled;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
@@ -18,6 +19,7 @@ import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -27,7 +29,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPart implements IMultiblockAbilityPart<IFluidTank> {
+public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPart implements IMultiblockAbilityPart<IFluidTank>, IChanneled {
 
     protected FluidTankList fluidTanks;
     private boolean isExportHatch;
@@ -84,23 +86,27 @@ public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPar
         }
     }
 
+    @Override
     public ICubeRenderer getBaseTexture() {
         MultiblockControllerBase controller = getController();
+
+        // If inside a multiblock, use controller texture
         if (controller != null) {
             this.hatchTexture = controller.getBaseTexture(this);
-        }
-        if (controller == null && this.hatchTexture != null) {
             return this.hatchTexture;
         }
-        if (controller == null) {
-            if (this.getTier() == 3)
-                return Textures.VOLTAGE_CASINGS[5];
-            else
-                return Textures.VOLTAGE_CASINGS[3];
+
+        // If not in a multiblock but we have a cached texture, use it
+        if (this.hatchTexture != null) {
+            return this.hatchTexture;
         }
-        this.setPaintingColor(0xFFFFFF);
-        return controller.getBaseTexture(this);
+
+        if (this.getTier() == 3)
+            return Textures.VOLTAGE_CASINGS[5];
+        else
+            return Textures.VOLTAGE_CASINGS[3];
     }
+
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
@@ -147,5 +153,14 @@ public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPar
         }
         builder.bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT, 8, 18 + 18 * rowSize + 12);
         return builder.build(getHolder(), entityPlayer);
+    }
+    @Override
+    public EnumDyeColor getChannel() {
+        return EnumDyeColor.byMetadata(getPaintingColor());
+    }
+
+    @Override
+    public void setChannel(EnumDyeColor color) {
+        setPaintingColor(color.getColorValue());
     }
 }

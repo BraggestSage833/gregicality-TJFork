@@ -11,8 +11,11 @@ import gregtech.api.gui.widgets.TankWidget;
 import gregtech.api.metatileentity.ITieredMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregtech.api.metatileentity.multiblock.IChanneled;
 import gregtech.api.metatileentity.multiblock.IMultiAbilityProvider;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.api.render.ICubeRenderer;
 import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.common.metatileentities.electric.multiblockpart.MetaTileEntityMultiblockPart;
@@ -20,6 +23,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -31,11 +35,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements ITieredMetaTileEntity, IMultiAbilityProvider {
+public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements ITieredMetaTileEntity, IMultiAbilityProvider, IChanneled {
 
     private final int tier;
     protected FluidTankList fluids;
     private ItemStackHandler inventory;
+    private ICubeRenderer hatchTexture = null;
    // private static final double[] rotations = new double[]{180.0, 0.0, -90.0, 90.0};
 
 
@@ -110,6 +115,20 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
     }
 
     @Override
+    public ICubeRenderer getBaseTexture() {
+        MultiblockControllerBase controller = getController();
+        if (controller != null) {
+            this.hatchTexture = controller.getBaseTexture(this);
+            return this.hatchTexture;
+        }
+        if (this.hatchTexture != null) {
+            return this.hatchTexture;
+        }
+        return Textures.VOLTAGE_CASINGS[this.getTier()];
+    }
+
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         data.setTag("Inventory", inventory.serializeNBT());
@@ -167,9 +186,16 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         tooltip.add(I18n.format("gtadditions.machine.multi_fluid_hatch_universal.tooltip.2", (int) fluids.getTanks()));
         tooltip.add(I18n.format("gregtech.universal.enabled"));
         tooltip.add(I18n.format("gregtech.universal.no_import"));
+    }
 
+    @Override
+    public EnumDyeColor getChannel() {
+        return EnumDyeColor.byMetadata(getPaintingColor());
+    }
 
-
+    @Override
+    public void setChannel(EnumDyeColor color) {
+        setPaintingColor(color.getColorValue());
     }
 
 }
