@@ -15,7 +15,6 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.common.gui.widget.appeng.slot.ExportOnlyAEItemList;
 import gregtech.common.gui.widget.appeng.slot.ExportOnlyAEItemSlot;
 import gregtech.common.metatileentities.electric.multiblockpart.appeng.MetaTileEntityMEInputBus;
@@ -40,24 +39,23 @@ import static gregtech.api.capability.GregtechDataCodes.UPDATE_AUTO_PULL;
 
 public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implements IDistinct {
 
-    private static final int CONFIG_SIZE = 16;
     private boolean autoPull;
     private Predicate<ItemStack> autoPullTest;
 
-    public MetaTileEntityMEStockingBus(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTValues.IV);
+    public MetaTileEntityMEStockingBus(ResourceLocation metaTileEntityId, int configSlots) {
+        super(metaTileEntityId, configSlots >= 64 ? GTValues.LuV : GTValues.IV, configSlots);
         this.autoPullTest = $ -> false;
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(MetaTileEntityHolder holder) {
-        return new MetaTileEntityMEStockingBus(metaTileEntityId);
+        return new MetaTileEntityMEStockingBus(this.metaTileEntityId, this.configSlots);
     }
 
     @Override
     protected ExportOnlyAEStockingItemList getAEItemHandler() {
         if (this.aeItemHandler == null) {
-            this.aeItemHandler = new ExportOnlyAEStockingItemList(this, CONFIG_SIZE, getController());
+            this.aeItemHandler = new ExportOnlyAEStockingItemList(this, this.configSlots, getController());
         }
         return (ExportOnlyAEStockingItemList) this.aeItemHandler;
     }
@@ -76,7 +74,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
                 if (autoPull) {
                     clearInventory(0);
                 } else {
-                    for (int i = 0; i < CONFIG_SIZE; i++) {
+                    for (int i = 0; i < this.configSlots; i++) {
                         getAEItemHandler().getInventory()[i].setStack(null);
                     }
                 }
@@ -219,7 +217,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
 
         int index = 0;
         for (IAEItemStack stack : storageList) {
-            if (index >= CONFIG_SIZE) break;
+            if (index >= this.configSlots) break;
             if (stack.getStackSize() == 0) continue;
             stack = monitor.extractItems(stack, Actionable.SIMULATE, getActionSource());
             if (stack == null || stack.getStackSize() == 0) continue;
@@ -241,7 +239,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     }
 
     private void clearInventory(int startIndex) {
-        for (int i = startIndex; i < CONFIG_SIZE; i++) {
+        for (int i = startIndex; i < this.configSlots; i++) {
             var slot = this.getAEItemHandler().getInventory()[i];
             slot.setConfig(null);
             slot.setStack(null);
@@ -366,9 +364,9 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     public void addInformation(ItemStack stack, @Nullable World player, @NotNull List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gregtech.machine.item_bus.import.tooltip"));
         tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip"));
-        tooltip.add(I18n.format("gregtech.machine.me_import_item_hatch.configs.tooltip"));
+        tooltip.add(I18n.format("gregtech.machine.me_import_item_hatch.configs.tooltip", this.configSlots));
         tooltip.add(I18n.format("gregtech.machine.me.copy_paste.tooltip"));
-        tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip.2"));
+        tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip.2", this.configSlots));
         tooltip.add(I18n.format("gregtech.machine.me.extra_connections.tooltip"));
         tooltip.add(I18n.format("gregtech.universal.enabled"));
     }

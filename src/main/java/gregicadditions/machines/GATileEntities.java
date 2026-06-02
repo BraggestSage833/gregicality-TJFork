@@ -264,10 +264,12 @@ public class GATileEntities {
     public static MetaTileEntityCryogenicFreezer CRYOGENIC_FREEZER;
 
     public static MetaTileEntityMEStockingBus ME_STOCKING_BUS;
+    public static MetaTileEntityMEStockingBus ME_ADVANCED_STOCKING_BUS;
 
     public static void init() {
 
-        ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus")));
+        ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus"), 16));
+        ME_ADVANCED_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1107, new MetaTileEntityMEStockingBus(gregtechId("me_advanced_stocking_bus"), 64));
 
         MONITOR_SCREEN = GregTechAPI.registerMetaTileEntity(1999, new MetaTileEntityMonitorScreen(location("monitor_screen")));
 
