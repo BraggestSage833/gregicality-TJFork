@@ -10,6 +10,8 @@ import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregtech.api.GTValues;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
+import gregtech.api.gui.widgets.ClickButtonWidget;
+import gregtech.api.gui.widgets.TextFieldWidget;
 import gregtech.api.gui.widgets.ToggleButtonWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static gregtech.api.capability.GregtechDataCodes.UPDATE_AUTO_PULL;
 
@@ -45,6 +48,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     public MetaTileEntityMEStockingBus(ResourceLocation metaTileEntityId, int configSlots) {
         super(metaTileEntityId, configSlots >= 64 ? GTValues.LuV : GTValues.IV, configSlots);
         this.autoPullTest = $ -> false;
+        this.tickRate = 100;
     }
 
     @Override
@@ -258,7 +262,11 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     protected ModularUI.Builder createUITemplate(EntityPlayer player) {
         ModularUI.Builder builder = super.createUITemplate(player);
         builder.widget(new ToggleButtonWidget(7 + 18 * 4 + 1, 26, 16, 16, GuiTextures.BUTTON_AUTO_PULL, () -> autoPull, this::setAutoPull)
-                .setTooltipText("gregtech.gui.me_bus.auto_pull_button"));
+                .setTooltipText("gregtech.gui.me_bus.auto_pull_button"))
+                .widget(new TextFieldWidget(26, 25, 124, 18, true, () -> String.valueOf(this.tickRate), this::setTickRate)
+                        .setValidator(str -> Pattern.compile("\\*?[0-9_]*\\*?").matcher(str).matches()))
+                .widget(new ClickButtonWidget(7, 25, 18, 18, "/2", data -> this.setTickRate(String.valueOf((long) this.tickRate / 2))))
+                .widget(new ClickButtonWidget(151, 25, 18, 18, "*2", data -> this.setTickRate(String.valueOf((long) this.tickRate * 2))));
         return builder;
     }
 
@@ -300,6 +308,11 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     public void receiveInitialSyncData(PacketBuffer buf) {
         super.receiveInitialSyncData(buf);
         this.autoPull = buf.readBoolean();
+    }
+
+    private void setTickRate(String tickRate) {
+        this.tickRate = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickRate)));
+        this.markDirty();
     }
 
     private static class ExportOnlyAEStockingItemSlot extends ExportOnlyAEItemSlot {
