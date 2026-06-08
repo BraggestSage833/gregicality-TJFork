@@ -32,7 +32,7 @@ public class LargeNaquadahReactorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("#CMC#", "#CSC#", "#CCC#", "##C##", "##C##", "#CCC#", "#CGC#", "#CCC#")
@@ -55,7 +55,7 @@ public class LargeNaquadahReactorInfo extends MultiblockInfoPage {
                     .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
 
     }
 

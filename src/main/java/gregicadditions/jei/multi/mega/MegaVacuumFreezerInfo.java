@@ -24,7 +24,7 @@ public class MegaVacuumFreezerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         ArrayList<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("#HXMIO#", "#XXSfE#", "#XXXXX#", "#XXXXX#", "#XXXXX#", "#XXXXX#", "#XXXXX#")
@@ -49,7 +49,7 @@ public class MegaVacuumFreezerInfo extends MultiblockInfoPage {
                     .where('F', GAMetaBlocks.getFramework(tier))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

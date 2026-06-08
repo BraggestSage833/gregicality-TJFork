@@ -6,6 +6,7 @@ import gregtech.api.multiblock.BlockPattern;
 import gregtech.api.util.BlockInfo;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import org.apache.commons.lang3.tuple.MutableTriple;
@@ -88,6 +89,12 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
         }
 
         @Override
+        public Builder where(char symbol, PlaceholderType type) {
+            this.symbolMap.put(symbol, BlockInfo.placeholder(type));
+            return this;
+        }
+
+        @Override
         public Builder where(char symbol, IBlockState blockState) {
             return where(symbol, new BlockInfo(blockState));
         }
@@ -97,8 +104,17 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
             MetaTileEntityHolder holder = new MetaTileEntityHolder();
             holder.setMetaTileEntity(tileEntity);
             holder.getMetaTileEntity().setFrontFacing(frontSide);
-            return where(symbol, new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder));
+            return where(symbol, new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder, null));
         }
+
+        @Override
+        public Builder where(char symbol, PlaceholderType type, MetaTileEntity tileEntity, EnumFacing frontSide) {
+            MetaTileEntityHolder holder = new MetaTileEntityHolder();
+            holder.setMetaTileEntity(tileEntity);
+            holder.getMetaTileEntity().setFrontFacing(frontSide);
+            return where(symbol, new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder, type));
+        }
+
 
         private BlockInfo[][][] bakeArray() {
             Triple<Integer, Integer, Integer> maximumBounds = transformPos(shape.size(), shape.get(0).length, shape.get(0)[0].length(), 0, 0, 0, false); // Find the bounds of the transformed array by transforming the final position
@@ -117,7 +133,7 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
                             newHolder.setMetaTileEntity(holder.getMetaTileEntity().createMetaTileEntity(newHolder));
                             newHolder.getMetaTileEntity().setFrontFacing(holder.getMetaTileEntity().getFrontFacing());
 
-                            positionData = new BlockInfo(positionData.getBlockState(), newHolder);
+                            positionData = new BlockInfo(positionData.getBlockState(), newHolder, positionData.getPlaceHolderType());
                         }
                         if (idealDir != structureDir) {
                             Triple<Integer, Integer, Integer> blockInfoPosition = transformPos(i, j, k, shape.size(), aisleEntry.length, rowEntry.length(), true);

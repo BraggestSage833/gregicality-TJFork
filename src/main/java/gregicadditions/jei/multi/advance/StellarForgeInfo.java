@@ -29,7 +29,7 @@ public class StellarForgeInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
                 .aisle("###############", "######CCC######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######C#C######", "######CCC######", "###############")
@@ -62,7 +62,7 @@ public class StellarForgeInfo extends MultiblockInfoPage {
                     .where('M', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[Math.max(0, tier - 1)]))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

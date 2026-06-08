@@ -28,7 +28,7 @@ public class MegaDistillationTowerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, LEFT, UP)
                 .aisle("#XXX#", "XXXXX", "XXXXX", "OXXXH", "#FSM#");
@@ -50,7 +50,7 @@ public class MegaDistillationTowerInfo extends MultiblockInfoPage {
                     .where('P', GAMetaBlocks.getFramework(tier))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

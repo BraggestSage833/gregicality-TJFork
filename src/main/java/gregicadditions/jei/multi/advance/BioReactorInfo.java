@@ -29,7 +29,7 @@ public class BioReactorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
                 .aisle("oXXXX", "XGGGX", "XGGGX", "XGGGX", "XXXXX")
@@ -54,7 +54,7 @@ public class BioReactorInfo extends MultiblockInfoPage {
                     .where('s', GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[Math.max(0, tier - 1)]))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

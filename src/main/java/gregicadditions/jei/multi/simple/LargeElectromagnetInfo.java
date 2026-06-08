@@ -11,6 +11,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -27,27 +28,29 @@ public class LargeElectromagnetInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+    public MultiblockShapeInfo getMatchingShapes() {
+        return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("#XXX#", "#XXX#", "#XXX#")
                 .aisle("XXXXX", "XAAAX", "XGXGX")
                 .aisle("XXXXX", "XAFAX", "XGXGX")
                 .aisle("XXXXX", "XAAAX", "XGXGX")
                 .aisle("#XHX#", "#ISO#", "#XEX#")
+
                 .where('S', GATileEntities.LARGE_ELECTROMAGNET, EnumFacing.WEST)
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeElectromagnet.casingState)
-                .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.NICKEL_GLASS));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[Math.max(0, tier - 1)]))
-                    .build());
-        }
-        return shapeInfos;
+                .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.NICKEL_GLASS))
+
+                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+
+                .where('I', PlaceholderType.INPUT_BUS,
+                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+
+                .where('O', PlaceholderType.OUTPUT_BUS,
+                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+
+                .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
+                .build();
     }
 
     @Override

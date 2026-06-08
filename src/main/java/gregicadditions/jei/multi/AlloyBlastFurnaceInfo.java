@@ -27,9 +27,8 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes() {
+        return MultiblockShapeInfo.builder()
                 .aisle("#EXX#", "#ccc#", "#ccc#", "#XXX#")
                 .aisle("MXXXX", "cCCCc", "cCCCc", "XXXXX")
                 .aisle("SXXXi", "cCACc", "cCACc", "XXmXX")
@@ -37,19 +36,10 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
                 .aisle("#OXX#", "#ccc#", "#ccc#", "#XXX#")
                 .where('S', GATileEntities.ALLOY_BLAST_FURNACE, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
                 .where('c', METAL_CASING_2.getState(MetalCasing2.CasingType.STABALLOY))
                 .where('X', METAL_CASING_1.getState(MetalCasing1.CasingType.ZIRCONIUM_CARBIDE))
-                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP);
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('i', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.EAST)
-                    .where('C', GAMetaBlocks.getCoils(tier))
-                    .build());
-        }
-        return shapeInfos;
+                .build();
     }
 
     @Override

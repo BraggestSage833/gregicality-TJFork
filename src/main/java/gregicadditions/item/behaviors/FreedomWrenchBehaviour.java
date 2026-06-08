@@ -11,7 +11,10 @@ import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.net.NetworkHandler;
 import gregtech.api.render.scene.WorldSceneRenderer;
+import gregtech.api.util.BlockInfo;
 import gregtech.common.sound.GTSoundEvents;
+import gregtech.integration.jei.multiblock.channel.ChannelState;
+import gregtech.integration.jei.multiblock.channel.StructureChannels;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,10 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class FreedomWrenchBehaviour implements IItemBehaviour {
     private static final String TRANSLATION_KEY_SPIN = "metaitem.freedom_wrench.spin";
@@ -195,9 +195,12 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
             return;
         }
 
-        List<BlockPos> renderedBlocks = ObfuscationReflectionHelper.getPrivateValue(WorldSceneRenderer.class, renderer, "renderedBlocks");
+        //List<BlockPos> renderedBlocks = ObfuscationReflectionHelper.getPrivateValue(WorldSceneRenderer.class, renderer, "renderedBlocks");
+        Map<BlockPos, BlockInfo> blockMap = renderer.getBlockInfoMap();
+        Set<BlockPos> renderedBlocks = blockMap.keySet();
 
-        if (renderedBlocks == null) {
+
+        if (renderedBlocks.isEmpty()) {
             return;
         }
 
@@ -349,4 +352,26 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
         lines.add(I18n.format("metaitem.freedom_wrench.info.2"));
         lines.add(I18n.format("metaitem.freedom_wrench.info.3"));
     }
+
+
+    public static ChannelState getChannelState(ItemStack stack) {
+        ChannelState state = new ChannelState();
+        NBTTagCompound tag = stack.getOrCreateSubCompound("Channels");
+
+        for (StructureChannels ch : StructureChannels.values()) {
+            state.set(ch, tag.getInteger(ch.get()));
+        }
+        return state;
+    }
+
+    public static void saveChannelState(ItemStack stack, ChannelState state) {
+        NBTTagCompound tag = stack.getOrCreateSubCompound("Channels");
+
+        for (StructureChannels ch : StructureChannels.values()) {
+            tag.setInteger(ch.get(), state.get(ch));
+        }
+    }
+
+
+
 }

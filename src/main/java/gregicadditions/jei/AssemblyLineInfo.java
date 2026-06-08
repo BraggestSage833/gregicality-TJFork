@@ -36,7 +36,7 @@ public class AssemblyLineInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes() {
 		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
 		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
 		for (int tier = 0; tier < maxTier; tier++) {
@@ -61,7 +61,7 @@ public class AssemblyLineInfo extends MultiblockInfoPage {
 					.where('T', GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.ASSEMBLY_LINE_CASING))
 					.build());
 		}
-		return shapeInfos;
+		return shapeInfos.get(0); // TODO: FIX ME
 	}
 
 	@Override

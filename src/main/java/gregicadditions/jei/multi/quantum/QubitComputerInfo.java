@@ -8,6 +8,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -22,24 +23,26 @@ public class QubitComputerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes() {
+        return MultiblockShapeInfo.builder()
                 .aisle("CC", "IC", "CC", "CC")
                 .aisle("OC", "SC", "CC", "CC")
                 .aisle("EC", "MC", "CC", "CC")
                 .aisle("CC", "CC", "CC", "CC")
                 .where('S', GATileEntities.QUBIT_COMPUTER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('O', GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
-                    .build());
-        }
-        return shapeInfos;
+                .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER))
+
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
+                        GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+
+                .where('I', PlaceholderType.INPUT_BUS,
+                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+
+                .where('O', PlaceholderType.OUTPUT_HATCH,
+                        GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
+
+                .build();
     }
 
     @Override

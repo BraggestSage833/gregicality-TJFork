@@ -11,6 +11,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -25,25 +26,20 @@ public class ElectricImplosionInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes() {
+        return GAMultiblockShapeInfo.builder()
                 .aisle("IXX", "GXG", "GXG", "GXG", "GXG", "GXG", "XXX")
                 .aisle("SXE", "X#X", "X#X", "X#X", "X#X", "X#X", "XmX")
                 .aisle("OMX", "GXG", "GXG", "GXG", "GXG", "GXG", "XXX")
                 .where('S', getController(), EnumFacing.WEST)
                 .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
+                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
                 .where('X', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_MA956))
-                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP);
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.EAST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .build());
-        }
-        return shapeInfos;
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_HATCH,MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
+                .build();
     }
 
     @Override

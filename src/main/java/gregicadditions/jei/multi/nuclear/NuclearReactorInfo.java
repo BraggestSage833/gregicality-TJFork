@@ -34,7 +34,7 @@ public class NuclearReactorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("MEY", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "YYY")
@@ -55,7 +55,7 @@ public class NuclearReactorInfo extends MultiblockInfoPage {
                     .where('R', GAMetaBlocks.NUCLEAR_CASING.getState(NuclearCasing.CasingType.values()[Math.min(11, tier)]))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO: FIX ME
     }
 
     @Override

@@ -27,7 +27,7 @@ public class HyperReactor3Info extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
                 .aisle("###########","###########","###########","###########","###########", "###########", "###########", "###########", "####CCC####", "###CGGGC###", "###CGGGC###", "###CGGGC###", "####CCC####", "###########", "###########", "###########")
@@ -53,7 +53,7 @@ public class HyperReactor3Info extends MultiblockInfoPage {
                     .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

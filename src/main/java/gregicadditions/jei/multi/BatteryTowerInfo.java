@@ -9,6 +9,7 @@ import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -24,9 +25,8 @@ public class BatteryTowerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes() {
+        return MultiblockShapeInfo.builder()
                 .aisle("eCCCC", "GGGGG", "GGGGG", "GGGGG", "GGGGG", "CCCCC")
                 .aisle("ECCCC", "GRRRG", "GRRRG", "GRRRG", "GRRRG", "CCCCC")
                 .aisle("SCCCC", "GRRRG", "GRRRG", "GRRRG", "GRRRG", "CCCCC")
@@ -35,15 +35,11 @@ public class BatteryTowerInfo extends MultiblockInfoPage {
                 .where('S', GATileEntities.BATTERY_TOWER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.TALONITE))
-                .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.BOROSILICATE_GLASS));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(Math.min(3, tier), true), EnumFacing.WEST)
-                    .where('e', GATileEntities.getEnergyHatch(Math.min(3, tier), false), EnumFacing.WEST)
-                    .where('R', GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[Math.max(0, tier - 3)]))
-                    .build());
-        }
-        return shapeInfos;
+                .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.BOROSILICATE_GLASS))
+                .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH ,GATileEntities.getEnergyHatch(0, true), EnumFacing.WEST)
+                .where('e', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('R', GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[0]))
+                .build();
     }
 
     public String[] getDescription() {

@@ -22,7 +22,7 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
         for (int tier = 0; tier < maxTier; tier++) {
@@ -49,7 +49,7 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
                     .where('B', GATileEntities.MONITOR_SCREEN, EnumFacing.WEST)
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO: FIX ME
     }
 
     @Override

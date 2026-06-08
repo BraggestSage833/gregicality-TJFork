@@ -10,6 +10,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -26,23 +27,27 @@ public class LargeForgeHammerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+    public MultiblockShapeInfo getMatchingShapes() {
+        return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("SXO", "M#E", "XpI", "XXF")
+
                 .where('S', GATileEntities.LARGE_FORGE_HAMMER, EnumFacing.WEST)
                 .where('X', TileEntityLargeForgeHammer.casingState)
-                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST);
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.SOUTH)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
-                    .where('p', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[Math.max(0, tier - 1)]))
-                    .build());
-        }
-        return shapeInfos;
+                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+
+                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.SOUTH)
+
+                .where('I', PlaceholderType.INPUT_BUS,
+                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.SOUTH)
+
+                .where('F', PlaceholderType.INPUT_HATCH,
+                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
+
+                .where('O', PlaceholderType.OUTPUT_BUS,
+                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.SOUTH)
+
+                .where('p', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+                .build();
     }
 
     @Override

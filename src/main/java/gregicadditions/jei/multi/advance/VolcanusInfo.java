@@ -22,7 +22,7 @@ public class VolcanusInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         ArrayList<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
          MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
                 .aisle("IFX", "CCC", "CCC", "XXX")
@@ -42,7 +42,7 @@ public class VolcanusInfo extends MultiblockInfoPage {
                     .where('C', GAMetaBlocks.getCoils(tier))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

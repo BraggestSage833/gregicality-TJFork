@@ -13,6 +13,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
@@ -33,30 +34,33 @@ public class LargeBenderAndFormingInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder;
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-                    .aisle("XXXX", "XXXX", "XXIX");
-            for (int j = -2; j < Math.min(tier, 6); j++) {
-                builder.aisle("iXXX", "XPMX", "XXIO");
-            }
-            shapeInfos.add(builder.aisle("EXXX", "XSHX", "XXIX")
-                    .where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('S', getController(), EnumFacing.WEST)
-                    .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                    .where('X', TileEntityLargeBenderAndForming.casingState)
-                    .where('i', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.SOUTH)
-                    .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
-                    .where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[Math.max(0, tier - 1)]))
-                    .where('I', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
-                    .build());
-        }
+    public MultiblockShapeInfo getMatchingShapes() {
+        return MultiblockShapeInfo.builder()
+                .aisle("XXXX", "XXXX", "XXIX")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
+                .aisle("iXXX", "XPMX", "XXIO")
 
-        return shapeInfos;
+                .aisle("EXXX", "XSHX", "XXIX")
+                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('S', getController(), EnumFacing.WEST)
+                .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+                .where('X', TileEntityLargeBenderAndForming.casingState)
+
+                .where('i', PlaceholderType.INPUT_BUS,
+                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+
+                .where('O', PlaceholderType.OUTPUT_BUS,
+                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.SOUTH)
+
+                .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+                .where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+                .where('I', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
+                .build();
     }
 
 	@Override

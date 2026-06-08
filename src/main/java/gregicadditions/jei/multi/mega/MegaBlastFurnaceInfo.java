@@ -27,7 +27,7 @@ public class MegaBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes() {
         List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(RIGHT, FRONT, DOWN)
                 .aisle("###############", "###############", "###############", "######TTT######", "####TTTTTTT####", "####TTTTTTT####", "###TTTTTTTTT###", "###TTTTmTTTT###", "###TTTTpTTTT###", "####TTTpTTT####", "####TTTpTTT####", "######TTT######", "###############", "###############", "###############");
@@ -64,7 +64,7 @@ public class MegaBlastFurnaceInfo extends MultiblockInfoPage {
                     .where('C', GAMetaBlocks.getCoils(tier))
                     .build());
         }
-        return shapeInfos;
+        return shapeInfos.get(0); // TODO FIX ME
     }
 
     @Override

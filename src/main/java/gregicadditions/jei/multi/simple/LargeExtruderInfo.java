@@ -12,6 +12,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -28,28 +29,30 @@ public class LargeExtruderInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
-		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-		for (int tier = 0; tier < maxTier; tier++) {
-			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-					.aisle("XXXX", "XXXX", "XXX#");
-			for (int j = -2; j < Math.min(4, tier); j++) {
-				builder.aisle("IXXX", "XCPX", "OXX#");
-			}
-			shapeInfos.add(builder.aisle("EHXX", "XSXX", "XXX#")
-					.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
-					.where('S', GATileEntities.LARGE_EXTRUDER, EnumFacing.WEST)
-					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-					.where('X', TileEntityLargeExtruder.casingState)
-					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
-					.where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[Math.max(0, tier - 1)]))
-					.where('C', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE))
-					.build());
-		}
+	public MultiblockShapeInfo getMatchingShapes() {
+		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+				.aisle("XXXX", "XXXX", "XXX#")
+				.aisle("IXXX", "XCPX", "OXX#")
+				.aisle("IXXX", "XCPX", "OXX#")
+				.aisle("IXXX", "XCPX", "OXX#")
+				.aisle("IXXX", "XCPX", "OXX#")
 
-		return shapeInfos;
+				.aisle("EHXX", "XSXX", "XXX#")
+
+				.where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+				.where('S', GATileEntities.LARGE_EXTRUDER, EnumFacing.WEST)
+				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+				.where('X', TileEntityLargeExtruder.casingState)
+
+				.where('I', PlaceholderType.INPUT_BUS,
+						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+
+				.where('O', PlaceholderType.OUTPUT_BUS,
+						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+
+				.where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+				.where('C', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE))
+				.build();
 	}
 
 	@Override
