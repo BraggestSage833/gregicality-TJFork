@@ -59,7 +59,7 @@ public class MetaTileEntityPolymerSynthesizer extends MultiRecipeMapMultiblockCo
 
                 .where('S', selfPredicate())
 
-				.where('C', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.CHEMICALLY_INERT)).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('C', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.CHEMICALLY_INERT)).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 
 				.where('T', motorPredicate())
 

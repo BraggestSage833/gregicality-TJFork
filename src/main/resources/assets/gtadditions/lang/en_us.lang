@@ -4647,3 +4647,16 @@ gtadditions.machine.cryogenic_freezer.name=Cryogenic Freezer
 recipemap.cryogenic_freezer=Cryogenic Freezer
 gregtech.multiblock.vol_cryo.description=This multiblock parallels four times per overlock
 gregtech.universal.no_import=Does not auto Import
+
+gregtech.multiblock.black.hole.cycle=Black Hole Size Currently %s
+gregtech.multiblock.black.hole.charges=Charge Amount: %s (%s)
+gtadditions.machine.black.hole.generator.name=Black Hole Generator
+material.infinity=Infinity
+tile.ga_explosive.infinity_charge.name=Infinity Charge
+gregtech.multiblock.black.hole.fuel_amount=Fuel Amount: %s
+fluid.quark_enriched_hydrogen_plasma=Quark Enriched Hydrogen Plasma
+gtadditions.machine.polymer.synthesizer.name=Polymer Synthesizer
+gtadditions.machine.polymer.synthesizer.name=Polymer Synthesizer
+recipemap.polymer_syn.name=Polymer Synthesizer
+recipemap.pcb_factory.name=PCB Factory
+gtadditions.multiblock.polymer.synth.description=The Polymer Synthesizer is able of creating polymers out of the base elements. PCB Factory is able to allow you to skip needed to make boards and allows you to create circuit boards out of higher tier polymers.

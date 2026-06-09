@@ -40,7 +40,7 @@ public class PolymerSynthesizerInfo extends MultiblockInfoPage {
 				.where('U' ,(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.CHEMICALLY_INERT)))
 				.where('F' ,(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.PTFE_PIPE)))
 				.where('P' , (GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.PTFE_PIPE)))
-                .where('m' , GATileEntities.MAINTENANCE_HATCH[1], EnumFacing.NORTH)
+                .where('m' , GATileEntities.MAINTENANCE_HATCH[2], EnumFacing.NORTH)
                 .where(' ', Blocks.AIR.getDefaultState());
         for (int tier = 0; tier < 15; tier++) {
             shapeInfos.add(builder

@@ -19,9 +19,9 @@ Code originally made by aeddddd for the mod AE2Enhanced
 public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEntityBlackhole> {
 
 
-    private static final double EVENT_HORIZON_RADIUS = 2.5;
-    private static final double INNER_HALO_BASE = 4.2;
-    private static final double MID_HALO_BASE = 6.6;
+    private static final double EVENT_HORIZON_RADIUS = 3.5;
+    private static final double INNER_HALO_BASE = 3.2;
+    private static final double MID_HALO_BASE = 5.6;
     private static final double OUTER_HALO_BASE = 7.0;
 
     private static final int LATITUDE_SEGMENTS = 24;
@@ -67,9 +67,6 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
         GlStateManager.disableLighting();
         GlStateManager.disableTexture2D();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        //Thank you og dev for fixing this still learning
-        boolean cullWasEnabled = GL11.glIsEnabled(GL11.GL_CULL_FACE);
-        GlStateManager.disableCull();
 
         try {
 
@@ -80,26 +77,24 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
             GlStateManager.rotate(18.0f, 1, 0, 0.3f);
             drawSphere(innerR, 0x140029, innerAlpha);
 
+            // drawWireframeSphere(innerR, 0x7700DD, 0.28f * (0.5f + 0.5f * gridEnergy));
             GlStateManager.popMatrix();
 
             GlStateManager.pushMatrix();
             GlStateManager.rotate(-time * 0.3f, 0, 1, 0);
             GlStateManager.rotate(12.0f, 0.5f, 0, 1.0f);
             drawSphere(midR, 0x05000D, midAlpha);
-
+            //wirerame sphere leaving in case we need it elsewere
+            //drawWireframeSphere(midR, 0x110022, 0.08f * (0.5f + 0.5f * gridEnergy));
+            GlStateManager.popMatrix();
 
             GlStateManager.pushMatrix();
-            GlStateManager.rotate(time * 0.7f, 0, 1, 0);
+            GlStateManager.rotate(time * 0.12f, 0, 1, 0);
             GlStateManager.rotate(8.0f, 1, 0.2f, 0);
             drawSphere(outerR, 0x020005, outerAlpha);
             GlStateManager.popMatrix();
 
         } finally {
-            if (cullWasEnabled) {
-                GlStateManager.enableCull();
-            } else {
-                GlStateManager.disableCull();
-            }
             GlStateManager.shadeModel(GL11.GL_FLAT);
             GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
@@ -111,6 +106,8 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
             );
             GlStateManager.popMatrix();
         }
+
+
 
     }
 
@@ -150,6 +147,53 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
         tessellator.draw();
     }
 
+    private void drawWireframeSphere(double radius, int color, float alpha) {
+        if (alpha <= 0.01f) return;
+        float r = ((color >> 16) & 0xFF) / 255.0f;
+        float g = ((color >> 8) & 0xFF) / 255.0f;
+        float b = (color & 0xFF) / 255.0f;
+
+        GlStateManager.glLineWidth(2.0f);
+
+        //likewise
+        for (int lat = 1; lat < GRID_LAT; lat++) {
+            double theta = Math.PI * lat / GRID_LAT;
+            double y = radius * Math.cos(theta);
+            double radH = radius * Math.sin(theta);
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
+
+            for (int lon = 0; lon <= GRID_LON; lon++) {
+                double phi = 2 * Math.PI * lon / GRID_LON;
+                buffer.pos(radH * Math.cos(phi), y, radH * Math.sin(phi))
+                        .color(r, g, b, alpha).endVertex();
+            }
+            tessellator.draw();
+        }
+
+        for (int lon = 0; lon < GRID_LON; lon++) {
+            double phi = 2 * Math.PI * lon / GRID_LON;
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+
+            for (int lat = 0; lat <= GRID_LAT; lat++) {
+                double theta = Math.PI * lat / GRID_LAT;
+                buffer.pos(
+                        radius * Math.sin(theta) * Math.cos(phi),
+                        radius * Math.cos(theta),
+                        radius * Math.sin(theta) * Math.sin(phi)
+                ).color(r, g, b, alpha).endVertex();
+            }
+            tessellator.draw();
+        }
+
+        GlStateManager.glLineWidth(1.0f);
+    }
+
     private void sphereVertex(double radius, double theta, double phi, double[] out) {
         out[0] = radius * Math.sin(theta) * Math.cos(phi);
         out[1] = radius * Math.cos(theta);
@@ -157,7 +201,7 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
     }
 
     private void addTriangle(BufferBuilder buffer, double[] a, double[] b, double[] c,
-    float r, float g, float blue, float alpha) {
+                             float r, float g, float blue, float alpha) {
         buffer.pos(a[0], a[1], a[2]).color(r, g, blue, alpha).endVertex();
         buffer.pos(b[0], b[1], b[2]).color(r, g, blue, alpha).endVertex();
         buffer.pos(c[0], c[1], c[2]).color(r, g, blue, alpha).endVertex();
