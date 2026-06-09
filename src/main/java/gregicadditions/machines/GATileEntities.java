@@ -271,6 +271,10 @@ public class GATileEntities {
 
     public static MetaTileEntityPolymerSynthesizer POLY_SYN;
 
+    public  static MetaTileEntityBlackHoleGenerator BLACK_HOLE;
+
+    public static MetaTileEntityPolymerSynthesizer POLY_SYN;
+
     public static void init() {
 
         ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus"), 16));
