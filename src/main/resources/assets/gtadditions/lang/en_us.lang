@@ -4660,3 +4660,4 @@ gtadditions.machine.polymer.synthesizer.name=Polymer Synthesizer
 recipemap.polymer_syn.name=Polymer Synthesizer
 recipemap.pcb_factory.name=PCB Factory
 gtadditions.multiblock.polymer.synth.description=The Polymer Synthesizer is able of creating polymers out of the base elements. PCB Factory is able to allow you to skip needed to make boards and allows you to create circuit boards out of higher tier polymers.
+recipemap.black_hole_generator=Black Hole Generator

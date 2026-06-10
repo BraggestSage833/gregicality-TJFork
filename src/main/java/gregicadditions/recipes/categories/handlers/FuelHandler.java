@@ -153,6 +153,6 @@ public class FuelHandler {
         //RecipeMaps.GAS_TURBINE_FUELS.removeRecipe(new FuelRecipe((Toluene.getFluid(4)), 41, GTValues.LV));
 
         //Black Hole Gen
-        registerBlackHoleFuel(Quark_Enriched_Hydrogen_plasma.getFluid(1000),500, GAValues.MAX);
+        registerBlackHoleFuel(Quark_Enriched_Hydrogen_plasma.getFluid(64000),500, GAValues.MAX);
     }
 }

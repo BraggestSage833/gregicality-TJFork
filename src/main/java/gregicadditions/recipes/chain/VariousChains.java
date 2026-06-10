@@ -739,16 +739,24 @@ public class VariousChains {
                 .buildAndRegister();
         // infinity charge
         ASSEMBLY_LINE_RECIPES.recipeBuilder()
-                .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE,16))
+                .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE, 16))
                 .input(plate, ProtoAdamantium, 16)
                 .input(plate, HeavyQuarkDegenerateMatter, 16)
-                .input(plate, NaquadriaticTaranium ,16)
+                .input(plate, NaquadriaticTaranium, 16)
                 .input(plate, SuperheavyHAlloy, 16)
-                .input(plate, SuperheavyLAlloy ,16)
-                .input(plate, Infinity ,16)
+                .input(plate, SuperheavyLAlloy, 16)
+                .input(plate, Infinity, 16)
                 .inputs(MACROWORMHOLE_GENERATOR.getStackForm())
                 .fluidInputs(CosmicComputingMix.getFluid(1296))
                 .outputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE))
+                .duration(600 * 4)
+                .EUt((GAValues.V[GAValues.UMV]) - (GAValues.V[GAValues.UHV]))
+                .buildAndRegister();
+
+        LARGE_MIXER_RECIPES.recipeBuilder()
+                .fluidInputs(Hydrogen.getPlasma(16000))
+                .fluidInputs(HighEnergyQGP.getFluid(16000))
+                .fluidOutputs(Quark_Enriched_Hydrogen_plasma.getFluid(32000))
                 .duration(600 * 4)
                 .EUt((GAValues.V[GAValues.UMV]) - (GAValues.V[GAValues.UHV]))
                 .buildAndRegister();
