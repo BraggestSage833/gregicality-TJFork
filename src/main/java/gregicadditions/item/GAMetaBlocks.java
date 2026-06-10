@@ -106,7 +106,7 @@ public class GAMetaBlocks {
 
     public static BlockOpticalFiber OPTICAL_FIBER;
 
-    public static renderBlockBlackHole blackhole = new renderBlockBlackHole();
+    public static renderBlockBlackHole BLACK_HOLE_GEN_RENDER_BLOCK = new renderBlockBlackHole();
 
 
     public static void init() {

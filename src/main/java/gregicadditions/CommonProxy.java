@@ -125,7 +125,7 @@ public class CommonProxy {
         GA_ORES.forEach(registry::register);
         registry.register(GAMetaBlocks.GA_CABLE);
 
-        registry.register(GAMetaBlocks.blackhole);
+        registry.register(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK);
         GameRegistry.registerTileEntity(RenderingTileEntityBlackhole.class, Gregicality.MODID + "black_hole_render");
     }
 
@@ -171,7 +171,7 @@ public class CommonProxy {
                 .map(block -> createItemBlock(block, GAOreItemBlock::new))
                 .forEach(registry::register);
 
-        registry.register(new ItemBlock(GAMetaBlocks.blackhole).setRegistryName(GAMetaBlocks.blackhole.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+        registry.register(new ItemBlock(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK).setRegistryName(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

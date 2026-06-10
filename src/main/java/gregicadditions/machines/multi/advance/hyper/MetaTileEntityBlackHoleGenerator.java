@@ -4,7 +4,6 @@ import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.item.*;
 import gregicadditions.item.components.EmitterCasing;
-import gregicadditions.item.fusion.GAFusionCasing;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.multi.GAFuelRecipeLogic;
@@ -27,8 +26,8 @@ import gregtech.api.recipes.machines.FuelRecipeMap;
 import gregtech.api.recipes.recipes.FuelRecipe;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.unification.OreDictUnifier;
-import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.util.world.DummyWorld;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -36,7 +35,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -46,7 +47,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import org.apache.logging.log4j.core.appender.rolling.action.IfAll;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -56,16 +56,13 @@ import java.util.function.Supplier;
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregicadditions.GAMaterials.Infinity;
 import static gregicadditions.client.ClientHandler.ENRICHED_NAQUADAH_ALLOY_CASING;
-import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 
 public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockController {
 
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
             MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.EXPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.IMPORT_ITEMS
     };
-    protected Item lep = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE).getItem();
-    protected Item quant = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE).getItem();
-    protected Item inf = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE).getItem();
+
     private IItemHandlerModifiable outputInventory;
     private IMultipleTankHandler exportFluidHandler;
     private IItemHandlerModifiable inputInventory;
@@ -74,19 +71,6 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
         super(metaTileEntityId, GARecipeMaps.BLACK_HOLE_GENERATOR, GAValues.V[GAValues.MAX]);
     }
 
-    public static Predicate<BlockWorldState> emitterPredicate() {
-        return (blockWorldState) -> {
-            IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof EmitterCasing)) {
-                return false;
-            } else {
-                EmitterCasing motorCasing = (EmitterCasing) blockState.getBlock();
-                EmitterCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
-                EmitterCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Emitter", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
-            }
-        };
-    }
 
     @Override
     public MetaTileEntity createMetaTileEntity(MetaTileEntityHolder holder) {
@@ -103,7 +87,6 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
         if (isStructureFormed()) {
             FluidStack fuelStack = ((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getFuelStack();
             int fuelAmount = fuelStack == null ? 0 : fuelStack.amount;
-            int itemCount = ((BlackHoleGeneratorWorkableHandler) workableHandler).getLepCharges();
 
             ITextComponent fuelName = new TextComponentTranslation(fuelAmount == 0 ? "gregtech.fluid.empty" : fuelStack.getUnlocalizedName());
 
@@ -183,6 +166,14 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
         initializeAbilities();
+       // placeRenderBlock();
+    }
+
+    @Override
+    public boolean isStructureFormed() {
+        boolean struct = super.isStructureFormed();
+        if(struct) placeRenderBlock();
+        return struct;
     }
 
     @Override
@@ -206,6 +197,7 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
     public void invalidateStructure() {
         super.invalidateStructure();
         resetTileAbilities();
+        removeRenderBlock();
     }
 
     private void initializeAbilities() {
@@ -236,6 +228,58 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
     }
     protected IBlockState getCasingState4() {
         return GAMetaBlocks.METAL_CASING_2.getState(MetalCasing2.CasingType.TRITANIUM);
+    }
+    public void removeRenderBlock() {
+        if (( this.getWorld() instanceof DummyWorld)) return;
+
+        double centerX = this.getPos().getX();
+        double yOffset = 28;
+        double centerZ = this.getPos().getZ();;
+
+        EnumFacing face = this.frontFacing;
+        switch (face) {
+            case SOUTH:
+                centerZ -= 5.0;
+                break;
+            case EAST:
+                centerX -= 5.0;
+                break;
+            case WEST:
+                centerX += 5.0;
+                break;
+            default:
+                centerZ += 5.0;
+                break;
+        }
+
+
+        this.getWorld().setBlockToAir(new BlockPos(centerX, this.getPos().getY() + yOffset ,centerZ));
+    }
+
+
+    public void placeRenderBlock() {
+        if (( this.getWorld() instanceof DummyWorld)) return;
+
+        double centerX = this.getPos().getX();
+        double yOffset = 28;
+        double centerZ = this.getPos().getZ();;
+        EnumFacing face = this.frontFacing;
+        switch (face) {
+            case SOUTH:
+                centerZ -= 5.0;
+                break;
+            case EAST:
+                centerX -= 5.0;
+                break;
+            case WEST:
+                centerX += 5.0;
+                break;
+            default:
+                centerZ += 5.0;
+                break;
+        }
+
+        this.getWorld().setBlockState(new BlockPos(centerX, this.getPos().getY() + yOffset,centerZ), GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getDefaultState(), 3);
     }
 
     public static class BlackHoleGeneratorWorkableHandler extends GAFuelRecipeLogic {
@@ -279,13 +323,13 @@ public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockControll
                 for (int i = 0; i < sizeInventory; i++) {
                     ItemStack slot = importHandler.get().getStackInSlot(i);
                     if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE)) ) {
-                        importHandler.get().extractItem(i, 1, false);
-                        if(currentCycle < 50) {
+                        importHandler.get().extractItem(i, currentCycle, false);
+                        if(currentCycle < 100) {
                             this.currentCycle += 1;
                             }
                     }
                      if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE)) && currentCycle >= 100 ) {
-                        importHandler.get().extractItem(i, 1, false);
+                        importHandler.get().extractItem(i, currentCycle, false);
                         this.currentCycle += 1;
                         break;
                     }

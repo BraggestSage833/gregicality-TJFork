@@ -271,10 +271,6 @@ public class GATileEntities {
 
     public static MetaTileEntityPolymerSynthesizer POLY_SYN;
 
-    public  static MetaTileEntityBlackHoleGenerator BLACK_HOLE;
-
-    public static MetaTileEntityPolymerSynthesizer POLY_SYN;
-
     public static void init() {
 
         ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus"), 16));
@@ -1207,8 +1203,9 @@ public class GATileEntities {
         VOLCANUS = GregTechAPI.registerMetaTileEntity(4244, new MetaTileEntityVolcanus(location("volcanus")));
         CRYOGENIC_FREEZER = GregTechAPI.registerMetaTileEntity(4245, new MetaTileEntityCryogenicFreezer(location("cryogenic_freezer")));
 
-        BLACK_HOLE = GregTechAPI.registerMetaTileEntity(6121, new MetaTileEntityBlackHoleGenerator(location("black.hole.generator")));
+        //BLACK_HOLE = GregTechAPI.registerMetaTileEntity(6121, new MetaTileEntityBlackHoleGenerator(location("black.hole.generator")));
         POLY_SYN = GregTechAPI.registerMetaTileEntity(6122, new MetaTileEntityPolymerSynthesizer(location("polymer.synthesizer")));
+
 
 
     }
