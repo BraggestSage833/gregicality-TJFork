@@ -274,11 +274,4 @@ public class CommonProxy {
     public static void onUnload(WorldEvent.Unload event) {
         IPSaveData.setDirty(0);
     }
-
-
-
-    @SubscribeEvent
-    public static void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
-        GTSounds.registerSounds();
-    }
 }
