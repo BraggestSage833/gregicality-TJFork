@@ -1,6 +1,14 @@
 package gregicadditions.recipes.chain;
 
+import gregicadditions.GAValues;
+import gregicadditions.item.GAExplosive;
+import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.GAMetaItem;
+import gregicadditions.item.GAMetaItems;
+import gregicadditions.machines.GATileEntities;
 import gregtech.api.recipes.ingredients.IntCircuitIngredient;
+import gregtech.api.unification.material.MarkerMaterials;
+import gregtech.common.items.MetaItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -9,6 +17,7 @@ import static gregicadditions.GAMaterials.*;
 import static gregicadditions.item.GAMetaItems.*;
 import static gregicadditions.recipes.GARecipeMaps.*;
 import static gregtech.api.recipes.RecipeMaps.*;
+import static gregtech.api.unification.material.MarkerMaterials.Tier.Elite;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
 import static gregtech.common.items.MetaItems.SHAPE_MOLD_BLOCK;
@@ -728,5 +737,21 @@ public class VariousChains {
                 .output(dust, Plutonium, 8)
                 .fluidOutputs(Radon.getFluid(1000))
                 .buildAndRegister();
+        // infinity charge
+        ASSEMBLY_LINE_RECIPES.recipeBuilder()
+                .inputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.QCD_CHARGE,16))
+                .input(plate, ProtoAdamantium, 16)
+                .input(plate, HeavyQuarkDegenerateMatter, 16)
+                .input(plate, NaquadriaticTaranium ,16)
+                .input(plate, SuperheavyHAlloy, 16)
+                .input(plate, SuperheavyLAlloy ,16)
+                .input(plate, Infinity ,16)
+                .inputs(MACROWORMHOLE_GENERATOR.getStackForm())
+                .fluidInputs(CosmicComputingMix.getFluid(1296))
+                .outputs(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE))
+                .duration(600 * 4)
+                .EUt((GAValues.V[GAValues.UMV]) - (GAValues.V[GAValues.UHV]))
+                .buildAndRegister();
+
     }
 }

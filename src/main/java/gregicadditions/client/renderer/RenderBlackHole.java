@@ -19,9 +19,9 @@ Code originally made by aeddddd for the mod AE2Enhanced
 public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEntityBlackhole> {
 
 
-    private static final double EVENT_HORIZON_RADIUS = 3.5;
-    private static final double INNER_HALO_BASE = 3.2;
-    private static final double MID_HALO_BASE = 5.6;
+    private static final double EVENT_HORIZON_RADIUS = 2.5;
+    private static final double INNER_HALO_BASE = 4.2;
+    private static final double MID_HALO_BASE = 6.6;
     private static final double OUTER_HALO_BASE = 7.0;
 
     private static final int LATITUDE_SEGMENTS = 24;
@@ -38,7 +38,7 @@ public class RenderBlackHole extends TileEntitySpecialRenderer<RenderingTileEnti
             return;
         }
 
-        float time = (te.tickCount + partialTicks) * ROTATION_SPEED;
+        float time = (te.getWorld().getTotalWorldTime() + partialTicks) * ROTATION_SPEED;
 
         float expand = 0.5f + 0.5f * (float) Math.sin(time * 0.5);
 

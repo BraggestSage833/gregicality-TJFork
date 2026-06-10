@@ -171,7 +171,7 @@ public class CommonProxy {
                 .map(block -> createItemBlock(block, GAOreItemBlock::new))
                 .forEach(registry::register);
 
-        registry.register(new ItemBlock(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK).setRegistryName(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+        //registry.register(new ItemBlock(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK).setRegistryName(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
