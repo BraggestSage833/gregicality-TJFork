@@ -260,14 +260,13 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
 
     @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer player) {
-        ModularUI.Builder builder = super.createUITemplate(player);
-        builder.widget(new ToggleButtonWidget(7 + 18 * 4 + 1, 26, 16, 16, GuiTextures.BUTTON_AUTO_PULL, () -> autoPull, this::setAutoPull)
-                .setTooltipText("gregtech.gui.me_bus.auto_pull_button"))
+        return super.createUITemplate(player)
+                .widget(new ToggleButtonWidget(7 + 18 * 4 + 1, 46, 16, 16, GuiTextures.BUTTON_AUTO_PULL, () -> autoPull, this::setAutoPull)
+                        .setTooltipText("gregtech.gui.me_bus.auto_pull_button"))
                 .widget(new TextFieldWidget(26, 25, 124, 18, true, () -> String.valueOf(this.tickRate), this::setTickRate)
                         .setValidator(str -> Pattern.compile("\\*?[0-9_]*\\*?").matcher(str).matches()))
                 .widget(new ClickButtonWidget(7, 25, 18, 18, "/2", data -> this.setTickRate(String.valueOf((long) this.tickRate / 2))))
                 .widget(new ClickButtonWidget(151, 25, 18, 18, "*2", data -> this.setTickRate(String.valueOf((long) this.tickRate * 2))));
-        return builder;
     }
 
     @Override
