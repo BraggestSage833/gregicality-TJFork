@@ -1,0 +1,392 @@
+package gregicadditions.machines.multi.advance.hyper;
+
+import gregicadditions.GAValues;
+import gregicadditions.capabilities.GregicAdditionsCapabilities;
+import gregicadditions.item.*;
+import gregicadditions.item.components.EmitterCasing;
+import gregicadditions.item.metal.MetalCasing1;
+import gregicadditions.item.metal.MetalCasing2;
+import gregicadditions.machines.multi.GAFuelRecipeLogic;
+import gregicadditions.machines.multi.GAFueledMultiblockController;
+import gregicadditions.recipes.GARecipeMaps;
+import gregtech.api.capability.IEnergyContainer;
+import gregtech.api.capability.IMultipleTankHandler;
+import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.FuelRecipeLogic;
+import gregtech.api.capability.impl.ItemHandlerList;
+import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.multiblock.BlockPattern;
+import gregtech.api.multiblock.BlockWorldState;
+import gregtech.api.multiblock.FactoryBlockPattern;
+import gregtech.api.multiblock.PatternMatchContext;
+import gregtech.api.recipes.machines.FuelRecipeMap;
+import gregtech.api.recipes.recipes.FuelRecipe;
+import gregtech.api.render.ICubeRenderer;
+import gregtech.api.unification.OreDictUnifier;
+import gregtech.api.unification.ore.OrePrefix;
+import gregtech.api.util.world.DummyWorld;
+import gregtech.common.blocks.BlockMultiblockCasing;
+import gregtech.common.blocks.MetaBlocks;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
+import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
+import static gregicadditions.GAMaterials.Infinity;
+import static gregicadditions.client.ClientHandler.ENRICHED_NAQUADAH_ALLOY_CASING;
+
+public class MetaTileEntityBlackHoleGenerator extends GAFueledMultiblockController {
+
+    private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
+            MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.OUTPUT_ENERGY, MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.EXPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH, MultiblockAbility.IMPORT_ITEMS
+    };
+
+    private IItemHandlerModifiable outputInventory;
+    private IMultipleTankHandler exportFluidHandler;
+    private IItemHandlerModifiable inputInventory;
+
+    public MetaTileEntityBlackHoleGenerator(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, GARecipeMaps.BLACK_HOLE_GENERATOR, GAValues.V[GAValues.MAX]);
+    }
+
+
+    @Override
+    public MetaTileEntity createMetaTileEntity(MetaTileEntityHolder holder) {
+        return new MetaTileEntityBlackHoleGenerator(metaTileEntityId);
+    }
+
+    @Override
+    protected FuelRecipeLogic createWorkable(long maxVoltage) {
+        return new MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler(this, recipeMap, () -> energyContainer, () -> importFluidHandler, () -> inputInventory, maxVoltage);
+    }
+
+    @Override
+    protected void addDisplayText(List<ITextComponent> textList) {
+        if (isStructureFormed()) {
+            FluidStack fuelStack = ((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getFuelStack();
+            int fuelAmount = fuelStack == null ? 0 : fuelStack.amount;
+
+            ITextComponent fuelName = new TextComponentTranslation(fuelAmount == 0 ? "gregtech.fluid.empty" : fuelStack.getUnlocalizedName());
+
+            if (fuelStack == null)
+                textList.add(new TextComponentTranslation("gregtech.multiblock.large_rocket_engine.no_fuel").setStyle(new Style().setColor(TextFormatting.RED)));
+            else {
+                textList.add(new TextComponentTranslation("gregtech.multiblock.diesel_engine.fuel_amount", fuelAmount, fuelName).setStyle(new Style().setColor(TextFormatting.AQUA)));
+            }
+            textList.add(new TextComponentTranslation("gregtech.multiblock.black.hole.charges", ((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getLepCharges(),GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE).getDisplayName()).setStyle(new Style().setColor(TextFormatting.AQUA)));
+            textList.add(new TextComponentTranslation("gregtech.multiblock.black.hole.charges", ((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getInfinityCharges(),GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE).getDisplayName()).setStyle(new Style().setColor(TextFormatting.AQUA)));
+
+            textList.add(new TextComponentTranslation("gregtech.multiblock.black.hole.cycle",((BlackHoleGeneratorWorkableHandler) workableHandler).getCurrentCycle()));
+
+        }
+        super.addDisplayText(textList);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(I18n.format("gtadditions.multiblock.black_hole_generator.tooltip.1"));
+
+    }
+//35 aisle
+//29 across
+    @Override
+    protected BlockPattern createStructurePattern() {
+        return FactoryBlockPattern.start(FRONT,UP,RIGHT)
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("            CCCCCCC             ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "              DDD               ", "             DDDDD              ", "            DDDDDDD             ", "            DDDDDDD             ", "            DDDDDDD             ", "             DDDDD              ", "              DDD               ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("         CCCCCCCCCCCCC          ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "              DDD               ", "            DDDDDDD             ", "           DDDDDDDDD            ", "          DDDD   DDDD           ", "          DDD     DDD           ", "         DDD       DDD          ", "         DDD       DDD          ", "         DDD       DDD          ", "          DDD     DDD           ", "          DDDD   DDDD           ", "           DDDDDDDDD            ", "            DDDDDDD             ", "              DDD               ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("        CCCCCCCCCCCCCCC         ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "          DDDDDDDDDDD           ", "         DDD       DDD          ", "         DD         DD          ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "         DD         DD          ", "         DDD       DDD          ", "          DDDDDDDDDDD           ", "            DDDDDDD             ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("      CCCCCCCCCCCCCCCCCCC       ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             DDDDD              ", "           DDDDDDDDD            ", "         DDD       DDD          ", "        DDD         DDD         ", "        DD           DD         ", "       DD             DD        ", "       D               D        ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "       D               D        ", "       DD             DD        ", "        DD           DD         ", "        DDD         DDD         ", "         DDD       DDD          ", "           DDDDDDDDD            ", "             DDDDD              ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("     CCCCCCCCCCCCCCCCCCCCC      ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             DDDDD              ", "          DDDDDDDDDDD           ", "         DDD       DDD          ", "        DD           DD         ", "       DD             DD        ", "      DD               DD       ", "      DD               DD       ", "      D                 D       ", "     DD                 DD      ", "     DD                 DD      ", "     DD                 DD      ", "     DD                 DD      ", "     DD                 DD      ", "      D                 D       ", "      DD               DD       ", "      DD               DD       ", "       DD             DD        ", "        DD           DD         ", "         DDD       DDD          ", "          DDDDDDDDDDD           ", "             DDDDD              ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("    CCCCCCCCCCCCCCCCCCCCCCC     ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             DDDDD              ", "          DDDDDDDDDDD           ", "         DD         DD          ", "        DD           DD         ", "       D               D        ", "      DD               DD       ", "     DD                 DD      ", "     D                   D      ", "     D                   D      ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "     D                   D      ", "     D                   D      ", "     DD                 DD      ", "      DD               DD       ", "       D               D        ", "        DD           DD         ", "         DD         DD          ", "          DDDDDDDDDDD           ", "             DDDDD              ", "                                ", "                                ", "                                ")
+                .aisle("    CCCCCCCCCCCCCCCCCCCCCCC     ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "           DDDDDDDDD            ", "         DDD       DDD          ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     DD                 DD      ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "     DD                 DD      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "         DDD       DDD          ", "           DDDDDDDDD            ", "                                ", "                                ", "                                ")
+                .aisle("   CCCCCCCCCCCCCCCCCCCCCCCCC    ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ", "                                ", "                                ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "              DDD               ", "          DDDDDDDDDDD           ", "        DDD         DDD         ", "       DD             DD        ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   DD                     DD    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "  DD                       DD   ", "  DD                       DD   ", "  DD                       DD   ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   DD                     DD    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "       DD             DD        ", "        DDD         DDD         ", "          DDDDDDDDDDD           ", "              DDD               ", "                                ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "                                ", "               E                ", "              FFF               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "               E                ", "               E                ", "                                ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "     D                   D      ", "    D                     D     ", "   DD                     DD    ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "   DD                     DD    ", "    D                     D     ", "     D                   D      ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ", "                                ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "               E                ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              EEE               ", "                                ", "                                ", "                                ", "                                ", "           DDDDDDDDD            ", "         DD         DD          ", "       DD             DD        ", "      DD               DD       ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "      DD               DD       ", "       DD             DD        ", "         DD         DD          ", "           DDDDDDDDD            ", "                                ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "              E E               ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             EE EE              ", "               E                ", "                                ", "                                ", "              DDD               ", "          DDDD   DDDD           ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     D                   D      ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", " DD                          D  ", " DD                          D  ", " DD                          D  ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "     D                   D      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "          DDDD   DDDD           ", "              DDD               ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "             E   E              ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            EE   EE             ", "              E E               ", "               E                ", "                                ", "             DDDDD              ", "          DDD     DDD           ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "          DDD     DDD           ", "             DDDDD              ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "            E     E             ", "           E       E            ", "          FE       EF           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "           E       E            ", "           EE     EE            ", "             E   E              ", "              EEE               ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "  DD                       DD   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  DD                       DD   ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "           E       E            ", "          E         E           ", "          G         F           ", "          E         E           ", "          E         E           ", "          E         E           ", "          E         E           ", "          E         E           ", "          E         E           ", "          E         E           ", "          E         E           ", "          EE       EE           ", "            E     E             ", "             EEEEE              ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "  DD                       DD   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  DD                       DD   ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "            E     E             ", "           E       E            ", "          FE       EF           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "          EE       EE           ", "           E       E            ", "           EE     EE            ", "             E   E              ", "              EEE               ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "  DD                       DD   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  DD                       DD   ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "             E   E              ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "            E     E             ", "             EE EE              ", "               E                ", "                                ", "             DDDDD              ", "          DDD     DDD           ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "          DDD     DDD           ", "             DDDDD              ")
+                .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCCCC  ", "              E E               ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             E   E              ", "             EE EE              ", "               E                ", "                                ", "                                ", "              DDD               ", "          DDDD   DDDD           ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     D                   D      ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", " D                           D  ", " D                           D  ", " D                           D  ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "     D                   D      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "          DDDD   DDDD           ", "              DDD               ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "               E                ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              E E               ", "              EEE               ", "                                ", "                                ", "                                ", "                                ", "           DDDDDDDDD            ", "         DD         DD          ", "       DD             DD        ", "      DD               DD       ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "      DD               DD       ", "       DD             DD        ", "         DD         DD          ", "           DDDDDDDDD            ", "                                ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "                                ", "               E                ", "              FFF               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "              EEE               ", "               E                ", "               E                ", "                                ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "      DD               DD       ", "     DD                 DD      ", "     D                   D      ", "    D                     D     ", "   DD                     DD    ", "   D                       D    ", "   D                       D    ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "  D                         D   ", "   D                       D    ", "   D                       D    ", "   DD                     DD    ", "    D                     D     ", "     D                   D      ", "     DD                 DD      ", "      DD               DD       ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ", "                                ")
+                .aisle("  CCCCCCCCCCCCCCCCCCCCCCCCCCC   ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "              DDD               ", "          DDDDDDDDDDD           ", "        DDD         DDD         ", "       DD             DD        ", "      DD               DD       ", "     DD                 DD      ", "    DD                   DD     ", "    D                     D     ", "   DD                     DD    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "  DD                       DD   ", "  DD                       DD   ", "  DD                       DD   ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   DD                     DD    ", "    D                     D     ", "    DD                   DD     ", "     DD                 DD      ", "      DD               DD       ", "       DD             DD        ", "        DDD         DDD         ", "          DDDDDDDDDDD           ", "              DDD               ", "                                ")
+                .aisle("   CCCCCCCCCCCCCCCCCCCCCCCCC    ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "         DDD       DDD          ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "    D                     D     ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "   D                       D    ", "    D                     D     ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "         DDD       DDD          ", "            DDDDDDD             ", "                                ", "                                ")
+                .aisle("    CCCCCCCCCCCCCCCCCCCCCCC     ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "                                ", "                                ", "                                ", "           DDDDDDDDD            ", "         DDD       DDD          ", "        DD           DD         ", "       D               D        ", "      D                 D       ", "     DD                 DD      ", "     D                   D      ", "    DD                   DD     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    D                     D     ", "    DD                   DD     ", "     D                   D      ", "     DD                 DD      ", "      D                 D       ", "       D               D        ", "        DD           DD         ", "         DDD       DDD          ", "           DDDDDDDDD            ", "                                ", "                                ", "                                ")
+                .aisle("    CCCCCCCCCCCCCCCCCCCCCCC     ", "             AAAAA              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "                                ", "                                ", "             DDDDD              ", "          DDDDDDDDDDD           ", "         DD         DD          ", "        DD           DD         ", "       D               D        ", "      DD               DD       ", "     DD                 DD      ", "     D                   D      ", "     D                   D      ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "    DD                   DD     ", "     D                   D      ", "     D                   D      ", "     DD                 DD      ", "      DD               DD       ", "       D               D        ", "        DD           DD         ", "         DD         DD          ", "          DDDDDDDDDDD           ", "             DDDDD              ", "                                ", "                                ", "                                ")
+                .aisle("     CCCCCCCCCCCCCCCCCCCCC      ", "             AAAAA              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "                                ", "                                ", "             DDDDD              ", "          DDDDDDDDDDD           ", "         DDD       DDD          ", "        DD           DD         ", "       DD             DD        ", "      DD               D        ", "      DD               DD       ", "      D                 D       ", "      D                 DD      ", "      D                 DD      ", "     DD                 DD      ", "     DD                 DD      ", "     DD                 DD      ", "      D                 D       ", "      DD               DD       ", "      DD               DD       ", "       DD             DD        ", "        DD           DD         ", "         DDD       DDD          ", "          DDDDDDDDDDD           ", "             DDDDD              ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("      CCCCCCCCCCCCCCCCCCC       ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "             DDDDD              ", "           DDDDDDDDD            ", "         DDD       DDD          ", "        DDD         DDD         ", "        DD           DD         ", "       DD             DD        ", "       D               D        ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "      DD               DD       ", "       D               D        ", "       DD             DD        ", "        DD           DD         ", "        DDD         DDD         ", "         DDD       DDD          ", "           DDDDDDDDD            ", "             DDDDD              ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("        CCCCCCCCCCCCCCC         ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             A   A              ", "             AAAAA              ", "                                ", "             AAAAA              ", "                                ", "                                ", "                                ", "            DDDDDDD             ", "          DDDDDDDDDDD           ", "         DDD       DDD          ", "         DD         DD          ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "        DD           DD         ", "         DD         DD          ", "         DDD       DDD          ", "          DDDDDDDDDDD           ", "            DDDDDDD             ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("         CCCCCCCCCCCCC          ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "             AAAAA              ", "                                ", "                                ", "                                ", "              DDD               ", "            DDDDDDD             ", "           DDDDDDDDD            ", "          DDDD   DDDD           ", "          DDD     DDD           ", "         DDD       DDD          ", "         DDD       DDD          ", "         DDD       DDD          ", "          DDD     DDD           ", "          DDDD   DDDD           ", "           DDDDDDDDD            ", "            DDDDDDD             ", "              DDD               ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("            CCCCCCC             ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "              DDD               ", "             DDDDD              ", "            DDDDDDD             ", "            DDDDDDD             ", "            DDDDDDD             ", "             DDDDD              ", "              DDD               ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "             AAAAA              ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "             AAAAA              ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "             AAAAA              ", "             AAAAA              ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             AAAAA              ", "             A   A              ", "             A   A              ", "             AAAAA              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .aisle("                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "             AAAAA              ", "             AAAAA              ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ", "                                ")
+                .where(' ', (tile) -> true)
+                .where('C', statePredicate(getCasingState()))
+                .where('E', statePredicate(getCasingState2()))
+                .where('G', selfPredicate())
+                .where('F', statePredicate(getCasingState2()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('D',statePredicate(getCasingState3()))
+                .where('A', statePredicate(getCasingState4()))
+                .build();
+    }
+
+    @Override
+    protected void formStructure(PatternMatchContext context) {
+        super.formStructure(context);
+        initializeAbilities();
+       // placeRenderBlock();
+    }
+
+    @Override
+    public boolean isStructureFormed() {
+        boolean struct = super.isStructureFormed();
+        if(struct) placeRenderBlock();
+        return struct;
+    }
+
+    @Override
+    protected void updateFormedValid() {
+        super.updateFormedValid();
+        if (this.isActive()) {
+            if (!(this.energyContainer.getEnergyCapacity() == this.energyContainer.getEnergyStored()) && this.energyContainer.getOutputAmperage() !=0) {
+                if (getWorld().rand.nextInt(100) % 5 == 0 && this.getOffsetTimer() % 20 == 0 && outputInventory != null && ((BlackHoleGeneratorWorkableHandler) workableHandler).getCurrentCycle() > 0) {
+                    ItemHandlerHelper.insertItemStacked(this.outputInventory, OreDictUnifier.get(OrePrefix.dust, Infinity, getWorld().rand.nextInt(((BlackHoleGeneratorWorkableHandler) workableHandler).getCurrentCycle() * 128)), false);
+                }
+                if (this.getOffsetTimer() % 20 == 0 && (((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getFuelStack() != null)) {
+                    this.exportFluidHandler.fill(new FluidStack(((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getFuelStack().getFluid(), (((MetaTileEntityBlackHoleGenerator.BlackHoleGeneratorWorkableHandler) workableHandler).getPreviousRecipeFuelUsage() / 20) - 40), true);
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    public void invalidateStructure() {
+        super.invalidateStructure();
+        resetTileAbilities();
+        removeRenderBlock();
+    }
+
+    private void initializeAbilities() {
+        this.outputInventory = new ItemHandlerList(getAbilities(MultiblockAbility.EXPORT_ITEMS));
+        this.exportFluidHandler = new FluidTankList(true, getAbilities(MultiblockAbility.EXPORT_FLUIDS));
+        this.inputInventory = new ItemHandlerList(getAbilities(MultiblockAbility.IMPORT_ITEMS));
+    }
+
+    private void resetTileAbilities() {
+        this.outputInventory = new ItemStackHandler(0);
+        this.exportFluidHandler = new FluidTankList(true);
+        this.inputInventory = new ItemStackHandler(0);
+    }
+
+    @Override
+    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
+        return ENRICHED_NAQUADAH_ALLOY_CASING;
+    }
+
+    protected IBlockState getCasingState() {
+        return GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.HASTELLOY_X78);
+    }
+    protected IBlockState getCasingState2() {
+        return MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.FUSION_CASING);
+    }
+    protected IBlockState getCasingState3() {
+        return GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS);
+    }
+    protected IBlockState getCasingState4() {
+        return GAMetaBlocks.METAL_CASING_2.getState(MetalCasing2.CasingType.TRITANIUM);
+    }
+    public void removeRenderBlock() {
+        if (( this.getWorld() instanceof DummyWorld)) return;
+
+        double centerX = this.getPos().getX();
+        double yOffset = 28;
+        double centerZ = this.getPos().getZ();;
+
+        EnumFacing face = this.frontFacing;
+        switch (face) {
+            case SOUTH:
+                centerZ -= 5.0;
+                break;
+            case EAST:
+                centerX -= 5.0;
+                break;
+            case WEST:
+                centerX += 5.0;
+                break;
+            default:
+                centerZ += 5.0;
+                break;
+        }
+
+
+        this.getWorld().setBlockToAir(new BlockPos(centerX, this.getPos().getY() + yOffset ,centerZ));
+    }
+
+
+    public void placeRenderBlock() {
+        if (( this.getWorld() instanceof DummyWorld)) return;
+
+        double centerX = this.getPos().getX();
+        double yOffset = 28;
+        double centerZ = this.getPos().getZ();;
+        EnumFacing face = this.frontFacing;
+        switch (face) {
+            case SOUTH:
+                centerZ -= 5.0;
+                break;
+            case EAST:
+                centerX -= 5.0;
+                break;
+            case WEST:
+                centerX += 5.0;
+                break;
+            default:
+                centerZ += 5.0;
+                break;
+        }
+
+        this.getWorld().setBlockState(new BlockPos(centerX, this.getPos().getY() + yOffset,centerZ), GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getDefaultState(), 3);
+    }
+
+    public static class BlackHoleGeneratorWorkableHandler extends GAFuelRecipeLogic {
+
+        private final int maxCycleLength = 200;
+        private int currentCycle = 0;
+
+
+        private Supplier<IItemHandlerModifiable> importHandler;
+
+
+        public BlackHoleGeneratorWorkableHandler(MetaTileEntity metaTileEntity, FuelRecipeMap recipeMap,
+                                                 Supplier<IEnergyContainer> energyContainer, Supplier<IMultipleTankHandler> fluidTank, Supplier<IItemHandlerModifiable> importHandler, long maxVoltage) {
+            super(metaTileEntity, recipeMap, energyContainer, fluidTank, maxVoltage);
+            this.importHandler = importHandler;
+        }
+
+        public FluidStack getFuelStack() {
+            if (previousRecipe == null)
+                return null;
+            FluidStack fuelStack = previousRecipe.getRecipeFluid();
+            return fluidTank.get().drain(new FluidStack(fuelStack.getFluid(), Integer.MAX_VALUE), false);
+        }
+
+        public int getMaxCycleLength() {
+            return maxCycleLength;
+        }
+
+        public int getPreviousRecipeFuelUsage() {
+            if (previousRecipe == null) {
+                return 0;
+            }
+            return calculateFuelAmount(previousRecipe);
+        }
+
+        @Override
+        protected long startRecipe(FuelRecipe currentRecipe, int fuelAmountUsed, int recipeDuration) {
+            if (importHandler.get() != null && this.metaTileEntity != null && currentCycle <= 200) {
+                int sizeInventory = importHandler.get().getSlots();
+
+                for (int i = 0; i < sizeInventory; i++) {
+                    ItemStack slot = importHandler.get().getStackInSlot(i);
+                    if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE)) ) {
+                        importHandler.get().extractItem(i, currentCycle, false);
+                        if(currentCycle < 100) {
+                            this.currentCycle += 1;
+                            }
+                    }
+                     if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE)) && currentCycle >= 100 ) {
+                        importHandler.get().extractItem(i, currentCycle, false);
+                        this.currentCycle += 1;
+                        break;
+                    }
+                    else if (currentCycle > 200){
+                        this.currentCycle -= 1;
+                    }
+                }
+            }
+            return (currentRecipe.getMinVoltage()) * currentCycle * 2;
+        }
+
+        @Override
+        public void update() {
+            super.update();
+        }
+
+        @Override
+        public NBTTagCompound serializeNBT() {
+            NBTTagCompound compound = super.serializeNBT();
+            compound.setInteger("Cycle", currentCycle);
+            return compound;
+        }
+
+        @Override
+        public void deserializeNBT(NBTTagCompound compound) {
+            super.deserializeNBT(compound);
+            this.currentCycle = compound.getInteger("Cycle");
+        }
+
+        public int getCurrentCycle() {
+            return currentCycle;
+        }
+
+        public int getLepCharges() {
+            int sizeInventory = importHandler.get().getSlots();
+            int itemCount = 0;
+
+            for (int i = 0; i < sizeInventory; i++) {
+                ItemStack slot = importHandler.get().getStackInSlot(i);
+                if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE))) {
+                    itemCount += slot.getCount();
+                }
+            }
+            return itemCount;
+        }
+
+        public int getInfinityCharges() {
+            int sizeInventory = importHandler.get().getSlots();
+            int itemCount = 0;
+
+            for (int i = 0; i < sizeInventory; i++) {
+                ItemStack slot = importHandler.get().getStackInSlot(i);
+                if (slot.isItemEqual(GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.INFINITY_CHARGE))) {
+                    itemCount += slot.getCount();
+                }
+            }
+            return itemCount;
+        }
+    }
+}

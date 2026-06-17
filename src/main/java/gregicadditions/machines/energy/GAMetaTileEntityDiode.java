@@ -140,6 +140,18 @@ public class GAMetaTileEntityDiode extends GATieredMetaTileEntity {
     }
 
     @Override
+    public void updateInputRedstoneSignals() {
+        super.updateInputRedstoneSignals();
+        if (this.getInputRedstoneSignal(EnumFacing.DOWN,true) > 0){
+            ((GAEnergyContainerHandler) this.energyContainer).setSideInputCondition(null);
+            ((GAEnergyContainerHandler) this.energyContainer).setSideOutputCondition(null);
+        }
+        else{
+            reinitializeEnergyContainer();
+        }
+    }
+
+    @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         long voltage = energyContainer.getInputVoltage();
         String tierName = GAValues.VN[getTier()];

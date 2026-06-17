@@ -98,11 +98,6 @@ public abstract class MegaMultiblockRecipeMapController extends LargeSimpleRecip
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        int tier = context.getOrDefault("casingTier", -1);
-        if (tier < 0)
-            maxVoltage = 0;
-        else
-            maxVoltage = (long) (Math.pow(4, tier) * 8);
     }
 
     public static class MegaMultiblockRecipeLogic extends LargeSimpleMultiblockRecipeLogic {

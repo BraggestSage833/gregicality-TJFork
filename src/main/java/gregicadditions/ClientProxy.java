@@ -5,6 +5,8 @@ import gregicadditions.blocks.GABlockOre;
 import gregicadditions.blocks.GAMetalCasing;
 import gregicadditions.client.model.ReTexturedModelLoader;
 import gregicadditions.client.renderer.OpticalFiberRenderer;
+import gregicadditions.client.renderer.RenderBlackHole;
+import gregicadditions.machines.renderTileEntities.RenderingTileEntityBlackhole;
 import gregicadditions.fluid.GAMetaFluids;
 import gregicadditions.input.Keybinds;
 import gregicadditions.item.GADustItem;
@@ -24,6 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -76,6 +79,8 @@ public class ClientProxy extends CommonProxy {
     public static void registerModels(ModelRegistryEvent event) {
         GAMetaBlocks.registerStateMappers();
         GAMetaBlocks.registerItemModels();
+        ClientRegistry.bindTileEntitySpecialRenderer(RenderingTileEntityBlackhole.class, new RenderBlackHole());
+
     }
 
     @SubscribeEvent
@@ -94,4 +99,5 @@ public class ClientProxy extends CommonProxy {
             }
         }
     }
+
 }

@@ -15,6 +15,7 @@ import gregicadditions.item.fusion.GAVacuumCasing;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.item.metal.NuclearCasing;
+import gregicadditions.item.render.renderBlockBlackHole;
 import gregicadditions.pipelike.opticalfiber.BlockOpticalFiber;
 import gregicadditions.pipelike.opticalfiber.OpticalFiberSize;
 import gregicadditions.pipelike.opticalfiber.tile.TileEntityOpticalFiber;
@@ -95,6 +96,7 @@ public class GAMetaBlocks {
 
     //nuclear casing
     public static NuclearCasing NUCLEAR_CASING;
+    public static GAParticleCasing PARTICLE_CASING = new GAParticleCasing();
 
     public static Map<IngotMaterial, GAMetalCasing> METAL_CASING = new HashMap<>();
 
@@ -103,6 +105,8 @@ public class GAMetaBlocks {
 
 
     public static BlockOpticalFiber OPTICAL_FIBER;
+
+    public static renderBlockBlackHole BLACK_HOLE_GEN_RENDER_BLOCK = new renderBlockBlackHole();
 
 
     public static void init() {

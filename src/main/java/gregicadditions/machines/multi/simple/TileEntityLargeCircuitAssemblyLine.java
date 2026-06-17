@@ -32,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +42,7 @@ import java.util.function.Predicate;
 
 import static gregtech.api.multiblock.BlockPattern.RelativeDirection.*;
 import static gregtech.api.render.Textures.SOLID_STEEL_CASING;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.*;
 
 public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockController {
 
@@ -102,19 +104,19 @@ public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockCon
                 long maxVoltage;
                 switch (tieredCasingType) {
                     case TIERED_HULL_IV:
-                        maxVoltage = GAValues.V[GAValues.IV];
+                        maxVoltage =  GAValues.IV;
                         break;
                     case TIERED_HULL_LUV:
-                        maxVoltage = GAValues.V[GAValues.LuV];
+                        maxVoltage =  GAValues.LuV;
                         break;
                     case TIERED_HULL_ZPM:
-                        maxVoltage = GAValues.V[GAValues.ZPM];
+                        maxVoltage =  GAValues.ZPM;
                         break;
                     case TIERED_HULL_UV:
-                        maxVoltage = GAValues.V[GAValues.UV];
+                        maxVoltage =  GAValues.UV;
                         break;
                     case TIERED_HULL_MAX:
-                        maxVoltage = GAValues.V[GAValues.MAX];
+                        maxVoltage =  GAValues.MAX;
                         break;
                     default:
                         maxVoltage = 0;
@@ -140,19 +142,19 @@ public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockCon
                 long maxVoltage;
                 switch (tieredCasingType) {
                     case TIERED_HULL_UHV:
-                        maxVoltage = GAValues.V[GAValues.UHV];
+                        maxVoltage =  GAValues.UHV;
                         break;
                     case TIERED_HULL_UEV:
-                        maxVoltage = GAValues.V[GAValues.UEV];
+                        maxVoltage =  GAValues.UEV;
                         break;
                     case TIERED_HULL_UIV:
-                        maxVoltage = GAValues.V[GAValues.UIV];
+                        maxVoltage =  GAValues.UIV;
                         break;
                     case TIERED_HULL_UMV:
-                        maxVoltage = GAValues.V[GAValues.UMV];
+                        maxVoltage =  GAValues.UMV;
                         break;
                     case TIERED_HULL_UXV:
-                        maxVoltage = GAValues.V[GAValues.UXV];
+                        maxVoltage =  GAValues.UXV;
                         break;
                     default:
                         maxVoltage = 0;
@@ -167,9 +169,27 @@ public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockCon
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        maxVoltage = context.getOrDefault("maxVoltage", 0L);
+        long tier = context.getOrDefault("maxVoltage", 0L);
 
+        if (tier >= GAValues.MAX) {
+            this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+                    .mapToLong(IEnergyContainer::getInputVoltage)
+                    .max()
+                    .orElse(0);
+            long amps = this.getAbilities(INPUT_ENERGY).stream()
+                    .filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+                    .mapToLong(IEnergyContainer::getInputAmperage)
+                    .sum();
+            amps = Math.min(1024, amps);
+            while (amps >= 4) {
+                amps /= 4;
+                this.maxVoltage *= 4;
+            }
+            if (this.maxVoltage >= Integer.MAX_VALUE)
+                this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+        } else this.maxVoltage = 8L << tier * 2;
     }
+
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {

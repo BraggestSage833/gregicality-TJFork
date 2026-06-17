@@ -1,6 +1,7 @@
 package gregicadditions.machines.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.item.components.ConveyorCasing;
 import gregicadditions.item.components.MotorCasing;
@@ -22,6 +23,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import gregtech.api.capability.IEnergyContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +35,7 @@ import static gregicadditions.client.ClientHandler.STELLITE_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
 import static gregtech.api.recipes.RecipeMaps.CUTTER_RECIPES;
 import static gregtech.api.recipes.RecipeMaps.LATHE_RECIPES;
+import static gregtech.api.metatileentity.multiblock.MultiblockAbility.*;
 
 public class TileEntityLargeCutting extends MultiRecipeMapMultiblockController {
 
@@ -85,7 +88,25 @@ public class TileEntityLargeCutting extends MultiRecipeMapMultiblockController {
 		MotorCasing.CasingType motor = context.getOrDefault("Motor", MotorCasing.CasingType.MOTOR_LV);
 		ConveyorCasing.CasingType conveyor = context.getOrDefault("Conveyor", ConveyorCasing.CasingType.CONVEYOR_LV);
 		int min = Collections.min(Arrays.asList(motor.getTier(), conveyor.getTier()));
-		maxVoltage = (long) (Math.pow(4, min) * 8);
+
+		if (min >= GAValues.MAX) {
+			this.maxVoltage = this.getAbilities(INPUT_ENERGY).stream()
+					.mapToLong(IEnergyContainer::getInputVoltage)
+					.max()
+					.orElse(0);
+			long amps = this.getAbilities(INPUT_ENERGY).stream()
+					.filter(energy -> energy.getInputVoltage() == this.maxVoltage)
+					.mapToLong(IEnergyContainer::getInputAmperage)
+					.sum();
+			amps = Math.min(1024, amps);
+			while (amps >= 4) {
+				amps /= 4;
+				this.maxVoltage *= 4;
+			}
+			if (this.maxVoltage >= Integer.MAX_VALUE)
+				this.maxVoltage += this.maxVoltage / Integer.MAX_VALUE;
+		} else this.maxVoltage = 8L << min * 2;
+
 	}
 
 	@Override

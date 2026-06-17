@@ -40,7 +40,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glGetInteger;
 
 @SideOnly(Side.CLIENT)
-public class PluginWorldSceneRenderer {
+public class    PluginWorldSceneRenderer {
     private static final FloatBuffer MODELVIEW_MATRIX_BUFFER = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asFloatBuffer();
     private static final FloatBuffer PROJECTION_MATRIX_BUFFER = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asFloatBuffer();
     private static final IntBuffer VIEWPORT_BUFFER = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asIntBuffer();

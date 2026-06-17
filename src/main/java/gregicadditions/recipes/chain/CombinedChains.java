@@ -131,7 +131,7 @@ public class CombinedChains {
 
         // Zylon
         // C6H6O2 + 2HNO3 + C8H10 -> C14H6N2O2 + 6H2O
-        CHEMICAL_PLANT_RECIPES.recipeBuilder().duration(30).EUt(31457280) // UIV
+        CHEMICAL_PLANT_RECIPES.recipeBuilder().duration(30).EUt(GAValues.VA[GAValues.UIV]) // UIV
                 .notConsumable(AuPdCCatalyst.getItemStack())
                 .fluidInputs(Resorcinol.getFluid(1000))
                 .fluidInputs(NitricAcid.getFluid(2000))

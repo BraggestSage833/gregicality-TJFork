@@ -183,8 +183,8 @@ public class GAMetaTileEntityTransformer extends GATieredMetaTileEntity {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        String lowerTierName = GAValues.VN[getTier() - 1];
-        String higherTierName = GAValues.VN[getTier()];
+        String lowerTierName = GAValues.VN2[getTier() - 1];
+        String higherTierName = GAValues.VN2[getTier()];
         long lowerVoltage = energyContainer.getOutputVoltage();
         long higherVoltage = energyContainer.getInputVoltage();
         long lowerAmperage = energyContainer.getInputAmperage();

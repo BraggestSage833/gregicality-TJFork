@@ -26,30 +26,30 @@ public class GARecipeLogicEnergy extends RecipeLogicEnergy {
         return (byte) Math.min(GAValues.V.length -1, tier);
     }
     @Override
-    protected int[] calculateOverclock(int EUt, long voltage, int duration) {
+    protected long[] calculateOverclock(long EUt, long voltage, int duration) {
         if(!allowOverclocking) {
-            return new int[] {EUt, duration};
+            return new long[] {EUt, duration};
         }
         boolean negativeEU = EUt < 0;
         int tier = getOverclockingTier(voltage);
-        if (GAValues.V[tier] <= EUt || tier == 0)
-            return new int[]{EUt, duration};
+        if (GAValues.VOC[tier] <= EUt || tier == 0)
+            return new long[]{EUt, duration};
         if (negativeEU)
             EUt = -EUt;
         if (EUt <= 16) {
             int multiplier = EUt <= 8 ? tier : tier - 1;
-            int resultEUt = EUt * (1 << multiplier) * (1 << multiplier);
+            long resultEUt = EUt * (1L << multiplier) * (1L << multiplier);
             int resultDuration = duration / (1 << multiplier);
-            return new int[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
+            return new long[]{negativeEU ? -resultEUt : resultEUt, resultDuration};
         } else {
-            int resultEUt = EUt;
+            long resultEUt = EUt;
             double resultDuration = duration;
             //do not overclock further if duration is already too small
-            while (resultDuration >= 3 && resultEUt <= GAValues.V[tier - 1]) {
+            while (resultDuration >= 3 && resultEUt <= GAValues.VOC[tier - 1]) {
                 resultEUt *= 4;
                 resultDuration /= 2.8;
             }
-            return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+            return new long[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
         }
     }
     protected int getOverclockingTier(long voltage) {

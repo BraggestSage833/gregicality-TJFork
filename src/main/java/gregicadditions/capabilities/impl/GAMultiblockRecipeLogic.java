@@ -49,7 +49,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
     }
 
     @Override
-    protected int[] calculateOverclock(int EUt, long voltage, int duration) {
+    protected long[] calculateOverclock(long EUt, long voltage, int duration) {
         int numMaintenanceProblems = (this.metaTileEntity instanceof GARecipeMapMultiblockController) ?
                 ((GARecipeMapMultiblockController) metaTileEntity).getNumProblems() : 0;
 
@@ -57,18 +57,18 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
         int durationModified = (int) (duration * maintenanceDurationMultiplier);
 
         if (!allowOverclocking) {
-            return new int[]{EUt, durationModified};
+            return new long[]{EUt, durationModified};
         }
         boolean negativeEU = EUt < 0;
         int tier = getOverclockingTier(voltage);
-        if (GAValues.V[tier] <= EUt || tier == 0)
-            return new int[]{EUt, durationModified};
+        if (GAValues.VOC[tier] <= EUt || tier == 0)
+            return new long[]{EUt, durationModified};
         if (negativeEU)
             EUt = -EUt;
-        int resultEUt = EUt;
+        long resultEUt = EUt;
         double resultDuration = durationModified;
         //do not overclock further if duration is already too small
-        while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
+        while (resultDuration >= 1 && resultEUt <= GAValues.VOC[tier - 1]) {
             resultEUt *= 4;
             resultDuration /= 2.8;
         }
@@ -77,7 +77,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
 
         }
         previousRecipeDuration = (int) resultDuration;
-        return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+        return new long[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
     }
 
     @Override
@@ -228,7 +228,7 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
     protected boolean setupAndConsumeRecipeInputs(Recipe recipe, int index) {
         RecipeMapMultiblockController controller = (RecipeMapMultiblockController) metaTileEntity;
         if (controller.checkRecipe(recipe, false)) {
-            int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
+            long[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
             long totalEUt = (long) resultOverclock[0] * resultOverclock[1];
             IItemHandlerModifiable importInventory = getInputBuses().get(index);
             IMultipleTankHandler importFluids = getInputTank();

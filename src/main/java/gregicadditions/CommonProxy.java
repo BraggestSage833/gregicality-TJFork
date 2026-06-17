@@ -8,6 +8,7 @@ import gregicadditions.integrations.mysticalagriculture.items.MysticalAgricultur
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMetaItems;
+import gregicadditions.machines.renderTileEntities.RenderingTileEntityBlackhole;
 import gregicadditions.network.IPSaveData;
 import gregicadditions.network.MessageReservoirListSync;
 import gregicadditions.network.NetworkHandler;
@@ -16,19 +17,19 @@ import gregicadditions.pipelike.opticalfiber.ItemBlockOpticalFiber;
 import gregicadditions.recipes.*;
 import gregicadditions.recipes.categories.handlers.*;
 import gregicadditions.recipes.compat.ForestryCompat;
-import gregicadditions.recipes.categories.machines.MachineCraftingRecipes;
 import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregicadditions.worldgen.StoneGenEvents;
 import gregicadditions.worldgen.WorldGenRegister;
 import gregtech.api.recipes.recipeproperties.BlastTemperatureProperty;
 import gregtech.api.unification.ore.OrePrefix;
-import gregtech.api.util.FluidTooltipUtil;
 import gregtech.common.blocks.VariantItemBlock;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -41,6 +42,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.io.IOException;
@@ -122,6 +124,9 @@ public class CommonProxy {
         GAMetaBlocks.METAL_CASING.values().stream().distinct().forEach(registry::register);
         GA_ORES.forEach(registry::register);
         registry.register(GAMetaBlocks.GA_CABLE);
+
+        registry.register(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK);
+        GameRegistry.registerTileEntity(RenderingTileEntityBlackhole.class, Gregicality.MODID + "black_hole_render");
     }
 
 
@@ -157,7 +162,6 @@ public class CommonProxy {
         registry.register(createItemBlock(GAMetaBlocks.METAL_CASING_1, VariantItemBlock::new));
         registry.register(createItemBlock(GAMetaBlocks.METAL_CASING_2, VariantItemBlock::new));
         registry.register(createItemBlock(GAMetaBlocks.NUCLEAR_CASING, VariantItemBlock::new));
-
         GAMetaBlocks.METAL_CASING.values()
                 .stream().distinct()
                 .map(block -> createItemBlock(block, GAMetalCasingItemBlock::new))
@@ -166,6 +170,8 @@ public class CommonProxy {
         GA_ORES.stream()
                 .map(block -> createItemBlock(block, GAOreItemBlock::new))
                 .forEach(registry::register);
+
+        //registry.register(new ItemBlock(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK).setRegistryName(GAMetaBlocks.BLACK_HOLE_GEN_RENDER_BLOCK.getRegistryName()).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -268,5 +274,4 @@ public class CommonProxy {
     public static void onUnload(WorldEvent.Unload event) {
         IPSaveData.setDirty(0);
     }
-
 }

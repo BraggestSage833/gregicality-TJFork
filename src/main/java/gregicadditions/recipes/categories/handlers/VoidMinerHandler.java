@@ -19,7 +19,7 @@ public class VoidMinerHandler {
     public static List<ItemStack> ORES = new ArrayList<>();
     public static List<ItemStack> ORES_2 = new ArrayList<>();
     public static List<ItemStack> ORES_3 = new ArrayList<>();
-
+    public static List<ItemStack> ORES_4 = new ArrayList<>();
     public static void register() {
         OrePrefix.ore.addProcessingHandler(DustMaterial.class, VoidMinerHandler::processVoidOre);
     }
@@ -42,6 +42,9 @@ public class VoidMinerHandler {
             if (!Arrays.asList(GAConfig.multis.voidMiner.oreBlacklistUEV).contains(material.toString())) {
                 ORES_3.addAll(OreDictUnifier.getAll(new UnificationEntry(currentOre[productTer], material)));
             }
+            if (!Arrays.asList(GAConfig.multis.voidMiner.oreBlacklistUIV).contains(material.toString())) {
+                ORES_4.addAll(OreDictUnifier.getAll(new UnificationEntry(currentOre[productTer], material)));
+            }
         } else {
             if (!Arrays.asList(GAConfig.multis.voidMiner.oreBlacklist).contains(material.toString())) {
                 ORES.add(OreDictUnifier.get(new UnificationEntry(currentOre[productTer], material)));
@@ -52,6 +55,9 @@ public class VoidMinerHandler {
             if (!Arrays.asList(GAConfig.multis.voidMiner.oreBlacklistUEV).contains(material.toString())) {
                 ORES_3.add(OreDictUnifier.get(new UnificationEntry(currentOre[productTer], material)));
             }
+            if (!Arrays.asList(GAConfig.multis.voidMiner.oreBlacklistUIV).contains(material.toString())) {
+                ORES_4.add(OreDictUnifier.get(new UnificationEntry(currentOre[productTer], material)));
+            }
         }
     }
 
@@ -59,6 +65,7 @@ public class VoidMinerHandler {
         addItemsToList(GAConfig.multis.voidMiner.oreWhitelist, ORES);
         addItemsToList(GAConfig.multis.voidMiner.oreWhitelistUHV, ORES_2);
         addItemsToList(GAConfig.multis.voidMiner.oreWhitelistUEV, ORES_3);
+        addItemsToList(GAConfig.multis.voidMiner.oreWhitelistUIV, ORES_4);
     }
 
     private static void addItemsToList(String[] itemStrings, List<ItemStack> list) {

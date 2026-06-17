@@ -55,7 +55,7 @@ public class FusionReactor4Info extends MultiblockInfoPage {
                 .where('X', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.ADV_FUSION_CASING))
                 .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[8], EnumFacing.SOUTH)
                 .where('F', MetaTileEntities.FLUID_EXPORT_HATCH[8], EnumFacing.SOUTH)
-                .where('E', GATileEntities.ENERGY_INPUT[0], EnumFacing.NORTH)
+                .where('E', GATileEntities.ENERGY_INPUT[i], EnumFacing.NORTH)
                 .where('c', GAMetaBlocks.CRYOSTAT_CASING.getState(GACryostatCasing.CasingType.values()[i]))
                 .where('v', GAMetaBlocks.VACUUM_CASING.getState(GAVacuumCasing.CasingType.values()[i]))
                 .where('b', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.FUSION_BLANKET))

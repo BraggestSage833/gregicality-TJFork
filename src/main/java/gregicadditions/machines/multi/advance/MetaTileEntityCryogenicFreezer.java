@@ -119,7 +119,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
         }
 
         @Override
-        protected boolean drawEnergy(int recipeEUt) {
+        protected boolean drawEnergy(long recipeEUt) {
             if (!cryotheum.isFluidStackIdentical(this.getInputTank().drain(cryotheum, false)))
                 return false;
             this.getInputTank().drain(cryotheum, true);

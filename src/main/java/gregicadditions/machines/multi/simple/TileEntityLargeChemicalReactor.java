@@ -291,7 +291,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             TileEntityLargeChemicalReactor metaTileEntity = (TileEntityLargeChemicalReactor) getMetaTileEntity();
             int energyBonus = metaTileEntity.getEnergyBonus();
 
-            int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
+            long[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
             this.progressTime = 1;
 
 //            // perfect overclocking
@@ -301,7 +301,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             // apply energy bonus
             resultOverclock[0] -= (int) (resultOverclock[0] * energyBonus * 0.01f);
 
-            setMaxProgress(resultOverclock[1]);
+            setMaxProgress((int) resultOverclock[1]);
 
             this.recipeEUt = resultOverclock[0];
             this.fluidOutputs = GTUtility.copyFluidList(recipe.getFluidOutputs());
@@ -315,7 +315,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
         }
 
         @Override
-        protected int[] calculateOverclock(int EUt, long voltage, int duration) {
+        protected long[] calculateOverclock(long EUt, long voltage, int duration) {
             int numMaintenanceProblems = (this.metaTileEntity instanceof GARecipeMapMultiblockController) ?
                     ((GARecipeMapMultiblockController) metaTileEntity).getNumProblems() : 0;
 
@@ -325,10 +325,10 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
             boolean negativeEU = EUt < 0;
             int tier = getOverclockingTier(voltage);
             if (GAValues.V[tier] <= EUt || tier == 0)
-                return new int[]{EUt, durationModified};
+                return new long[]{EUt, durationModified};
             if (negativeEU)
                 EUt = -EUt;
-            int resultEUt = EUt;
+            long resultEUt = EUt;
             double resultDuration = durationModified;
             //do not overclock further if duration is already too small
             while (resultDuration >= 1 && resultEUt <= GAValues.V[tier - 1]) {
@@ -336,7 +336,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
                 resultDuration /= 4;
             }
             previousRecipeDuration = (int) resultDuration;
-            return new int[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
+            return new long[]{negativeEU ? -resultEUt : resultEUt, (int) Math.ceil(resultDuration)};
         }
 
         @Override

@@ -14,6 +14,7 @@ import gregicadditions.machines.energyconverter.utils.ConverterType;
 import gregicadditions.machines.energyconverter.utils.EnergyConverterType;
 import gregicadditions.machines.multi.*;
 import gregicadditions.machines.multi.advance.*;
+import gregicadditions.machines.multi.advance.hyper.MetaTileEntityBlackHoleGenerator;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorI;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorII;
 import gregicadditions.machines.multi.advance.hyper.MetaTileEntityHyperReactorIII;
@@ -265,6 +266,10 @@ public class GATileEntities {
 
     public static MetaTileEntityMEStockingBus ME_STOCKING_BUS;
     public static MetaTileEntityMEStockingBus ME_ADVANCED_STOCKING_BUS;
+
+    public  static MetaTileEntityBlackHoleGenerator BLACK_HOLE;
+
+    public static MetaTileEntityPolymerSynthesizer POLY_SYN;
 
     public static void init() {
 
@@ -1198,6 +1203,11 @@ public class GATileEntities {
         VOLCANUS = GregTechAPI.registerMetaTileEntity(4244, new MetaTileEntityVolcanus(location("volcanus")));
         CRYOGENIC_FREEZER = GregTechAPI.registerMetaTileEntity(4245, new MetaTileEntityCryogenicFreezer(location("cryogenic_freezer")));
 
+        //BLACK_HOLE = GregTechAPI.registerMetaTileEntity(6121, new MetaTileEntityBlackHoleGenerator(location("black.hole.generator")));
+        POLY_SYN = GregTechAPI.registerMetaTileEntity(6122, new MetaTileEntityPolymerSynthesizer(location("polymer.synthesizer")));
+
+
+
     }
 
     public static MetaTileEntity getEnergyHatch(int tier, boolean isOutput) {
@@ -1218,6 +1228,7 @@ public class GATileEntities {
             case 14: return isOutput ? MetaTileEntities.ENERGY_OUTPUT_HATCH[9] : MetaTileEntities.ENERGY_INPUT_HATCH[9];
             default: return isOutput ? MetaTileEntities.ENERGY_OUTPUT_HATCH[0] : MetaTileEntities.ENERGY_INPUT_HATCH[0];
         }
+
     }
 
     public static <T extends MetaTileEntity & ITieredMetaTileEntity> MTE<T> create(int id, T sampleMetaTileEntity) {

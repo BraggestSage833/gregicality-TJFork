@@ -210,6 +210,26 @@ public class GARecipeMaps {
             1, 2, 1, 2, 0, 0, 0, 0, new SimpleRecipeBuilder()
                 .duration(1).EUt(375000)); // UV-tier, 1tick processing time
 
+    @ZenProperty
+    public static final RecipeMap<SimpleRecipeBuilder> POLYMERS_SYN = new RecipeMap<>("polymer_syn",
+            1,6,0,0,1,3,0,1, new SimpleRecipeBuilder())
+            .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE,ProgressWidget.MoveType.HORIZONTAL)
+            .setSlotOverlay(false, false, false, GuiTextures.MOLECULAR_OVERLAY_1)
+            .setSlotOverlay(false, false, true, GuiTextures.MOLECULAR_OVERLAY_2)
+            .setSlotOverlay(false, true, GuiTextures.MOLECULAR_OVERLAY_3)
+            .setSlotOverlay(true, false, GuiTextures.VIAL_OVERLAY_1)
+            .setSlotOverlay(true, true, GuiTextures.VIAL_OVERLAY_2);
+
+    @ZenProperty
+    public static final RecipeMap<SimpleRecipeBuilder> PCB_FACTORY = new RecipeMap<>("pcb_factory",
+            1,8,1,6,1,3,0,0, new SimpleRecipeBuilder())
+            .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE,ProgressWidget.MoveType.HORIZONTAL)
+            .setSlotOverlay(false, false, false, GuiTextures.MOLECULAR_OVERLAY_1)
+            .setSlotOverlay(false, false, true, GuiTextures.MOLECULAR_OVERLAY_2)
+            .setSlotOverlay(false, true, GuiTextures.MOLECULAR_OVERLAY_3)
+            .setSlotOverlay(true, false, GuiTextures.VIAL_OVERLAY_1)
+            .setSlotOverlay(true, true, GuiTextures.VIAL_OVERLAY_2);
+
 
 
     // Fuel Recipe Maps ================================================================================================
@@ -230,4 +250,8 @@ public class GARecipeMaps {
 
     @ZenProperty
     public static final HotCoolantRecipeMap HOT_COOLANT_TURBINE_FUELS = new HotCoolantRecipeMap("hot_coolant_turbine");
+
+    @ZenProperty
+    public static final FuelRecipeMap BLACK_HOLE_GENERATOR = new FuelRecipeMap("black_hole_generator");
+
 }
