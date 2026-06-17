@@ -36,7 +36,7 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         MetaTileEntityHolder holder = new MetaTileEntityHolder();
         holder.setMetaTileEntity(GATileEntities.ROTOR_HOLDER[2]);
         holder.getMetaTileEntity().setFrontFacing(EnumFacing.WEST);
@@ -57,15 +57,10 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('C', turbine.turbineType.casingState)
 
-                // rotor holder (BlockInfo mukana)
-                .where('R', new BlockInfo(
-                        MetaBlocks.MACHINE.getDefaultState(),
-                        holder,
-                        null
-                ))
+                .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder, null))
 
-                .where('D', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
-                .where('I', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+                .where('D', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+                .where('I', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
                 .where('O', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
 
                 .build();

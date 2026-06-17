@@ -28,7 +28,7 @@ public class GasCentrifugeInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("#FEM#", "#YSY#", "#####", "#####", "#####", "#####", "#####")
                 .aisle("OYYYY", "YYYYY", "#ZCZ#", "#Z#Z#", "#Z#Z#", "#Z#Z#", "#Z#Z#")
@@ -42,19 +42,13 @@ public class GasCentrifugeInfo extends MultiblockInfoPage {
                 .where('Y', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STAINLESS_CLEAN))
                 .where('Z', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
                 .where('C', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
 
-                // placeholderit (ei enää tieriä)
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-                        GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+                .where('O', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
 
-                .where('O', PlaceholderType.ENERGY_OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
+                .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
 
-                .where('F', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.EAST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.EAST)
 
                 .build();
     }

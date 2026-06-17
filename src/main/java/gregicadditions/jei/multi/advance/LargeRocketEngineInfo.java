@@ -11,6 +11,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
@@ -32,26 +33,20 @@ public class LargeRocketEngineInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT);
         builder.aisle("CMC", "CSC", "CCC");
         for (int num = 0; num < 8; num++) {
             builder.aisle("CCC", "C#F", "CAC");
         }
-        builder.aisle("CCC", "CEC", "CCC")
-                .where('S', GATileEntities.LARGE_ROCKET_ENGINE, EnumFacing.WEST)
-                .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('C', METAL_CASING_1.getState(MetalCasing1.CasingType.NITINOL_60))
-                .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.SOUTH)
-                    .build());
-        }
-        return shapeInfos.get(0); // TODO FIX ME
-
+        return builder.aisle("CCC", "CEC", "CCC")
+            .where('S', GATileEntities.LARGE_ROCKET_ENGINE, EnumFacing.WEST)
+            .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+            .where('C', METAL_CASING_1.getState(MetalCasing1.CasingType.NITINOL_60))
+            .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING))
+            .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+            .where('F', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
+            .build();
     }
 
     @Override

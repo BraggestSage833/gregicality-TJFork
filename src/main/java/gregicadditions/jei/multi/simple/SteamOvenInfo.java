@@ -25,7 +25,7 @@ public class SteamOvenInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("FFF", "IXX", "###")
                 .aisle("HFF", "S#X", "XXX")

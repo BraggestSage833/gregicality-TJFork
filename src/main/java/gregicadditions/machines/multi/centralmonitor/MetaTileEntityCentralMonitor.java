@@ -85,7 +85,7 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
     public int height = 3;
 
     public MetaTileEntityCentralMonitor(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId);
+        super(metaTileEntityId,3, MAX_WIDTH);
         reinitializeStructurePattern();
     }
 
@@ -355,7 +355,7 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
         }
         return FactoryBlockPattern.start(UP, BACK, RIGHT)
                 .aisle(start.toString())
-                .aisle(slice.toString()).setRepeatable(3, MAX_WIDTH)
+                .aisle(slice.toString()).setRepeatable(getMinExtent(),getMaxExtent())
                 .aisle(end.toString())
                 .where('S', selfPredicate())
                 .where('A', statePredicate(MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID)).or(abilityPartPredicate(MultiblockAbility.INPUT_ENERGY)))

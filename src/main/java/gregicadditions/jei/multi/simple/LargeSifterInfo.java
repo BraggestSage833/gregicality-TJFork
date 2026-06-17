@@ -30,7 +30,7 @@ public class LargeSifterInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return MultiblockShapeInfo.builder()
 				.aisle("XXXXX", "PXXXP", "XXXXX")
 				.aisle("IXXXX", "X###X", "XGGGX")
@@ -46,13 +46,12 @@ public class LargeSifterInfo extends MultiblockInfoPage {
 				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,
 						GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
 				.where('O', PlaceholderType.OUTPUT_BUS,
 						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
 
-				.where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+				.where('P', PlaceholderType.PISTON,GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
 				.build();
 	}
 

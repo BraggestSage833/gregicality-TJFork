@@ -29,7 +29,7 @@ public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, DOWN, RIGHT)
                 .aisle("AAA", "ACA", "AAA")
                 .aisle("HHH", "MGH", "HHH")
@@ -40,7 +40,6 @@ public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
                 .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.EXTREME_ENGINE_INTAKE_CASING))
                 .where('C', GATileEntities.EXTREME_DIESEL_ENGINE, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
-                // tier lukittu (0)
                 .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
                 .where('F', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, 0)], EnumFacing.NORTH)
                 .build();

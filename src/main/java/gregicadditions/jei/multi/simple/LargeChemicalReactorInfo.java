@@ -26,7 +26,7 @@ public class LargeChemicalReactorInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 				.aisle("XXX", "XEX", "XXX")
 				.aisle("IXX", "iPX", "XCX")
@@ -39,14 +39,12 @@ public class LargeChemicalReactorInfo extends MultiblockInfoPage {
 				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,
 						GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
 
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
 
 				.where('O', PlaceholderType.OUTPUT_BUS,
 						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
 
-				.where('i', PlaceholderType.INPUT_HATCH,
-						MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+				.where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
 
 				.where('o', PlaceholderType.OUTPUT_HATCH,
 						MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)

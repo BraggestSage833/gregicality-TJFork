@@ -32,7 +32,7 @@ public class MetaTileEntityDistillationTower extends GARecipeMapMultiblockContro
     private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH};
 
     public MetaTileEntityDistillationTower(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, DISTILLATION_RECIPES, true, true, false);
+        super(metaTileEntityId, DISTILLATION_RECIPES, true, true, false,0,11);
         this.recipeMapWorkable = new GAMultiblockRecipeLogic(this);
     }
 
@@ -52,10 +52,10 @@ public class MetaTileEntityDistillationTower extends GARecipeMapMultiblockContro
 
         return FactoryBlockPattern.start(BlockPattern.RelativeDirection.RIGHT, BlockPattern.RelativeDirection.FRONT, BlockPattern.RelativeDirection.UP)
                 .aisle("YSY", "YYY", "YYY")
-                .aisle("XXX", "X#X", "XXX").setRepeatable(0, 11)
+                .aisle("XXX", "X#X", "XXX").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("XXX", "XMX", "XXX")
                 .where('S', this.selfPredicate())
-                .where('Y', statePredicate(new IBlockState[]{this.getCasingState()}).or(abilityPartPredicate(MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.INPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH)))
+                .where('Y', statePredicate(new IBlockState[]{this.getCasingState()}).or(abilityPartPredicate(MultiblockAbility.EXPORT_ITEMS, MultiblockAbility.INPUT_ENERGY, MultiblockAbility.IMPORT_FLUIDS, GregicAdditionsCapabilities.MAINTENANCE_HATCH)).or(multiiPartPredicate()))
                 .where('X', fluidExportPredicate.or(statePredicate(this.getCasingState())).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('M', abilityPartPredicate(GregicAdditionsCapabilities.MUFFLER_HATCH))
                 .where('#', isAirPredicate())

@@ -11,6 +11,7 @@ import gregtech.common.blocks.*;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -27,13 +28,13 @@ public class MegaBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(RIGHT, FRONT, DOWN)
                 .aisle("###############", "###############", "###############", "######TTT######", "####TTTTTTT####", "####TTTTTTT####", "###TTTTTTTTT###", "###TTTTmTTTT###", "###TTTTpTTTT###", "####TTTpTTT####", "####TTTpTTT####", "######TTT######", "###############", "###############", "###############");
         for (int i = 0; i < 6; i++)
             builder.aisle("###############", "###############", "###############", "###############", "#######f#######", "#####CCCCC#####", "#####C###C#####", "####fC###Cf####", "#####C###C#####", "#####CCCCC#####", "#######p#######", "###############", "###############", "###############", "###############");
-        builder.aisle("###############", "###############", "###############", "#######T#######", "#######f#######", "#####CCCCC#####", "#####C###C#####", "###TfC###CfT###", "#####C###C#####", "#####CCCCC#####", "#######p#######", "#######p#######", "#######p#######", "#######p#######", "###############")
+        return builder.aisle("###############", "###############", "###############", "#######T#######", "#######f#######", "#####CCCCC#####", "#####C###C#####", "###TfC###CfT###", "#####C###C#####", "#####CCCCC#####", "#######p#######", "#######p#######", "#######p#######", "#######p#######", "###############")
                 .aisle("###############", "###############", "###############", "######TTT######", "####TTTTTTT####", "####TTTTTTT####", "###TTTTTTTTT###", "###TTTTTTTTT###", "###TTTTTTTTT###", "####TTTTTTT####", "####TTTTTTT####", "######TTT######", "###############", "#######p#######", "###############")
                 .aisle("###############", "#FFFFFFFFFFFFF#", "#FFFFFFFFFFFFF#", "#FF#########FF#", "#FF####T####FF#", "#FF##T###T##FF#", "#FF#########FF#", "#FF#T##P##T#FF#", "#FF#########FF#", "#FF##T###T##FF#", "#FF####T####FF#", "#FF#########FF#", "#FFFFFXXXFFFFF#", "#FFFFFXpXFFFFF#", "###############")
                 .aisle("#######p#######", "#F##ppppppp####", "##ppp#####ppp##", "##p#########p##", "#pp####T####pp#", "#pp##T###T###p#", "##pp#########p#", "##ppT##P##T##pp", "#############p#", "#pp##T###T###p#", "#pp####T####pp#", "##p#########p##", "##ppp#####ppp##", "####ppppppp####", "#######p#######")
@@ -52,19 +53,16 @@ public class MegaBlastFurnaceInfo extends MultiblockInfoPage {
                 .where('m', GATileEntities.MUFFLER_HATCH[2], EnumFacing.UP)
                 .where('B', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
                 .where('R', MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.TUNGSTENSTEEL_FIREBOX))
-                .where('g', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder .where('H', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('o', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('i', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('P', GAMetaBlocks.getFramework(tier))
-                    .where('C', GAMetaBlocks.getCoils(tier))
-                    .build());
-        }
-        return shapeInfos.get(0); // TODO FIX ME
+                .where('g', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
+                .where('H', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                    .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                    .where('o',PlaceholderType.OUTPUT_HATCH ,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                    .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                    .where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                    .where('P', PlaceholderType.FRAMEWORK,GAMetaBlocks.getFramework(0))
+                    .where('C', PlaceholderType.COIL)
+                    .build();
+
     }
 
     @Override

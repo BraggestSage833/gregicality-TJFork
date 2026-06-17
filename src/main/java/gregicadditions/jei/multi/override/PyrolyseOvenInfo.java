@@ -27,7 +27,7 @@ public class PyrolyseOvenInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("XMX", "ISF", "XXX")
                 .aisle("CCC", "C#C", "CCC")
@@ -40,11 +40,8 @@ public class PyrolyseOvenInfo extends MultiblockInfoPage {
                 .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
                         GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
 
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-
-                .where('F', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
                 .where('B', PlaceholderType.OUTPUT_BUS,
                         MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.EAST)

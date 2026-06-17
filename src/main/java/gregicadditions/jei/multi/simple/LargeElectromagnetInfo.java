@@ -28,28 +28,21 @@ public class LargeElectromagnetInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("#XXX#", "#XXX#", "#XXX#")
                 .aisle("XXXXX", "XAAAX", "XGXGX")
                 .aisle("XXXXX", "XAFAX", "XGXGX")
                 .aisle("XXXXX", "XAAAX", "XGXGX")
                 .aisle("#XHX#", "#ISO#", "#XEX#")
-
                 .where('S', GATileEntities.LARGE_ELECTROMAGNET, EnumFacing.WEST)
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeElectromagnet.casingState)
                 .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.NICKEL_GLASS))
-
-                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-
-                .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('F', PlaceholderType.FIELD_GEN, GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
                 .build();
     }
 

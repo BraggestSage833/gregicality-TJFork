@@ -25,7 +25,7 @@ public class BatteryTowerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("eCCCC", "GGGGG", "GGGGG", "GGGGG", "GGGGG", "CCCCC")
                 .aisle("ECCCC", "GRRRG", "GRRRG", "GRRRG", "GRRRG", "CCCCC")
@@ -38,7 +38,7 @@ public class BatteryTowerInfo extends MultiblockInfoPage {
                 .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.BOROSILICATE_GLASS))
                 .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH ,GATileEntities.getEnergyHatch(0, true), EnumFacing.WEST)
                 .where('e', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-                .where('R', GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[0]))
+                .where('R', PlaceholderType.CELL, GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[0]))
                 .build();
     }
 

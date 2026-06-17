@@ -23,7 +23,7 @@ public class QubitComputerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("CC", "IC", "CC", "CC")
                 .aisle("OC", "SC", "CC", "CC")
@@ -32,15 +32,9 @@ public class QubitComputerInfo extends MultiblockInfoPage {
                 .where('S', GATileEntities.QUBIT_COMPUTER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', GAMetaBlocks.QUANTUM_CASING.getState(GAQuantumCasing.CasingType.COMPUTER))
-
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-                        GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_HATCH,
-                        GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('O', GATileEntities.QBIT_OUTPUT_HATCH[0], EnumFacing.WEST)
 
                 .build();
     }

@@ -36,7 +36,7 @@ public class LargeReplicatorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("#####XXEXX#####", "#####eXEXe#####", "#######X#######")
                 .aisle("###XXXXXXXXX###", "###XXCCCCCXX###", "#####XPXPX#####")
@@ -59,24 +59,20 @@ public class LargeReplicatorInfo extends MultiblockInfoPage {
                 .where('X', TileEntityLargeReplicator.casingState)
                 .where('C', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.SUPERCONDUCTOR))
 
-                .where('e', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('e', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.SOUTH)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.SOUTH)
 
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.SOUTH)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.SOUTH)
 
-                .where('i', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+                .where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
 
-                .where('o', PlaceholderType.OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
+                .where('o', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
 
-                .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
-                .where('P', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
-                .where('s', GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
-                .where('E', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
+                .where('F', PlaceholderType.FIELD_GEN, GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
+                .where('P', PlaceholderType.PUMP, GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('s', PlaceholderType.SENSOR, GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
+                .where('E', PlaceholderType.EMITTER, GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
                 .build();
     }
 

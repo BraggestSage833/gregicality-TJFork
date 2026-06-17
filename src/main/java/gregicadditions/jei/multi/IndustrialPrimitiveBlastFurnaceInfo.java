@@ -30,7 +30,7 @@ public class IndustrialPrimitiveBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
                 .aisle("YYY", "YCY", "YYY", "YYY")
                 // alkuperäinen i-loop (i=0..63) → valitaan neutraali keskivaiheen rakenne
@@ -38,8 +38,8 @@ public class IndustrialPrimitiveBlastFurnaceInfo extends MultiblockInfoPage {
                 .aisle("YYY", "YOY", "YYY", "YYY")
                 .where('Y', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
                 .where('C', GATileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.NORTH)
-                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[1], EnumFacing.SOUTH)
-                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[1], EnumFacing.WEST)
+                .where('O', MetaTileEntities.ITEM_EXPORT_BUS[1], EnumFacing.SOUTH)
+                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[1], EnumFacing.WEST)
                 .where('#', Blocks.AIR.getDefaultState())
                 .build();
     }

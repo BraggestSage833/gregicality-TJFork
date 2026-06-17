@@ -9,6 +9,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -27,7 +28,7 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("#EXX#", "#ccc#", "#ccc#", "#XXX#")
                 .aisle("MXXXX", "cCCCc", "cCCCc", "XXXXX")
@@ -36,9 +37,14 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
                 .aisle("#OXX#", "#ccc#", "#ccc#", "#XXX#")
                 .where('S', GATileEntities.ALLOY_BLAST_FURNACE, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
+                .where('m', PlaceholderType.MUFFLER,GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
                 .where('c', METAL_CASING_2.getState(MetalCasing2.CasingType.STABALLOY))
                 .where('X', METAL_CASING_1.getState(MetalCasing1.CasingType.ZIRCONIUM_CARBIDE))
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.EAST)
+                .where('C', PlaceholderType.COIL)
                 .build();
     }
 

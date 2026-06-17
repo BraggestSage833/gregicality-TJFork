@@ -195,10 +195,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
             return;
         }
 
-        //List<BlockPos> renderedBlocks = ObfuscationReflectionHelper.getPrivateValue(WorldSceneRenderer.class, renderer, "renderedBlocks");
-        Map<BlockPos, BlockInfo> blockMap = renderer.getBlockInfoMap();
-        Set<BlockPos> renderedBlocks = blockMap.keySet();
-
+        List<BlockPos> renderedBlocks = ObfuscationReflectionHelper.getPrivateValue(WorldSceneRenderer.class, renderer, "renderedBlocks");
 
         if (renderedBlocks.isEmpty()) {
             return;

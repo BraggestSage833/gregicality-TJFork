@@ -25,27 +25,18 @@ public class SteamGrinderInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("XXX", "IXX", "XXX")
                 .aisle("HXX", "S#X", "XXX")
                 .aisle("XXX", "OXX", "XXX")
-
                 .where('S', GATileEntities.STEAM_GRINDER, EnumFacing.WEST)
-
                 .where('X', GAConfig.multis.steamMultis.useSteelMultis
                         ? MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID)
                         : MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS))
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        GATileEntities.STEAM_INPUT_BUS, EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        GATileEntities.STEAM_OUTPUT_BUS, EnumFacing.WEST)
-
-                .where('H', PlaceholderType.INPUT_HATCH,
-                        GATileEntities.STEAM_HATCH, EnumFacing.WEST)
-
+                .where('I', GATileEntities.STEAM_INPUT_BUS, EnumFacing.WEST)
+                .where('O', GATileEntities.STEAM_OUTPUT_BUS, EnumFacing.WEST)
+                .where('H', GATileEntities.STEAM_HATCH, EnumFacing.WEST)
                 .where('#', Blocks.AIR.getDefaultState())
                 .build();
     }

@@ -35,7 +35,7 @@ public class LargeMassFabricatorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("XXXXX", "#P#P#", "#P#P#", "#P#P#", "XXXXX")
                 .aisle("IXXXX", "PXGXP", "PXGXP", "PXGXP", "iXXXX")
@@ -58,19 +58,16 @@ public class LargeMassFabricatorInfo extends MultiblockInfoPage {
                 .where('e', PlaceholderType.ENERGY_INPUT_HATCH,
                         GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
 
-                .where('i', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+                .where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
 
-                .where('o', PlaceholderType.OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('o', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
 
-                .where('F', GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
-                .where('U', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
-                .where('s', GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
-                .where('E', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
+                .where('F', PlaceholderType.FIELD_GEN, GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
+                .where('U', PlaceholderType.PUMP, GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('s', PlaceholderType.SENSOR, GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
+                .where('E', PlaceholderType.EMITTER, GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
                 .build();
     }
 

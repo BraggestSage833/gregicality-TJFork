@@ -29,36 +29,22 @@ public class LargeCanningMachineInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
-        return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-                .aisle("XHX", "XEX", "XXX")
-                .aisle("IXi", "XpX", "OXo")
-                .aisle("IXi", "XpX", "OXo")
-                .aisle("IXi", "XpX", "OXo")
-                .aisle("IXi", "XpX", "OXo")
-                .aisle("IXi", "XpX", "OXo")
-                .aisle("IXi", "XpX", "OXo")
-
-                .aisle("PPP", "PSP", "PPP")
-
-                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+                .aisle("XHX", "XEX", "XXX");
+        for (int j = 0; j < extent; j++) {
+            builder.aisle("IXi", "XpX", "OXo");
+        }
+        return builder.aisle("PPP", "PSP", "PPP")
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
                 .where('S', GATileEntities.LARGE_CANNING_MACHINE, EnumFacing.WEST)
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.EAST)
                 .where('X', TileEntityLargeCanningMachine.casingState)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
-
-                .where('i', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
-
-                .where('o', PlaceholderType.OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH)
-
-                .where('p', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+                .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+                .where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
+                .where('o', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH)
+                .where('p', PlaceholderType.PUMP,GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
                 .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
                 .build();
     }

@@ -36,7 +36,7 @@ public class LargeThermalCentrifugeInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return MultiblockShapeInfo.builder()
                 .aisle("#XXX#", "#XGX#", "#XXX#", "#####")
                 .aisle("XXXXX", "XCCCX", "I###X", "#XXX#")
@@ -50,17 +50,14 @@ public class LargeThermalCentrifugeInfo extends MultiblockInfoPage {
 
                 .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
 
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-                        GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
 
-                .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
-                .where('C', GAMetaBlocks.getCoils(0))
+                .where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+                .where('C', PlaceholderType.COIL, GAMetaBlocks.getCoils(0))
                 .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
                 .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
                 .build();

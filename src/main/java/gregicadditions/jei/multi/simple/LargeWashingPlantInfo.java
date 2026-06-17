@@ -39,7 +39,7 @@ public class LargeWashingPlantInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 				.aisle("XXXXX", "XXXXX", "XXXXX")
 				.aisle("XXXXX", "XP#PX", "X###X")
@@ -48,27 +48,20 @@ public class LargeWashingPlantInfo extends MultiblockInfoPage {
 				.aisle("XXXXX", "XP#PX", "X###X")
 				.aisle("XXXXX", "XP#PX", "X###X")
 				.aisle("IOMEX", "XHSiX", "XXXXX")
-
 				.where('S', GATileEntities.LARGE_WASHING_PLANT, EnumFacing.WEST)
 				.where('X', TileEntityLargeWashingPlant.casingState)
 				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 				.where('#', Blocks.WATER.getDefaultState())
+				.where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
 
-				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-						GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-
-				.where('O', PlaceholderType.OUTPUT_BUS,
-						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-
-				.where('i', PlaceholderType.INPUT_HATCH,
-						MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-
-				.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+				.where('I',	PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+				.where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+				.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+				.where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
 				.build();
 	}
+
 
 	private static final ITextComponent componentCasingTooltip = new TextComponentTranslation("gregtech.multiblock.universal.component_casing.tooltip").setStyle(new Style().setColor(TextFormatting.RED));
 

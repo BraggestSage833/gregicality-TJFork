@@ -60,7 +60,7 @@ public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockCon
     private long maxVoltage = 0;
 
     public TileEntityLargeCircuitAssemblyLine(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.CIRCUIT_ASSEMBLER_RECIPES);
+        super(metaTileEntityId, GARecipeMaps.CIRCUIT_ASSEMBLER_RECIPES, 5);
         this.recipeMapWorkable = new GAMultiblockRecipeLogic(this);
     }
 

@@ -32,7 +32,7 @@ public class FusionReactor4Info extends MultiblockInfoPage {
 
     // TODO: FIX ME. Loopissa oli 0-5 + 4 casing. ELI TÄHÄN MENEE JOKO FUSION COIL 1-5. TEE SILLE OMA PAIKKA
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
             .aisle("###############", "###############","#####ccCcc#####","#####ccCcc#####","###############","###############")
             .aisle("###############", "#######C#######","###ccvEvEvcc###","###ccvEvEvcc###","#######C#######","###############")

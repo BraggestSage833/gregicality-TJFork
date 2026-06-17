@@ -32,7 +32,7 @@ public class PlasmaCondenserInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
                 .aisle("#####", "#XXX#", "#XXX#", "#XXX#", "#####")
                 .aisle("#XXX#", "iG#GX", "f#P#X", "XGpGX", "#XXX#")
@@ -44,18 +44,12 @@ public class PlasmaCondenserInfo extends MultiblockInfoPage {
                 .where('X', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.HASTELLOY_N))
                 .where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.STEEL_GEARBOX))
                 .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE))
-
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-                        GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-
-                .where('f', MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-                .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-                .where('i', MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-
-                .where('p', GAMetaBlocks.PUMP_CASING.getState(
-                        PumpCasing.CasingType.values()[0]
-                ))
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('f', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('i', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('p', PlaceholderType.PUMP,GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
                 .build();
     }
 

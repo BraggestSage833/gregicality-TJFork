@@ -35,7 +35,7 @@ public class LargeEngraverInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("XXX", "XXX", "XXX", "#T#")
                 .aisle("IXX", "GCG", "XEX", "#T#")
@@ -48,24 +48,16 @@ public class LargeEngraverInfo extends MultiblockInfoPage {
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', GAMetaBlocks.MUTLIBLOCK_CASING2.getState(GAMultiblockCasing2.CasingType.LASER_ENGRAVER))
 
-                .where('e', GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+                .where('e', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+                .where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('o', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
 
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-
-                .where('i', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-
-                .where('o', PlaceholderType.OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-
-                .where('E', GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
+                .where('E', PlaceholderType.EMITTER, GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
                 .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.IRIDIUM_GLASS))
                 .where('T', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
-                .where('C', GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[0]))
+                .where('C', PlaceholderType.CONVEYOR, GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[0]))
                 .build();
     }
 

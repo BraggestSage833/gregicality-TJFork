@@ -30,31 +30,22 @@ public class LargeExtractorInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
                 .aisle("XXXXX", "X###X", "X###X", "XXXXX")
                 .aisle("XXXXX", "#XXX#", "#XXX#", "XXXXX")
                 .aisle("XXXXX", "#PpM#", "#XpX#", "XXXXX")
                 .aisle("XXXXX", "#XSX#", "#XXX#", "XXXXX")
                 .aisle("XXHoE", "I###O", "X###X", "XXXXX")
-
                 .where('S', GATileEntities.LARGE_EXTRACTOR, EnumFacing.WEST)
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeExtractor.casingState)
-
-                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-
-                .where('o', PlaceholderType.OUTPUT_HATCH,
-                        MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-
-                .where('P', GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
-                .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('o', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('P', PlaceholderType.PUMP, GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
                 .where('p', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE))
                 .build();
     }

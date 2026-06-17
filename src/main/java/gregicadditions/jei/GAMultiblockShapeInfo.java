@@ -23,8 +23,8 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
 
     private final BlockInfo[][][] blocks; //[z][y][x]
 
-    public GAMultiblockShapeInfo(BlockInfo[][][] blocks) {
-        super(blocks);
+    public GAMultiblockShapeInfo(BlockInfo[][][] blocks, boolean isTiered) {
+        super(blocks, isTiered);
         this.blocks = blocks;
     }
 
@@ -48,6 +48,7 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
         private Map<Character, BlockInfo> symbolMap = new HashMap<>();
         private BlockPattern.RelativeDirection[] structureDir = new BlockPattern.RelativeDirection[3];
         private final BlockPattern.RelativeDirection[] idealDir = {RIGHT, UP, FRONT};
+        private boolean isTiered = false;
 
 
         public Builder(BlockPattern.RelativeDirection charDir, BlockPattern.RelativeDirection stringDir, BlockPattern.RelativeDirection aisleDir) {
@@ -90,6 +91,7 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
 
         @Override
         public Builder where(char symbol, PlaceholderType type) {
+            this.isTiered = true;
             this.symbolMap.put(symbol, BlockInfo.placeholder(type));
             return this;
         }
@@ -109,6 +111,7 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
 
         @Override
         public Builder where(char symbol, PlaceholderType type, MetaTileEntity tileEntity, EnumFacing frontSide) {
+            this.isTiered = true;
             MetaTileEntityHolder holder = new MetaTileEntityHolder();
             holder.setMetaTileEntity(tileEntity);
             holder.getMetaTileEntity().setFrontFacing(frontSide);
@@ -194,7 +197,7 @@ public class GAMultiblockShapeInfo extends MultiblockShapeInfo {
 
         @Override
         public GAMultiblockShapeInfo build() {
-            return new GAMultiblockShapeInfo(bakeArray());
+            return new GAMultiblockShapeInfo(bakeArray(),this.isTiered);
         }
 
     }

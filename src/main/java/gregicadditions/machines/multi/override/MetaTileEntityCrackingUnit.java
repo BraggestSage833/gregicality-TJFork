@@ -75,7 +75,7 @@ public class MetaTileEntityCrackingUnit extends GARecipeMapMultiblockController 
     public Predicate<BlockWorldState> heatingCoilPredicate() {
         return blockWorldState -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof BlockWireCoil))
+            if (!(blockState.getBlock() instanceof BlockWireCoil) )
                 return false;
             BlockWireCoil blockWireCoil = (BlockWireCoil) blockState.getBlock();
             BlockWireCoil.CoilType coilType = blockWireCoil.getState(blockState);

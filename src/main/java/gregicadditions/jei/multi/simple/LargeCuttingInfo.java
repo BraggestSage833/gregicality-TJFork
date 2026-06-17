@@ -28,33 +28,25 @@ public class LargeCuttingInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
-        return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-                .aisle("EXXXX", "XXX#X", "##X#X")
-                .aisle("IXXCX", "OXXMX", "##X#X")
-                .aisle("IXXCX", "OXXMX", "##X#X")
-                .aisle("IXXCX", "OXXMX", "##X#X")
-                .aisle("IXXCX", "OXXMX", "##X#X")
-                .aisle("IXXCX", "OXXMX", "##X#X")
-                .aisle("iHXXX", "XSX#X", "##X#X")
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
 
-                .where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+                .aisle("EXXXX", "XXX#X", "##X#X");
+        for(int j = 0; j < extent; j++) {
+            builder.aisle("IXXCX", "OXXMX", "##X#X");
+        }
+        return builder.aisle("iHXXX", "XSX#X", "##X#X")
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
                 .where('S', GATileEntities.LARGE_CUTTING, EnumFacing.WEST)
                 .where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', TileEntityLargeCutting.casingState)
-
-                .where('I', PlaceholderType.INPUT_BUS,
-                        MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-
-                .where('i', PlaceholderType.INPUT_HATCH,
-                        MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-
-                .where('O', PlaceholderType.OUTPUT_BUS,
-                        MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
-
-                .where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
-                .where('C', GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[0]))
+                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+                .where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+                .where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+                .where('C', PlaceholderType.CONVEYOR,GAMetaBlocks.CONVEYOR_CASING.getState(ConveyorCasing.CasingType.values()[0]))
                 .build();
+
     }
 
 	@Override

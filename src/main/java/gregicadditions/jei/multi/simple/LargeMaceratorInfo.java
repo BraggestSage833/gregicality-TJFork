@@ -28,7 +28,7 @@ public class LargeMaceratorInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 				.aisle("XXX", "XXX", "XXX", "XXX", "XXX", "XXX")
 				.aisle("XXX", "XMX", "X#X", "XPX", "X#X", "XXX")
@@ -38,16 +38,15 @@ public class LargeMaceratorInfo extends MultiblockInfoPage {
 				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 				.where('X', TileEntityLargeMacerator.casingState)
 
-				.where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+				.where('E',PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
 				.where('O', PlaceholderType.OUTPUT_BUS,
 						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
 
-				.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
-				.where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+				.where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('P', PlaceholderType.PISTON,GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
 				.build();
 	}
 

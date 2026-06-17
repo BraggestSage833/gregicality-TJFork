@@ -23,7 +23,7 @@ public class LargeTransformerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("ISO")
                 .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST)

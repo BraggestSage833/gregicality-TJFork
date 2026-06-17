@@ -30,7 +30,7 @@ public class LargeCentrifugeInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
 				.aisle("#OXo#", "XXSXX", "#IHi#")
 				.aisle("XXXXX", "X###X", "XXXXX")
@@ -48,19 +48,17 @@ public class LargeCentrifugeInfo extends MultiblockInfoPage {
 				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,
 						GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
 
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
 				.where('O', PlaceholderType.OUTPUT_BUS,
 						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
 
-				.where('i', PlaceholderType.INPUT_HATCH,
-						MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+				.where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
 				.where('o', PlaceholderType.OUTPUT_HATCH,
 						MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
 
-				.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
 				.build();
 	}
 

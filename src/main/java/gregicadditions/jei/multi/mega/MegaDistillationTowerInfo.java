@@ -12,6 +12,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -28,29 +29,25 @@ public class MegaDistillationTowerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, LEFT, UP)
                 .aisle("#XXX#", "XXXXX", "XXXXX", "OXXXH", "#FSM#");
         for (int i = 0; i < 11; i++) {
             builder.aisle("#XXX#", "XCpCX", "XpPpX", "XCpCX", "#XEX#");
         }
-        builder.aisle("#XXX#", "XXXXX", "XXXXX", "XXXXX", "#XEX#")
+        return builder.aisle("#XXX#", "XXXXX", "XXXXX", "XXXXX", "#XEX#")
                 .where('S', GATileEntities.MEGA_DISTILLATION_TOWER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STAINLESS_CLEAN))
-                .where('C', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.NICHROME))
-                .where('p', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('H', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-                    .where('E', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('P', GAMetaBlocks.getFramework(tier))
-                    .build());
-        }
-        return shapeInfos.get(0); // TODO FIX ME
+                .where('C',MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.NICHROME))
+                .where('p', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE))
+                .where('H', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('E', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('F', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .where('P', PlaceholderType.FRAMEWORK,GAMetaBlocks.getFramework(0))
+                .build();
+
     }
 
     @Override

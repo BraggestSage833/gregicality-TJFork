@@ -50,8 +50,14 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     /**
      * @deprecated use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
      */
-    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack) {
-        super(metaTileEntityId, recipeMap, false, true, true);
+
+    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack){
+        this(metaTileEntityId,recipeMap,EUtPercentage,durationPercentage,chancePercentage,stack,1,1);
+    }
+
+
+    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, int minExtent, int maxExtent) {
+        super(metaTileEntityId, recipeMap, false, true, true, minExtent, maxExtent);
         this.recipeMapWorkable = new LargeSimpleMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack);
 
         this.EUtPercentage = EUtPercentage;
@@ -76,8 +82,20 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
      * @param hasMuffler
      * @param hasMaintenance
      */
+
     public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct) {
-        super(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct);
+        super(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct,1,1);
+        this.recipeMapWorkable = new LargeSimpleMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack);
+
+        this.EUtPercentage = EUtPercentage;
+        this.durationPercentage = durationPercentage;
+        this.chancePercentage = chancePercentage;
+        this.stack = stack;
+    }
+
+
+    public LargeSimpleRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct, int minExtent, int maxExtent) {
+        super(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct, minExtent, maxExtent);
         this.recipeMapWorkable = new LargeSimpleMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack);
 
         this.EUtPercentage = EUtPercentage;

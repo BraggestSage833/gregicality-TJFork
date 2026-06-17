@@ -37,30 +37,23 @@ public class LargeWiremillInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
-		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-				.aisle("XXXXX", "XXXXX", "XXXXX")
-				.aisle("IXXXX", "XMGMX", "OXXXX")
-				.aisle("IXXXX", "XMGMX", "OXXXX")
-				.aisle("IXXXX", "XMGMX", "OXXXX")
-				.aisle("IXXXX", "XMGMX", "OXXXX")
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
+			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+					.aisle("XXXXX", "XXXXX", "XXXXX");
+			for (int j = 0; j < extent; j++) {
+				builder.aisle("IXXXX", "XMGMX", "OXXXX");
+			}
+			return builder.aisle("XHX##", "XSX##", "EXX##")
+					.where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+					.where('S', GATileEntities.LARGE_WIREMILL, EnumFacing.WEST)
+					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
+					.where('X', TileEntityLargeWiremill.casingState)
+					.where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
+					.where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+					.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+					.where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+					.build();
 
-				.aisle("XHX##", "XSX##", "EXX##")
-
-				.where('E', GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
-				.where('S', GATileEntities.LARGE_WIREMILL, EnumFacing.WEST)
-				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-				.where('X', TileEntityLargeWiremill.casingState)
-
-				.where('I', PlaceholderType.INPUT_BUS,
-						MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-
-				.where('O', PlaceholderType.OUTPUT_BUS,
-						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
-
-				.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
-				.where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
-				.build();
 	}
 
 	private static final ITextComponent componentCasingTooltip = new TextComponentTranslation("gregtech.multiblock.universal.component_casing.tooltip").setStyle(new Style().setColor(TextFormatting.RED));

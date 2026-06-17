@@ -29,7 +29,7 @@ public class LargeCombustionEngineInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return GAMultiblockShapeInfo.builder(FRONT, DOWN, RIGHT)
 				.aisle("AAA", "ACA", "AAA")
 				.aisle("HHH", "MGH", "HHH")
@@ -40,12 +40,8 @@ public class LargeCombustionEngineInfo extends MultiblockInfoPage {
 				.where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING))
 				.where('C', GATileEntities.LARGE_COMBUSTION_ENGINE[0], EnumFacing.WEST)
 				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
-
-				.where('E', PlaceholderType.ENERGY_INPUT_HATCH,
-						GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
-
-				.where('F', PlaceholderType.INPUT_HATCH,
-						MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+				.where('E', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+				.where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
 				.build();
 	}
 

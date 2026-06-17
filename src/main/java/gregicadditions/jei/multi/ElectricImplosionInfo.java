@@ -26,7 +26,7 @@ public class ElectricImplosionInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public MultiblockShapeInfo getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
                 .aisle("IXX", "GXG", "GXG", "GXG", "GXG", "GXG", "XXX")
                 .aisle("SXE", "X#X", "X#X", "X#X", "X#X", "X#X", "XmX")
@@ -38,7 +38,7 @@ public class ElectricImplosionInfo extends MultiblockInfoPage {
                 .where('X', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_MA956))
                 .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
                 .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
-                .where('I', PlaceholderType.INPUT_HATCH,MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
+                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
                 .build();
     }
 

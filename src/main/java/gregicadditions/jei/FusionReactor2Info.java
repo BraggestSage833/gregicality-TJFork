@@ -25,7 +25,7 @@ public class FusionReactor2Info extends MultiblockInfoPage {
 	}
 
 	@Override
-	public MultiblockShapeInfo getMatchingShapes() {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 		return MultiblockShapeInfo.builder()
 				.aisle("###############", "######NCN######", "###############")
 				.aisle("######DCD######", "####CCcccCC####", "######UCU######")
