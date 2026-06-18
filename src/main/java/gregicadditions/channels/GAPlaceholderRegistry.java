@@ -2,6 +2,7 @@ package gregicadditions.channels;
 
 import gregicadditions.item.CellCasing;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.GATransparentCasing;
 import gregicadditions.item.components.*;
 import gregicadditions.item.metal.NuclearCasing;
 import gregicadditions.machines.GATileEntities;
@@ -37,5 +38,6 @@ public class GAPlaceholderRegistry {
         PlaceholderBlockRegistry.register(PlaceholderType.MUFFLER, (context) ->  PlaceholderBlockRegistry.MTEHolderBuilder(GATileEntities.MUFFLER_HATCH[Math.min(7, Math.max(0, context.voltageTier - 1))], context.facing));
         PlaceholderBlockRegistry.register(PlaceholderType.FRAMEWORK, (context) ->  new BlockInfo(GAMetaBlocks.getFramework(Math.max(context.voltageTier,context.minTier))));
         PlaceholderBlockRegistry.register(PlaceholderType.NUCLEAR_CASING, (context) -> new BlockInfo(GAMetaBlocks.NUCLEAR_CASING.getState(NuclearCasing.CasingType.values()[Math.min(11, context.voltageTier)])));
+        PlaceholderBlockRegistry.register(PlaceholderType.GLASS, (context) -> new BlockInfo(GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.values()[Math.min(6, context.voltageTier)])));
     }
 }
