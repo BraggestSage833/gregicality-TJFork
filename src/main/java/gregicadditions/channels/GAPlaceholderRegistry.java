@@ -34,7 +34,7 @@ public class GAPlaceholderRegistry {
         PlaceholderBlockRegistry.register(PlaceholderType.PUMP, (context) ->  new BlockInfo(GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[componentBlockClamp(context.voltageTier)])));
         PlaceholderBlockRegistry.register(PlaceholderType.ROBOT_ARM, (context) ->  new BlockInfo(GAMetaBlocks.ROBOT_ARM_CASING.getState(RobotArmCasing.CasingType.values()[componentBlockClamp(context.voltageTier)])));
         PlaceholderBlockRegistry.register(PlaceholderType.SENSOR, (context) ->  new BlockInfo(GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[componentBlockClamp(context.voltageTier)])));
-        PlaceholderBlockRegistry.register(PlaceholderType.CELL, (context) ->  new BlockInfo(GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[context.voltageTier])));
+        PlaceholderBlockRegistry.register(PlaceholderType.CELL, (context) ->  new BlockInfo(GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[ Math.min(Math.max(context.voltageTier - 3, 0), 12)])));
         PlaceholderBlockRegistry.register(PlaceholderType.MUFFLER, (context) ->  PlaceholderBlockRegistry.MTEHolderBuilder(GATileEntities.MUFFLER_HATCH[Math.min(7, Math.max(0, context.voltageTier - 1))], context.facing));
         PlaceholderBlockRegistry.register(PlaceholderType.FRAMEWORK, (context) ->  new BlockInfo(GAMetaBlocks.getFramework(Math.max(context.voltageTier,context.minTier))));
         PlaceholderBlockRegistry.register(PlaceholderType.NUCLEAR_CASING, (context) -> new BlockInfo(GAMetaBlocks.NUCLEAR_CASING.getState(NuclearCasing.CasingType.values()[Math.min(11, context.voltageTier)])));
