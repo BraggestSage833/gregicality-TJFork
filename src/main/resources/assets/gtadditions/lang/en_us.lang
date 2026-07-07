@@ -4368,9 +4368,9 @@ fluid.maraging_steel_a_molten=Molten Maraging Steel 250
 fluid.inconel_a_molten=Molten Inconel 625
 fluid.grisium_molten=Molten Grisium
 
-gtadditions.machine.buffer.lv.name=Basic Buffer
-gtadditions.machine.buffer.mv.name=Advanced Buffer
-gtadditions.machine.buffer.hv.name=Advanced Buffer II
+gtadditions.machine.buffer.lv.name=Basic Dual Input Buffer
+gtadditions.machine.buffer.mv.name=Advanced Dual Input Buffer
+gtadditions.machine.buffer.hv.name=Advanced Dual Input Buffer II
 
 metaitem.hyperium_essence.name=Hyperium Essence
 metaitem.ludicium_essence.name=Ludicium Essence
@@ -4646,3 +4646,4 @@ gregtech.multiblock.cryogenic_freezer.description=The Cryogenic Freezer is built
 gtadditions.machine.cryogenic_freezer.name=Cryogenic Freezer
 recipemap.cryogenic_freezer=Cryogenic Freezer
 gregtech.multiblock.vol_cryo.description=This multiblock parallels four times per overlock
+gregtech.universal.no_import=Does not auto Import

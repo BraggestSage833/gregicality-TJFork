@@ -66,7 +66,7 @@ public class TileEntityLargeForgeHammer extends MultiRecipeMapMultiblockControll
                 .setAmountAtLeast('Y', 4)
                 .where('S', selfPredicate())
                 .where('Y', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('#', isAirPredicate())
                 .where('p', pistonPredicate())
                 .build();

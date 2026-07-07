@@ -62,7 +62,7 @@ public class TileEntityLargeWashingPlant extends MultiRecipeMapMultiblockControl
                 .setAmountAtLeast('L', 9)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('P', statePredicate(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE)))
                 .where('#', statePredicate(Blocks.WATER.getDefaultState()).or(isAirPredicate()))
                 .where('M', motorPredicate())

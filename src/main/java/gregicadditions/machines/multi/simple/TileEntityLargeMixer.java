@@ -51,7 +51,7 @@ public class TileEntityLargeMixer extends LargeSimpleRecipeMapMultiblockControll
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
                 .where('Y', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TUNGSTENSTEEL_GEARBOX_CASING)))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('A', (tile) -> true)
                 .where('#', isAirPredicate())
                 .where('M', motorPredicate())

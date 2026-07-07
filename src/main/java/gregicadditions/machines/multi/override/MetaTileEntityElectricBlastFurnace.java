@@ -77,7 +77,7 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 				.setAmountAtLeast('L', 8)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('C', heatingCoilPredicate().or(heatingCoilPredicate2()))
                 .where('M', abilityPartPredicate(GregicAdditionsCapabilities.MUFFLER_HATCH))
 				.where('#', isAirPredicate())

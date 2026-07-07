@@ -79,7 +79,7 @@ public class TileEntityChemicalPlant extends MultiRecipeMapMultiblockController 
 				.setAmountAtLeast('L', 22)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('C', heatingCoilPredicate().or(heatingCoilPredicate2()))
 				.where('P', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.PTFE_PIPE)))
 				.where('#', (tile) -> true)

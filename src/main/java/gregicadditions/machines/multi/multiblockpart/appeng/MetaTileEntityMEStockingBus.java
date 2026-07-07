@@ -10,12 +10,13 @@ import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregtech.api.GTValues;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
+import gregtech.api.gui.widgets.ClickButtonWidget;
+import gregtech.api.gui.widgets.TextFieldWidget;
 import gregtech.api.gui.widgets.ToggleButtonWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.common.gui.widget.appeng.slot.ExportOnlyAEItemList;
 import gregtech.common.gui.widget.appeng.slot.ExportOnlyAEItemSlot;
 import gregtech.common.metatileentities.electric.multiblockpart.appeng.MetaTileEntityMEInputBus;
@@ -35,29 +36,30 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static gregtech.api.capability.GregtechDataCodes.UPDATE_AUTO_PULL;
 
 public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implements IDistinct {
 
-    private static final int CONFIG_SIZE = 16;
     private boolean autoPull;
     private Predicate<ItemStack> autoPullTest;
 
-    public MetaTileEntityMEStockingBus(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTValues.IV);
+    public MetaTileEntityMEStockingBus(ResourceLocation metaTileEntityId, int configSlots) {
+        super(metaTileEntityId, configSlots >= 64 ? GTValues.LuV : GTValues.IV, configSlots);
         this.autoPullTest = $ -> false;
+        this.tickRate = 100;
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(MetaTileEntityHolder holder) {
-        return new MetaTileEntityMEStockingBus(metaTileEntityId);
+        return new MetaTileEntityMEStockingBus(this.metaTileEntityId, this.configSlots);
     }
 
     @Override
     protected ExportOnlyAEStockingItemList getAEItemHandler() {
         if (this.aeItemHandler == null) {
-            this.aeItemHandler = new ExportOnlyAEStockingItemList(this, CONFIG_SIZE, getController());
+            this.aeItemHandler = new ExportOnlyAEStockingItemList(this, this.configSlots, getController());
         }
         return (ExportOnlyAEStockingItemList) this.aeItemHandler;
     }
@@ -65,19 +67,19 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            if (isWorkingEnabled() && autoPull && getOffsetTimer() % 100 == 0) {
-                refreshList();
-                syncME();
+        if (!this.getWorld().isRemote) {
+            if (this.isWorkingEnabled() && this.autoPull && this.getOffsetTimer() % this.tickRate == 0) {
+                this.refreshList();
+                this.syncME();
             }
 
             // Immediately clear cached items if the status changed, to prevent running recipes while offline
             if (this.meStatusChanged && !this.isOnline) {
-                if (autoPull) {
-                    clearInventory(0);
+                if (this.autoPull) {
+                    this.clearInventory(0);
                 } else {
-                    for (int i = 0; i < CONFIG_SIZE; i++) {
-                        getAEItemHandler().getInventory()[i].setStack(null);
+                    for (int i = 0; i < this.configSlots; i++) {
+                        this.getAEItemHandler().getInventory()[i].setStack(null);
                     }
                 }
             }
@@ -219,7 +221,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
 
         int index = 0;
         for (IAEItemStack stack : storageList) {
-            if (index >= CONFIG_SIZE) break;
+            if (index >= this.configSlots) break;
             if (stack.getStackSize() == 0) continue;
             stack = monitor.extractItems(stack, Actionable.SIMULATE, getActionSource());
             if (stack == null || stack.getStackSize() == 0) continue;
@@ -241,7 +243,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     }
 
     private void clearInventory(int startIndex) {
-        for (int i = startIndex; i < CONFIG_SIZE; i++) {
+        for (int i = startIndex; i < this.configSlots; i++) {
             var slot = this.getAEItemHandler().getInventory()[i];
             slot.setConfig(null);
             slot.setStack(null);
@@ -258,10 +260,13 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
 
     @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer player) {
-        ModularUI.Builder builder = super.createUITemplate(player);
-        builder.widget(new ToggleButtonWidget(7 + 18 * 4 + 1, 26, 16, 16, GuiTextures.BUTTON_AUTO_PULL, () -> autoPull, this::setAutoPull)
-                .setTooltipText("gregtech.gui.me_bus.auto_pull_button"));
-        return builder;
+        return super.createUITemplate(player)
+                .widget(new ToggleButtonWidget(7 + 18 * 4 + 1, 46, 16, 16, GuiTextures.BUTTON_AUTO_PULL, () -> autoPull, this::setAutoPull)
+                        .setTooltipText("gregtech.gui.me_bus.auto_pull_button"))
+                .widget(new TextFieldWidget(26, 25, 124, 18, true, () -> String.valueOf(this.tickRate), this::setTickRate)
+                        .setValidator(str -> Pattern.compile("\\*?[0-9_]*\\*?").matcher(str).matches()))
+                .widget(new ClickButtonWidget(7, 25, 18, 18, "/2", data -> this.setTickRate(String.valueOf((long) this.tickRate / 2))))
+                .widget(new ClickButtonWidget(151, 25, 18, 18, "*2", data -> this.setTickRate(String.valueOf((long) this.tickRate * 2))));
     }
 
     @Override
@@ -302,6 +307,11 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     public void receiveInitialSyncData(PacketBuffer buf) {
         super.receiveInitialSyncData(buf);
         this.autoPull = buf.readBoolean();
+    }
+
+    private void setTickRate(String tickRate) {
+        this.tickRate = (int) Math.max(1, Math.min(Integer.MAX_VALUE, Long.parseLong(tickRate)));
+        this.markDirty();
     }
 
     private static class ExportOnlyAEStockingItemSlot extends ExportOnlyAEItemSlot {
@@ -366,9 +376,9 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
     public void addInformation(ItemStack stack, @Nullable World player, @NotNull List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gregtech.machine.item_bus.import.tooltip"));
         tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip"));
-        tooltip.add(I18n.format("gregtech.machine.me_import_item_hatch.configs.tooltip"));
+        tooltip.add(I18n.format("gregtech.machine.me_import_item_hatch.configs.tooltip", this.configSlots));
         tooltip.add(I18n.format("gregtech.machine.me.copy_paste.tooltip"));
-        tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip.2"));
+        tooltip.add(I18n.format("gregtech.machine.me.stocking_item.tooltip.2", this.configSlots));
         tooltip.add(I18n.format("gregtech.machine.me.extra_connections.tooltip"));
         tooltip.add(I18n.format("gregtech.universal.enabled"));
     }

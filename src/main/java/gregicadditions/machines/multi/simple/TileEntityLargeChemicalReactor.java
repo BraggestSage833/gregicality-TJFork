@@ -74,7 +74,7 @@ public class TileEntityLargeChemicalReactor extends GARecipeMapMultiblockControl
                 .setAmountLimit('K', 1, 1)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('C', heatingCoilPredicate().or(heatingCoilPredicate2()).or(statePredicate(getCasingState())).or(abilityPartPredicate(ALLOWED_ABILITIES)))
                 .where('K', heatingCoilPredicate().or(heatingCoilPredicate2()))
                 .where('P', statePredicate(GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.PTFE_PIPE)))

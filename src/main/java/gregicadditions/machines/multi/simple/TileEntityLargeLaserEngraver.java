@@ -55,7 +55,7 @@ public class TileEntityLargeLaserEngraver extends LargeSimpleRecipeMapMultiblock
                 .setAmountAtLeast('L', 18)
                 .where('S', selfPredicate())
                 .where('L', statePredicate(getCasingState()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('#', (tile) -> true)
                 .where('C', conveyorPredicate())
                 .where('E', emitterPredicate())

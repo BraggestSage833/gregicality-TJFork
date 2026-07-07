@@ -65,7 +65,7 @@ public class MetaTileEntityBioReactor extends GARecipeMapMultiblockController {
                 .aisle("XXSXX", "XGGGX", "XGGGX", "XGGGX", "XXXXX")
                 .setAmountAtLeast('L', 34)
                 .where('S', selfPredicate())
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('L', statePredicate(getCasingState()))
                 .where('#', isAirPredicate())
                 .where('G', statePredicate(GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS)))

@@ -1,40 +1,52 @@
 package gregicadditions.machines;
 
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import codechicken.lib.vec.Vector3;
 import gregicadditions.client.ClientHandler;
-import gregtech.api.capability.impl.FilteredFluidHandler;
 import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.TankWidget;
 import gregtech.api.metatileentity.ITieredMetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregtech.api.metatileentity.multiblock.IMultiAbilityProvider;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
-import gregtech.api.util.GTUtility;
+import gregtech.common.gui.widget.GhostCircuitWidget;
+import gregtech.common.metatileentities.electric.multiblockpart.MetaTileEntityMultiblockPart;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class TileEntityBuffer extends MetaTileEntity implements ITieredMetaTileEntity {
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+
+public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements ITieredMetaTileEntity, IMultiAbilityProvider {
 
     private final int tier;
     protected FluidTankList fluids;
     private ItemStackHandler inventory;
-    private static final double[] rotations = new double[]{180.0, 0.0, -90.0, 90.0};
+    private ItemStackHandler circuitInventory;
+    private IItemHandlerModifiable combinedInventory;
+   // private static final double[] rotations = new double[]{180.0, 0.0, -90.0, 90.0};
 
 
     public TileEntityBuffer(ResourceLocation metaTileEntityId, int tier) {
-        super(metaTileEntityId);
+        super(metaTileEntityId,tier);
         this.tier = tier;
         initializeInventory();
     }
@@ -42,16 +54,18 @@ public class TileEntityBuffer extends MetaTileEntity implements ITieredMetaTileE
     @Override
     protected void initializeInventory() {
         super.initializeInventory();
-        FilteredFluidHandler[] fluidsHandlers = new FilteredFluidHandler[this.tier];
+        FluidTank[] tanks = new FluidTank[this.tier];
         for (int i = 0; i < this.tier; i++) {
-            fluidsHandlers[i] = new FilteredFluidHandler(16000);
+            tanks[i] = new FluidTank(8000 * (1 << getTier()));
         }
-        this.fluids = new FluidTankList(false, fluidsHandlers);
+        this.fluids = new FluidTankList(false, tanks);
+        this.fluidInventory = fluids;
         //this.importFluids = new FluidTankList(false, fluids);
         //this.exportFluids = new FluidTankList(false, fluids);
         //this.fluidInventory = new FluidHandlerProxy(fluids, fluids);
-        this.fluidInventory = fluids;
+        this.circuitInventory = new ItemStackHandler(1);
         this.inventory = new ItemStackHandler(tier * tier);
+        this.combinedInventory = new ItemHandlerList(Arrays.asList(this.circuitInventory, this.inventory));
         this.itemInventory = inventory;
     }
 
@@ -82,6 +96,8 @@ public class TileEntityBuffer extends MetaTileEntity implements ITieredMetaTileE
             }
         }
         return builder.label(6, 6, getMetaFullName())
+                .widget(new GhostCircuitWidget(this.circuitInventory, 7 + (this.tier * 18), 54 + (18 * Math.max(0, this.tier - 3)))
+                        .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.INT_CIRCUIT_OVERLAY))
                 .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT, 8, 18 + 18 * tier + 12)
                 .build(getHolder(), entityPlayer);
     }
@@ -93,18 +109,21 @@ public class TileEntityBuffer extends MetaTileEntity implements ITieredMetaTileE
 
     @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
-        Textures.VOLTAGE_CASINGS[this.tier].render(renderState, translation, ArrayUtils.add(pipeline,
-                new ColourMultiplier(GTUtility.convertRGBtoOpaqueRGBA_CL(getPaintingColorForRendering()))));
-        translation.translate(0.5, 0.001, 0.5);
-        translation.rotate(Math.toRadians(rotations[getFrontFacing().getIndex() - 2]), new Vector3(0.0, 1.0, 0.0));
-        translation.translate(-0.5, 0.0, -0.5);
-        Textures.SCREEN.renderSided(EnumFacing.UP, renderState, translation, pipeline);
+        super.renderMetaTileEntity(renderState, translation, pipeline);
+        if (shouldRenderOverlay()) {
+            SimpleOverlayRenderer renderer = Textures.PIPE_IN_OVERLAY;
+            renderer.renderSided(getFrontFacing(), renderState, translation, pipeline);
+            renderState.reset();
+            SimpleOverlayRenderer renderer2 = Textures.BUFFER_INPUT_OVERLAY;
+            renderer2.renderSided(getFrontFacing(), renderState, translation, pipeline);
+        }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         data.setTag("Inventory", inventory.serializeNBT());
+        data.setTag("GhostCircuit", circuitInventory.serializeNBT());
         data.setTag("FluidInventory", fluids.serializeNBT());
         return data;
     }
@@ -113,12 +132,56 @@ public class TileEntityBuffer extends MetaTileEntity implements ITieredMetaTileE
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         this.inventory.deserializeNBT(data.getCompoundTag("Inventory"));
+        this.circuitInventory.deserializeNBT(data.getCompoundTag("GhostCircuit"));
         this.fluids.deserializeNBT(data.getCompoundTag("FluidInventory"));
     }
 
     @Override
     protected boolean shouldSerializeInventories() {
         return false;
+    }
+    @Override
+    public MultiblockAbility<?>[] getAbilities() {
+        return new MultiblockAbility<?>[]{
+                MultiblockAbility.IMPORT_ITEMS,
+                MultiblockAbility.IMPORT_FLUIDS
+        };
+    }
+
+    @Override
+    public void registerAbilityFor(MultiblockAbility<?> ability, List<Object> list) {
+        if (ability == MultiblockAbility.IMPORT_ITEMS) {
+            list.add(this.combinedInventory);
+        }
+
+        if (ability == MultiblockAbility.IMPORT_FLUIDS) {
+            list.addAll(fluids.getFluidTanks());
+        }
+
+    }
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!getWorld().isRemote) {
+            for (int i = 0; i < itemInventory.getSlots(); i++) {
+                ItemStack stack = itemInventory.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    Block.spawnAsEntity(getWorld(), getPos(), stack.copy());
+                    //itemInventory.setStackInSlot(i, ItemStack.EMPTY);
+                }
+            }
+        }
+    }
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
+        tooltip.add(I18n.format("gregtech.universal.tooltip.item_storage_capacity", (tier * tier)));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.fluid_storage_capacity", (8000 * (1 << getTier()))));
+        tooltip.add(I18n.format("gtadditions.machine.multi_fluid_hatch_universal.tooltip.2", (int) fluids.getTanks()));
+        tooltip.add(I18n.format("gregtech.universal.enabled"));
+        tooltip.add(I18n.format("gregtech.universal.no_import"));
+
+
+
     }
 
 }

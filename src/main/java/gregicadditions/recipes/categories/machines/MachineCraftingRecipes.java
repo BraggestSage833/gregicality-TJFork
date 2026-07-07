@@ -239,6 +239,21 @@ public class MachineCraftingRecipes {
 
         ModHandler.addShapedRecipe("ga_volcanus", GATileEntities.VOLCANUS.getStackForm(), "GCG", "IHI", "PCP", 'H', GATileEntities.ELECTRIC_BLAST_FURNACE.getStackForm(), 'C', new UnificationEntry(circuit, Elite), 'P', new UnificationEntry(plateDense, HastelloyN), 'G', new UnificationEntry(gear, HastelloyN), 'I', MetaItems.ROBOT_ARM_IV);
         ModHandler.addShapedRecipe("ga_cryogenic_freezer", GATileEntities.CRYOGENIC_FREEZER.getStackForm(), "GCG", "IHI", "PCP", 'H', GATileEntities.VACUUM_FREEZER.getStackForm(), 'C', new UnificationEntry(circuit, Elite), 'P', new UnificationEntry(plateDense, HG1223), 'G', new UnificationEntry(gear, IncoloyMA956), 'I', MetaItems.ELECTRIC_PISTON_IV);
-
+        //input buffer
+        ASSEMBLER_RECIPES.recipeBuilder().EUt(480).duration(400)
+                .inputs(MetaTileEntities.ITEM_IMPORT_BUS[HV].getStackForm(), MetaTileEntities.FLUID_IMPORT_HATCH[HV].getStackForm(),GATileEntities.STAINLESS_STEEL_CRATE.getStackForm())
+                .input(pipeLarge, StainlessSteel, 3)
+                .outputs(GATileEntities.BUFFER[0].getStackForm())
+                .buildAndRegister();
+        ASSEMBLER_RECIPES.recipeBuilder().EUt(1000).duration(400)
+                .inputs(MetaTileEntities.ITEM_IMPORT_BUS[EV].getStackForm(), MetaTileEntities.FLUID_IMPORT_HATCH[EV].getStackForm(),GATileEntities.TITANIUM_CRATE.getStackForm())
+                .input(pipeLarge, TungstenSteel, 4)
+                .outputs(GATileEntities.BUFFER[1].getStackForm())
+                .buildAndRegister();
+        ASSEMBLER_RECIPES.recipeBuilder().EUt(8000).duration(400)
+                .inputs(MetaTileEntities.ITEM_IMPORT_BUS[IV].getStackForm(), MetaTileEntities.FLUID_IMPORT_HATCH[IV].getStackForm(),GATileEntities.TUNGSTENSTEEL_CRATE.getStackForm())
+                .input(pipeLarge, NiobiumTitanium, 5)
+                .outputs(GATileEntities.BUFFER[2].getStackForm())
+                .buildAndRegister();
     }
 }
