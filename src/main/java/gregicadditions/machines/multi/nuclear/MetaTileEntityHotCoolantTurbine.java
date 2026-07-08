@@ -59,7 +59,11 @@ public class MetaTileEntityHotCoolantTurbine extends HotCoolantMultiblockControl
     public IFluidHandler exportFluidHandler;
 
     public MetaTileEntityHotCoolantTurbine(ResourceLocation metaTileEntityId, TurbineType turbineType) {
-        super(metaTileEntityId, turbineType.recipeMap, GAValues.V[GAValues.EV]);
+        this(metaTileEntityId, turbineType, 1,1);
+    }
+
+    public MetaTileEntityHotCoolantTurbine(ResourceLocation metaTileEntityId, TurbineType turbineType, int minExtent, int maxExtent) {
+        super(metaTileEntityId, turbineType.recipeMap, GAValues.V[GAValues.EV], minExtent, maxExtent);
         this.turbineType = turbineType;
         reinitializeStructurePattern();
     }
