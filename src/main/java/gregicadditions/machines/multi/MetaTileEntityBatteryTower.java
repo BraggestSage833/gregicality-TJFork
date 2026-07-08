@@ -63,7 +63,7 @@ public class MetaTileEntityBatteryTower extends GAMultiblockWithDisplayBase impl
     private long passiveDrain;
 
     public MetaTileEntityBatteryTower(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId,4,16);
+        super(metaTileEntityId);
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
@@ -128,7 +128,7 @@ public class MetaTileEntityBatteryTower extends GAMultiblockWithDisplayBase impl
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start(RIGHT, FRONT, UP)
                 .aisle("CCSCC", "CCCCC", "CCCCC", "CCCCC", "CCCCC")
-                .aisle("XXXXX", "XRRRX", "XRRRX", "XRRRX", "XXXXX").setRepeatable(getMinExtent(), getMaxExtent())
+                .aisle("XXXXX", "XRRRX", "XRRRX", "XRRRX", "XXXXX").setRepeatable(4,16)
                 .aisle("CCCCC", "CCCCC", "CCCCC", "CCCCC", "CCCCC")
                 .where('S', selfPredicate())
                 .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))

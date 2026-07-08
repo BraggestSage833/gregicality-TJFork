@@ -31,17 +31,17 @@ public class IndustrialPrimitiveBlastFurnaceInfo extends MultiblockInfoPage {
 
     @Override
     public MultiblockShapeInfo getMatchingShapes(int extent) {
-        return GAMultiblockShapeInfo.builder()
-                .aisle("YYY", "YCY", "YYY", "YYY")
-                // alkuperäinen i-loop (i=0..63) → valitaan neutraali keskivaiheen rakenne
-                .aisle("YYY", "I#Y", "Y#Y", "Y#Y")
-                .aisle("YYY", "YOY", "YYY", "YYY")
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
+        builder.aisle("YYY", "YCY", "YYY", "YYY");
+        for (int num = 0; num < 1 + extent; num++) {
+            builder.aisle("YYY", "I#Y", "Y#Y", "Y#Y");
+        }
+        return builder.aisle("YYY", "YOY", "YYY", "YYY")
                 .where('Y', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
                 .where('C', GATileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.NORTH)
                 .where('O', MetaTileEntities.ITEM_EXPORT_BUS[1], EnumFacing.SOUTH)
                 .where('I', MetaTileEntities.ITEM_IMPORT_BUS[1], EnumFacing.WEST)
-                .where('#', Blocks.AIR.getDefaultState())
-                .build();
+                .where('#', Blocks.AIR.getDefaultState()).build();
     }
 
     @Override

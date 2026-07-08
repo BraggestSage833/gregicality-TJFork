@@ -64,7 +64,7 @@ public class TileEntityLargeBenderAndForming extends MultiRecipeMapMultiblockCon
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXXX", "XXXX", "XXIX")
-                .aisle("XXXX", "XPMX", "XXIX").setRepeatable(getMinExtent(), getMaxExtent())
+                .aisle("XXXX", "XPMX", "XXIX").setRepeatable(getMinExtent(),getMaxExtent())
                 .aisle("XXXX", "XSXX", "XXIX")
                 .setAmountAtLeast('L', 16)
                 .where('S', selfPredicate())

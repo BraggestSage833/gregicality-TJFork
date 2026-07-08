@@ -89,7 +89,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends MultiblockWit
 
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId,1 ,MAX_SIZE);
+        super(metaTileEntityId,0 ,MAX_SIZE);
     }
 
     @Override
