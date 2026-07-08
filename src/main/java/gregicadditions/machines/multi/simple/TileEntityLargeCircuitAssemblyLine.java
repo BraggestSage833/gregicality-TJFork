@@ -9,6 +9,7 @@ import gregicadditions.item.GAMultiblockCasing;
 import gregicadditions.item.GAMultiblockCasing2;
 import gregicadditions.item.GATransparentCasing;
 import gregicadditions.recipes.GARecipeMaps;
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -60,7 +61,7 @@ public class TileEntityLargeCircuitAssemblyLine extends GARecipeMapMultiblockCon
     private long maxVoltage = 0;
 
     public TileEntityLargeCircuitAssemblyLine(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.CIRCUIT_ASSEMBLER_RECIPES, 5);
+        super(metaTileEntityId, GARecipeMaps.CIRCUIT_ASSEMBLER_RECIPES, GTValues.IV);
         this.recipeMapWorkable = new GAMultiblockRecipeLogic(this);
     }
 
