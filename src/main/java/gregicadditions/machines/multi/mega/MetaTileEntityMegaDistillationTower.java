@@ -58,7 +58,7 @@ public class MetaTileEntityMegaDistillationTower extends MegaMultiblockRecipeMap
                 .setAmountAtLeast('L', 100)
                 .where('L', statePredicate(getCasingState()))
                 .where('S', selfPredicate())
-                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('X', abilityPartPredicate(MultiblockAbility.EXPORT_FLUIDS).or(statePredicate(getCasingState())).or(abilityPartPredicate(GregicAdditionsCapabilities.MAINTENANCE_HATCH)))
                 .where('C', statePredicate(MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.NICHROME)))
                 .where('P', frameworkPredicate().or(frameworkPredicate2()))

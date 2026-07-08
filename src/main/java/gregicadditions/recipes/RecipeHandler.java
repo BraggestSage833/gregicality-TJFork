@@ -53,6 +53,7 @@ import static gregtech.api.unification.material.type.GemMaterial.MatFlags.CRYSTA
 import static gregtech.api.unification.material.type.IngotMaterial.MatFlags.GENERATE_SMALL_GEAR;
 import static gregtech.api.unification.material.type.Material.MatFlags.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
+import static gregtech.api.util.GTUtility.getTieredVoltageMultiplier;
 
 /**
  * Primary Recipe Registration Class
@@ -208,7 +209,7 @@ public class RecipeHandler {
 
     /**
      * Ingot Material Handler. Generates:
-     *
+     * <p>
      * + Mixer Recipes for GTCE Materials we add
      * + Bending Cylinder Recipes
      * + GT6 Wrench Recipes (plates over ingots)
@@ -277,14 +278,14 @@ public class RecipeHandler {
 
             builder = MIXER_RECIPES.recipeBuilder();
 
-        // Try to fit in Large Mixer
+            // Try to fit in Large Mixer
         else if (itemCount <= LARGE_MIXER_RECIPES.getMaxInputs()
                 && fluidCount <= LARGE_MIXER_RECIPES.getMaxFluidInputs())
 
             builder = LARGE_MIXER_RECIPES.recipeBuilder()
                     .notConsumable(new IntCircuitIngredient(material.materialComponents.size()));
 
-        // Cannot fit in either
+            // Cannot fit in either
         else {
             GALog.logger.warn("Material {} has too many material components to generate a recipe in either normal or large mixer.", material.getUnlocalizedName());
             return;
@@ -307,18 +308,18 @@ public class RecipeHandler {
         }
 
         builder.output(dust, material, totalMaterial)
-               .duration((int) (material.getAverageMass() * totalMaterial))
-               .EUt(30)
-               .buildAndRegister();
+                .duration((int) (material.getAverageMass() * totalMaterial))
+                .EUt(30)
+                .buildAndRegister();
     }
 
     /**
      * Gem Material Handler. Generates:
-     *
+     * <p>
      * + Laser Engraver Gem Recipes
      * + Implosion Compressor Gem Recipes
      * + Gem Hammer Recipes
-     *
+     * <p>
      * - Removes GTCE Gem Implosion Recipes
      */
     private static void processGem(OrePrefix dustPrefix, GemMaterial material) {
@@ -362,8 +363,8 @@ public class RecipeHandler {
                         .input(dust, material, 4)
                         .output(gem, material, 3)
                         .output(dustTiny, DarkAsh, 2);
-                builder .applyProperty("explosives", explosive);
-                builder .buildAndRegister();
+                builder.applyProperty("explosives", explosive);
+                builder.buildAndRegister();
 
                 if (hasFlawless) {
 
@@ -372,8 +373,8 @@ public class RecipeHandler {
                             .input(gem, material, 3)
                             .output(gemFlawless, material)
                             .output(dustTiny, DarkAsh, 2);
-                    builder .applyProperty("explosives", explosive);
-                    builder .buildAndRegister();
+                    builder.applyProperty("explosives", explosive);
+                    builder.buildAndRegister();
                 }
 
                 if (hasExquisite) {
@@ -383,8 +384,8 @@ public class RecipeHandler {
                             .input(gemFlawless, material, 3)
                             .output(gemExquisite, material)
                             .output(dustTiny, DarkAsh, 2);
-                    builder .applyProperty("explosives", explosive);
-                    builder .buildAndRegister();
+                    builder.applyProperty("explosives", explosive);
+                    builder.buildAndRegister();
                 }
             }
         }
@@ -401,9 +402,9 @@ public class RecipeHandler {
 
     /**
      * Rod Material Handler. Generates:
-     *
+     * <p>
      * + GT5U Lathe Recipes if enabled (1 rod + 2 small dust)
-     *
+     * <p>
      * - Removes old Lathe Rod Recipes if enabled
      */
     private static void processStick(OrePrefix stickPrefix, DustMaterial material) {
@@ -424,7 +425,7 @@ public class RecipeHandler {
 
     /**
      * Tiny Dust Material Handler. Generates:
-     *
+     * <p>
      * + Schematic Recipes in favor of Integrated Circuit Packager Recipes
      */
     private static void processTinyDust(OrePrefix dustTiny, DustMaterial material) {
@@ -440,7 +441,7 @@ public class RecipeHandler {
 
     /**
      * Small Dust Material Handler. Generates:
-     *
+     * <p>
      * + Schematic Recipes in favor of Integrated Circuit Packager Recipes
      */
     private static void processSmallDust(OrePrefix dustSmall, DustMaterial material) {
@@ -456,9 +457,9 @@ public class RecipeHandler {
 
     /**
      * Nugget Material Handler. Generates:
-     *
+     * <p>
      * + Ingot -> Nugget Alloy Smelter Recipes
-     *
+     * <p>
      * - GTCE Packer / Unpacker recipes, to be registered elsewhere if configured.
      */
     private static void processNugget(OrePrefix nugget, IngotMaterial material) {
@@ -476,9 +477,9 @@ public class RecipeHandler {
 
     /**
      * Ring Material Handler. Generates:
-     *
+     * <p>
      * + Bending Cylinder Ring Recipes if enabled
-     *
+     * <p>
      * - Removes old Handcrafting Ring Recipes if enabled
      */
     private static void processRing(OrePrefix ring, IngotMaterial material) {
@@ -495,10 +496,10 @@ public class RecipeHandler {
 
     /**
      * Foil Material Handler. Generates:
-     *
+     * <p>
      * + Bending Cylinder Foil Recipes if enabled
      * + Cluster Mill Foil Recipes if enabled
-     *
+     * <p>
      * - Removes Bender Foils if Cluster Mill is enabled
      */
     private static void processFoil(OrePrefix foil, IngotMaterial material) {
@@ -527,9 +528,10 @@ public class RecipeHandler {
 
                 removeRecipesByInputs(BENDER_RECIPES, OreDictUnifier.get(plate, material), getIntegratedCircuit(0));
 
-                CLUSTER_MILL_RECIPES.recipeBuilder().EUt(24).duration((int) material.getAverageMass())
+                CLUSTER_MILL_RECIPES.recipeBuilder().duration((int) material.getAverageMass())
                         .input(plate, material)
                         .output(foil, material, 4)
+                        .EUt(getTieredVoltageMultiplier(material))
                         .buildAndRegister();
             }
         }
@@ -537,7 +539,7 @@ public class RecipeHandler {
 
     /**
      * Round Material Handler. Generates:
-     *
+     * <p>
      * + Round Handcrafting Recipes
      * + Round Lathe Recipes
      * + Round Unification Recipes
@@ -554,9 +556,10 @@ public class RecipeHandler {
                     'I', new UnificationEntry(ingot, material));
         }
 
-        LATHE_RECIPES.recipeBuilder().EUt(8).duration(100)
+        LATHE_RECIPES.recipeBuilder().duration(100)
                 .input(nugget, material)
                 .output(round, material)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
 
         int voltageMultiplier = material.blastFurnaceTemperature == 0 ? 1 : material.blastFurnaceTemperature > 2000 ? 16 : 4;
@@ -580,7 +583,7 @@ public class RecipeHandler {
 
     /**
      * Double PLate Material Handler. Generates:
-     *
+     * <p>
      * + Plate to Double Plate Hand Recipes
      * + Double Plate Forge Hammer Recipes
      * + Double Plate Unification Recipes
@@ -592,10 +595,11 @@ public class RecipeHandler {
                     'P', new UnificationEntry(plate, material));
         }
 
-        BENDER_RECIPES.recipeBuilder().EUt(30).duration((int) material.getAverageMass())
+        BENDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass())
                 .input(plate, material, 2)
                 .output(doublePlate, material)
                 .circuitMeta(2)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
 
         int voltageMultiplier = material.blastFurnaceTemperature == 0 ? 1 : material.blastFurnaceTemperature > 2000 ? 16 : 4;
@@ -619,7 +623,7 @@ public class RecipeHandler {
 
     /**
      * Dense PLate Material Handler. Generates:
-     *
+     * <p>
      * + Plate/Ingot to Dense Plate Bender Recipes with circuit 9
      * - Plate/Ingot to Dense Plate Bender Recipes with circuit 2/5
      */
@@ -627,22 +631,24 @@ public class RecipeHandler {
         removeRecipesByInputs(BENDER_RECIPES, OreDictUnifier.get(ingot, material, 9), getIntegratedCircuit(5));
         removeRecipesByInputs(BENDER_RECIPES, OreDictUnifier.get(plate, material, 9), getIntegratedCircuit(2));
 
-        BENDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass() * 4).EUt(96)
+        BENDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass() * 4)
                 .input(plate, material, 9)
                 .output(densePlate, material, 1)
                 .circuitMeta(9)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
-        BENDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass() * 9).EUt(96)
+        BENDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass() * 9)
                 .input(ingot, material, 9)
                 .output(densePlate, material, 1)
                 .circuitMeta(9)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
     }
 
 
     /**
      * Curved Plate Material Handler. Generates:
-     *
+     * <p>
      * + Curved Plate Recipes if enabled, Handcrafting and Machine
      * + Curved Plate Rotor Recipes if enabled
      * + Curved Plate Pipe Recipes if enabled
@@ -706,7 +712,7 @@ public class RecipeHandler {
 
     /**
      * Rotor Material Handler. Generates:
-     *
+     * <p>
      * + Curved Plate Rotor Recipe
      * + Assembler Rotor Recipe that GTCE removed
      * + Extruder Rotor Recipe
@@ -723,23 +729,25 @@ public class RecipeHandler {
                 'S', new UnificationEntry(screw, material),
                 'R', new UnificationEntry(ring, material));
 
-        ASSEMBLER_RECIPES.recipeBuilder().duration(240).EUt(24)
+        ASSEMBLER_RECIPES.recipeBuilder().duration(240)
                 .input(plateOrCurved, material, 4)
                 .input(ring, material)
                 .fluidInputs(SolderingAlloy.getFluid(32))
                 .output(rotor, material)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
 
-        EXTRUDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass()).EUt(material.blastFurnaceTemperature >= 2800 ? 256 : 64)
-                    .input(ingot, material, 5)
-                    .notConsumable(SHAPE_EXTRUDER_ROTOR)
-                    .output(rotor, material)
-                    .buildAndRegister();
+        EXTRUDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass())
+                .input(ingot, material, 5)
+                .notConsumable(SHAPE_EXTRUDER_ROTOR)
+                .output(rotor, material)
+                .EUt(getTieredVoltageMultiplier(material))
+                .buildAndRegister();
     }
 
     /**
      * Tiny Pipe Material Handler. Generates:
-     *
+     * <p>
      * + Tiny Pipe Handcrafting Recipes
      */
     private static void processTinyPipe(OrePrefix prefix, IngotMaterial material) {
@@ -760,7 +768,7 @@ public class RecipeHandler {
 
     /**
      * Small Pipe Material Handler. Generates:
-     *
+     * <p>
      * + Small Pipe Handcrafting Recipes
      */
     private static void processSmallPipe(OrePrefix prefix, IngotMaterial material) {
@@ -782,7 +790,7 @@ public class RecipeHandler {
 
     /**
      * Medium Pipe Material Handler. Generates:
-     *
+     * <p>
      * + Medium Pipe Handcrafting Recipes
      */
     private static void processMediumPipe(OrePrefix prefix, IngotMaterial material) {
@@ -804,7 +812,7 @@ public class RecipeHandler {
 
     /**
      * Large Pipe Material Handler. Generates:
-     *
+     * <p>
      * + Large Pipe Handcrafting Recipes
      */
     private static void processLargePipe(OrePrefix prefix, IngotMaterial material) {
@@ -825,7 +833,7 @@ public class RecipeHandler {
 
     /**
      * Metal Casing Material Handler. Generates:
-     *
+     * <p>
      * + Autogenerated Metal Casing Handcrafting and Assembler Recipes
      * + Casing Unification Recipes
      */
@@ -869,10 +877,10 @@ public class RecipeHandler {
 
     /**
      * Turbine Material Handler. Generates:
-     *
+     * <p>
      * + Small, Medium, Large, and Huge Turbine Assembler Recipes
      * + Turbine Blade Forming Press Recipes
-     *
+     * <p>
      * - Removes GTCE Recipes for Turbines and Blades, as well as the Handcrafting Turbine Blades Recipes
      */
     private static void processTurbine(OrePrefix toolPrefix, IngotMaterial material) {
@@ -932,9 +940,9 @@ public class RecipeHandler {
 
     /**
      * Lens Material Handler. Generates:
-     *
+     * <p>
      * + Exquisite Gem -> Lens Recipes
-     *
+     * <p>
      * - Plate -> Lens Recipes
      */
     private static void processLens(OrePrefix gem, GemMaterial material) {
@@ -958,7 +966,7 @@ public class RecipeHandler {
 
     /**
      * Spring Material Handler. Generates:
-     *
+     * <p>
      * + Crafting Table Recipe for Spring
      */
     private static void processSpring(OrePrefix prefix, IngotMaterial material) {
@@ -970,10 +978,10 @@ public class RecipeHandler {
 
     /**
      * Small Spring Material Handler. Generates:
-     *
+     * <p>
      * + Crafting Table Recipe for Small Spring
      * + Bender Recipe for Small Spring
-     *
+     * <p>
      * - GTCE Fine Wire to Small Spring Recipe
      */
     private static void processSpringSmall(OrePrefix prefix, IngotMaterial material) {
@@ -985,20 +993,21 @@ public class RecipeHandler {
                 " s ", "fRx",
                 'R', new UnificationEntry(stick, material));
 
-        BENDER_RECIPES.recipeBuilder().duration((int) (material.getAverageMass() / 2)).EUt(8)
+        BENDER_RECIPES.recipeBuilder().duration((int) (material.getAverageMass() / 2))
                 .input(stick, material)
                 .output(springSmall, material, 2)
                 .circuitMeta(1)
+                .EUt(getTieredVoltageMultiplier(material))
                 .buildAndRegister();
     }
 
     /**
      * Small Gear Material Handler. Generates:
-     *
+     * <p>
      * + Harder Small Gear Crafting Table Recipe
      * + Extruder Recipe for Small Gears
      * + Lossy Small Gear recipe in Alloy Smelter (similar to normal Gears)
-     *
+     * <p>
      * - Removes Forge Hammer Recipe for Small Gears
      */
     private static void processGearSmall(OrePrefix prefix, IngotMaterial material) {
@@ -1012,23 +1021,25 @@ public class RecipeHandler {
                     'P', new UnificationEntry(plate, material));
 
             removeRecipesByInputs(FORGE_HAMMER_RECIPES, OreDictUnifier.get(plate, material, 2));
-            EXTRUDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass()).EUt(material.blastFurnaceTemperature >= 2800 ? 256 : 64)
+            EXTRUDER_RECIPES.recipeBuilder().duration((int) material.getAverageMass())
                     .input(ingot, material)
                     .notConsumable(SHAPE_EXTRUDER_SMALL_GEAR.getStackForm())
                     .output(gearSmall, material)
+                    .EUt(getTieredVoltageMultiplier(material))
                     .buildAndRegister();
 
-            ALLOY_SMELTER_RECIPES.recipeBuilder().duration((int) material.getAverageMass()).EUt(30)
+            ALLOY_SMELTER_RECIPES.recipeBuilder().duration((int) material.getAverageMass())
                     .input(ingot, material, 2)
                     .notConsumable(MetaItems.SHAPE_MOLD_GEAR_SMALL.getStackForm())
                     .output(gearSmall, material)
+                    .EUt(getTieredVoltageMultiplier(material))
                     .buildAndRegister();
         }
     }
 
     /**
      * Gear Material Handler. Generates:
-     *
+     * <p>
      * + Replace GTCE Gear recipe to use proper tool
      */
     private static void processGear(OrePrefix prefix, IngotMaterial material) {
@@ -1042,7 +1053,7 @@ public class RecipeHandler {
 
     /**
      * Hot Ingot Material Handler. Generates:
-     *
+     * <p>
      * + Increased duration Hot Ingot Recipes, to make Cryogenic Freezer viable
      */
     private static void processIngotHot(OrePrefix prefix, IngotMaterial material) {
@@ -1081,7 +1092,7 @@ public class RecipeHandler {
     /**
      * Large Mixer Recipe Creation.
      * Copies the Mixer RecipeMap.
-     *
+     * <p>
      * This RecipeMap also applies a circuit to every recipe to avoid conflicts.
      */
     private static void registerLargeMixerRecipes() {
@@ -1115,7 +1126,7 @@ public class RecipeHandler {
     /**
      * Alloy Blast Furnace Recipe creation.
      * Uses the Large Mixer RecipeMap to look up compositions of alloys.
-     *
+     * <p>
      * This Recipe Registration MUST be run after the Large Mixer recipe addition.
      */
     private static void registerAlloyBlastRecipes() {
@@ -1136,7 +1147,7 @@ public class RecipeHandler {
                         ItemStack itemStack = recipe.getOutputs().get(0);
                         IngotMaterial ingot = ((IngotMaterial) (OreDictUnifier.getUnificationEntry(itemStack).material));
                         int duration = Math.max(1, (int) (ingot.getAverageMass() * ingot.blastFurnaceTemperature / 100));
-                        if(ingot.blastFurnaceTemperature <= 1750) {
+                        if (ingot.blastFurnaceTemperature <= 1750) {
                             BLAST_ALLOY_RECIPES.recipeBuilder()
                                     .duration(duration * 50 / 100)
                                     .EUt(30 * ingot.blastFurnaceTemperature / 100)
@@ -1271,9 +1282,9 @@ public class RecipeHandler {
     private static void registerGreenHouseRecipes() {
 
         final List<Object> fertilizers = Arrays.asList(
-            null, 1000,
-            new ItemStack(Items.DYE, 1, 15), 900,
-            OreDictUnifier.get(dust, OrganicFertilizer), 600
+                null, 1000,
+                new ItemStack(Items.DYE, 1, 15), 900,
+                OreDictUnifier.get(dust, OrganicFertilizer), 600
         );
 
         final List<Item> inputs = Arrays.asList(
@@ -1337,8 +1348,8 @@ public class RecipeHandler {
 
             if (fertilizer != null)
                 recipes.stream()
-                       .map(r -> r.inputs(fertilizer))
-                       .forEach(RecipeBuilder::buildAndRegister);
+                        .map(r -> r.inputs(fertilizer))
+                        .forEach(RecipeBuilder::buildAndRegister);
         }
 
         // Search for seeds in the OreDictionary to find other recipes to add
@@ -1385,7 +1396,7 @@ public class RecipeHandler {
     /**
      * Recipe Registration method for any recipes that need to iterate over
      * ALL registered materials. Generates:
-     *
+     * <p>
      * - Large Centrifuge autogenerated recipes
      * - Matter Replication Recipes
      */
@@ -1527,7 +1538,7 @@ public class RecipeHandler {
 
     /**
      * Recipe Generation for any recipes that need to iterate over the entire Crafting Table recipe registry.
-     *
+     * <p>
      * Details on recipe registration in each individual method. It works only on recipes that
      * have exactly one unique Item input.
      */
@@ -1535,26 +1546,33 @@ public class RecipeHandler {
 
         for (IRecipe recipe : ForgeRegistries.RECIPES) {
 
-            switch(getSingleInputCount(recipe)) {
-                case -1: continue;
-                case 1: generate1to9Recipes(recipe); break;
-                case 4: generate2x2Recipes(recipe); break;
-                case 9: generate3x3Recipes(recipe); break;
+            switch (getSingleInputCount(recipe)) {
+                case -1:
+                    continue;
+                case 1:
+                    generate1to9Recipes(recipe);
+                    break;
+                case 4:
+                    generate2x2Recipes(recipe);
+                    break;
+                case 9:
+                    generate3x3Recipes(recipe);
+                    break;
             }
         }
     }
 
     /**
      * 3x3 Single Input Recipe Generation. Generates:
-     *
+     * <p>
      * + Compressor Recipes for 3x3 Crafting Recipes
      * + Packer Recipes for 3x3 Crafting Recipes
-     *
+     * <p>
      * - Removes handcrafting 3x3 Recipes for:
-     *     - Blocks
-     *     - Nuggets
-     *     - All others
-     *   depending on config values.
+     * - Blocks
+     * - Nuggets
+     * - All others
+     * depending on config values.
      */
     private static void generate3x3Recipes(IRecipe recipe) {
 
@@ -1563,7 +1581,7 @@ public class RecipeHandler {
 
         // Exclude tinyDust->dust recipes, handled elsewhere
         if (output.getCount() != 1
-         || hasOrePrefix(input, "dustTiny"))
+                || hasOrePrefix(input, "dustTiny"))
             return;
 
         if (GAConfig.GT5U.Remove3x3BlockRecipes && hasOrePrefix(output, "block"))
@@ -1591,7 +1609,7 @@ public class RecipeHandler {
 
     /**
      * 2x2 Single Input Recipe Generation. Generates:
-     *
+     * <p>
      * + Packer Recipes for 2x2 Crafting Recipes
      */
     private static void generate2x2Recipes(IRecipe recipe) {
@@ -1601,9 +1619,9 @@ public class RecipeHandler {
 
         // Exclude smallDust->dust recipes and wire/cable compacting, handled elsewhere
         if (output.getCount() != 1
-         || hasOrePrefix(input, "dustSmall")
-         || hasOrePrefix(input, "wireGt")
-         || hasOrePrefix(input, "cableGt"))
+                || hasOrePrefix(input, "dustSmall")
+                || hasOrePrefix(input, "wireGt")
+                || hasOrePrefix(input, "cableGt"))
             return;
 
         // Add Packager 2x2 Recipes
@@ -1616,14 +1634,14 @@ public class RecipeHandler {
 
     /**
      * 1 to 9 Single Input Recipe Generation. Generates:
-     *
+     * <p>
      * + Unpacker Recipes for 1 to 9 Crafting Recipes
-     *
+     * <p>
      * - Removes handcrafting 1 to 9 Recipes for:
-     *     - Blocks
-     *     - Nuggets
-     *     - All others
-     *   depending on config values.
+     * - Blocks
+     * - Nuggets
+     * - All others
+     * depending on config values.
      */
     private static void generate1to9Recipes(IRecipe recipe) {
 
@@ -1632,7 +1650,7 @@ public class RecipeHandler {
 
         // Exclude dust->tinyDust recipes, handled elsewhere
         if (output.getCount() != 9
-         || hasOrePrefix(output, "dustTiny"))
+                || hasOrePrefix(output, "dustTiny"))
             return;
 
         if (GAConfig.GT5U.Remove1to9BlockRecipes && hasOrePrefix(input, "block"))
@@ -1653,7 +1671,7 @@ public class RecipeHandler {
 
     /**
      * Plasma to Fluid plasma condenser recipes
-     *
+     * <p>
      * + Plasma Condenser recipes
      */
     private static void registerPlasmaCondenserRecipes(OrePrefix prefix, FluidMaterial material) {
@@ -1673,7 +1691,7 @@ public class RecipeHandler {
 
     /**
      * Stellar Forge Recipes for materials with too large EBF temperatures
-     *
+     * <p>
      * + Stellar Forge EBF recipe analogues
      */
     private static void registerStellarForgeRecipes(OrePrefix prefix, IngotMaterial material) {
@@ -1686,7 +1704,7 @@ public class RecipeHandler {
             else if (material.blastFurnaceTemperature >= 35000)
                 explosive = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.LEPTONIC_CHARGE);
             else if (material.blastFurnaceTemperature >= 22500)
-                explosive =  GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.TARANIUM_CHARGE);
+                explosive = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.TARANIUM_CHARGE);
             else
                 explosive = GAMetaBlocks.EXPLOSIVE.getItemVariant(GAExplosive.ExplosiveType.NAQUADRIA_CHARGE);
 

@@ -58,7 +58,7 @@ public class TileEntityLargeCutting extends MultiRecipeMapMultiblockController {
 				.setAmountAtLeast('L', 12)
 				.where('S', selfPredicate())
 				.where('L', statePredicate(getCasingState()))
-				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+				.where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
 				.where('#', (tile) -> true)
 				.where('A', isAirPredicate())
 				.where('M', motorPredicate())

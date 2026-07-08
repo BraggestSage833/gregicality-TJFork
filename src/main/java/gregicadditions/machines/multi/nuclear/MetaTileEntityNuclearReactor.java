@@ -101,7 +101,7 @@ public class MetaTileEntityNuclearReactor extends GARecipeMapMultiblockControlle
                 .aisle("YYY", "XRX", "XRX", "XRX", "XRX", "XRX", "XRX", "XRX", "YYY")
                 .aisle("YSY", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "ZXZ", "YYY")
                 .where('S', selfPredicate())
-                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('Z', statePredicate(getCasingState()))
                 .where('X', statePredicate(getGlassCasing()).or(statePredicate(getCasingState())))
                 .where('R', heatingCoilPredicate())

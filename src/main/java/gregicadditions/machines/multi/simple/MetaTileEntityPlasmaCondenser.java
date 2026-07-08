@@ -61,7 +61,7 @@ public class MetaTileEntityPlasmaCondenser extends LargeSimpleRecipeMapMultibloc
                 .aisle("#####", "#XXX#", "#XSX#", "#XXX#", "#####")
                 .setAmountAtLeast('L', 25)
                 .where('S', selfPredicate())
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('L', statePredicate(getCasingState()))
                 .where('G', statePredicate(MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.STEEL_GEARBOX)))
                 .where('P', statePredicate(MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TUNGSTENSTEEL_PIPE)))

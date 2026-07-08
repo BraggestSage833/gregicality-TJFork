@@ -90,7 +90,7 @@ public class TileEntityAlloyBlastFurnace extends GARecipeMapMultiblockController
                 .where('L', statePredicate(getCasingState()))
                 .where('S', selfPredicate())
                 .where('C', heatingCoilPredicate().or(heatingCoilPredicate2()))
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('c', statePredicate(getCasingState2()))
                 .where('m', abilityPartPredicate(GregicAdditionsCapabilities.MUFFLER_HATCH))
                 .where('#', (tile) -> true)

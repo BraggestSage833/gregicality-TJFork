@@ -78,7 +78,7 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
                 .setAmountAtLeast('L', 8)
                 .where('L', statePredicate(getCasingState()))
                 .where('S', selfPredicate())
-                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))
+                .where('X', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))
                 .where('M', abilityPartPredicate(GregicAdditionsCapabilities.MUFFLER_HATCH))
                 .where('C', heatingCoilPredicate().or(heatingCoilPredicate2()))
                 .where('#', isAirPredicate())

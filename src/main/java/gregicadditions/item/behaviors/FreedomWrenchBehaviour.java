@@ -349,26 +349,4 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
         lines.add(I18n.format("metaitem.freedom_wrench.info.2"));
         lines.add(I18n.format("metaitem.freedom_wrench.info.3"));
     }
-
-
-    public static ChannelState getChannelState(ItemStack stack) {
-        ChannelState state = new ChannelState();
-        NBTTagCompound tag = stack.getOrCreateSubCompound("Channels");
-
-        for (StructureChannels ch : StructureChannels.values()) {
-            state.set(ch, tag.getInteger(ch.get()));
-        }
-        return state;
-    }
-
-    public static void saveChannelState(ItemStack stack, ChannelState state) {
-        NBTTagCompound tag = stack.getOrCreateSubCompound("Channels");
-
-        for (StructureChannels ch : StructureChannels.values()) {
-            tag.setInteger(ch.get(), state.get(ch));
-        }
-    }
-
-
-
 }
