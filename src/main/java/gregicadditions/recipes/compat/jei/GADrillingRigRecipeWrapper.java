@@ -1,6 +1,7 @@
 package gregicadditions.recipes.compat.jei;
 
 import com.google.common.collect.Lists;
+import gregicadditions.integrations.advancedrocketry.DimensionHandler;
 import gregicadditions.worldgen.PumpjackHandler;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -11,6 +12,7 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
@@ -122,6 +124,11 @@ public class GADrillingRigRecipeWrapper implements IRecipeWrapper {
                 name = getBiomeName(id);
             } else {
                 name = getDimName(id);
+                if (Objects.equals(name, "Planet")) {
+                    if (Loader.isModLoaded("advancedrocketry")){
+                        name = DimensionHandler.getDimensionName(id);
+                    }
+                }
             }
             if(!name.trim().equals("")) {
                 names.add(name);
