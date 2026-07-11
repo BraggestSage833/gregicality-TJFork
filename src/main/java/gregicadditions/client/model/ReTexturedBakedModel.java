@@ -20,14 +20,15 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReTexturedBakedModel implements IBakedModel {
     protected final ReTexturedModel baseModel;
     private List<IBakedModel> CACHE;
+
+    private final Map<Pair<Integer, ImmutableMap<String, String>>, IBakedModel> retexturedCache = new HashMap<>();
+
 
     public ReTexturedBakedModel(ReTexturedModel model) {
         this.baseModel = model;
@@ -45,27 +46,40 @@ public class ReTexturedBakedModel implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-        if (baseModel.provider != null) {
-            BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
-            List<BakedQuad> bakedQuads = new ArrayList<>();
-            IModel[] models = baseModel.getModels();
-            for (int i = 0; i < models.length; i++) {
-                IModel toBaked = models[i];
-                ResourceLocation resource = baseModel.resources[i];
-                if (layer == null || baseModel.provider.shouldRenderInLayer(state, side, resource, layer)) {
-                    ImmutableMap<String, String> map = baseModel.provider.reTextured(state, side, resource);
-                    if (map != null) {
-                        toBaked = toBaked.retexture(map);
-                    }
-                    List<BakedQuad> quads = toBaked.bake(TRSRTransformation.identity()
-                            , DefaultVertexFormats.ITEM
-                            , location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString())).getQuads(state, side, rand);
-                    bakedQuads.addAll(baseModel.provider.reBakedQuad(state, side, resource, quads));
-                }
-            }
-            return bakedQuads;
+        if (baseModel.provider == null) {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
+
+        BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+        List<BakedQuad> bakedQuads = new ArrayList<>();
+        IModel[] models = baseModel.getModels();
+
+        for (int i = 0; i < models.length; i++) {
+            ResourceLocation resource = baseModel.resources[i];
+
+            if (layer != null && !baseModel.provider.shouldRenderInLayer(state, side, resource, layer)) {
+                continue;
+            }
+
+            ImmutableMap<String, String> map = baseModel.provider.reTextured(state, side, resource);
+            ImmutableMap<String, String> cacheMap = map == null ? ImmutableMap.of() : map;
+
+            final int index = i;
+            IBakedModel baked = retexturedCache.get(Pair.of(index, cacheMap));
+            if (baked == null) {
+                IModel toBaked = models[index];
+                if (!cacheMap.isEmpty()) toBaked = toBaked.retexture(cacheMap);
+                baked = toBaked.bake(TRSRTransformation.identity(), DefaultVertexFormats.ITEM,
+                        loc -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(loc.toString()));
+                retexturedCache.put(Pair.of(index, cacheMap), baked);
+            }
+
+            List<BakedQuad> quads = baked.getQuads(state, side, rand);
+            bakedQuads.addAll(baseModel.provider.reBakedQuad(state, side, resource, quads));
+        }
+
+        return bakedQuads;
+
     }
 
     @Override

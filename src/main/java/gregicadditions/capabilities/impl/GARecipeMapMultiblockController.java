@@ -71,11 +71,33 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
     private boolean storedTaped = false;
 
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
-        this(metaTileEntityId, recipeMap, false, true, false);
+        this(metaTileEntityId, recipeMap, false, true, false, 1,1, 0);
+    }
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minTier) {
+        this(metaTileEntityId, recipeMap, false, true, false, 1,1, minTier);
+    }
+
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minExtent, int maxExtent) {
+        this(metaTileEntityId, recipeMap, false, true, false, minExtent, maxExtent,0);
+    }
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minExtent, int maxExtent, int minTier) {
+        this(metaTileEntityId, recipeMap, false, true, false, minExtent, maxExtent, minTier);
     }
 
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct) {
-        super(metaTileEntityId, recipeMap);
+        this(metaTileEntityId, recipeMap, hasMuffler,hasMaintenance,canDistinct,1,1, 0);
+    }
+
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct, int minExtent, int maxExtent) {
+        this(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct, minExtent, maxExtent, 0);
+    }
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct, int minExtent, int maxExtent, int minTier) {
+        super(metaTileEntityId, recipeMap, minExtent, maxExtent, minTier);
         this.hasMuffler = hasMuffler;
         this.hasMaintenance = hasMaintenance;
         this.maintenance_problems = 0b000000;

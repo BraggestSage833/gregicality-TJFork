@@ -128,7 +128,7 @@ public class MetaTileEntityBatteryTower extends GAMultiblockWithDisplayBase impl
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start(RIGHT, FRONT, UP)
                 .aisle("CCSCC", "CCCCC", "CCCCC", "CCCCC", "CCCCC")
-                .aisle("XXXXX", "XRRRX", "XRRRX", "XRRRX", "XXXXX").setRepeatable(4, 16)
+                .aisle("XXXXX", "XRRRX", "XRRRX", "XRRRX", "XXXXX").setRepeatable(4,16)
                 .aisle("CCCCC", "CCCCC", "CCCCC", "CCCCC", "CCCCC")
                 .where('S', selfPredicate())
                 .where('C', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)))

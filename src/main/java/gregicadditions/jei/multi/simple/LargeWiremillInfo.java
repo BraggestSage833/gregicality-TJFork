@@ -14,6 +14,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -36,27 +37,23 @@ public class LargeWiremillInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
-		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-		for (int tier = 0; tier < maxTier; tier++) {
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
 			GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
 					.aisle("XXXXX", "XXXXX", "XXXXX");
-			for (int j = -2; j < Math.min(4, tier); j++) {
+			for (int j = 0; j < extent; j++) {
 				builder.aisle("IXXXX", "XMGMX", "OXXXX");
 			}
-			shapeInfos.add(builder.aisle("XHX##", "XSX##", "EXX##")
-					.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
+			return builder.aisle("XHX##", "XSX##", "EXX##")
+					.where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
 					.where('S', GATileEntities.LARGE_WIREMILL, EnumFacing.WEST)
 					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 					.where('X', TileEntityLargeWiremill.casingState)
 					.where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
-					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.NORTH)
-					.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
-					.build());
-		}
-		return shapeInfos;
+					.where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+					.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+					.where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+					.build();
+
 	}
 
 	private static final ITextComponent componentCasingTooltip = new TextComponentTranslation("gregtech.multiblock.universal.component_casing.tooltip").setStyle(new Style().setColor(TextFormatting.RED));

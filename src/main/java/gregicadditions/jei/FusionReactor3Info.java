@@ -25,8 +25,8 @@ public class FusionReactor3Info extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
-		MultiblockShapeInfo shapeInfo = MultiblockShapeInfo.builder()
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
+		return MultiblockShapeInfo.builder()
 				.aisle("###############", "######NCN######", "###############")
 				.aisle("######DCD######", "####CCcccCC####", "######UCU######")
 				.aisle("####CC###CC####", "###sccNMNccs###", "####CC###CC####")
@@ -57,8 +57,6 @@ public class FusionReactor3Info extends MultiblockInfoPage {
 				.where('D', MetaTileEntities.FLUID_IMPORT_HATCH[8], EnumFacing.DOWN)
 				.where('#', Blocks.AIR.getDefaultState())
 				.build();
-
-		return Lists.newArrayList(shapeInfo);
 	}
 
 	@Override

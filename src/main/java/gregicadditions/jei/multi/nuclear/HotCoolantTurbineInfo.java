@@ -14,6 +14,7 @@ import gregtech.common.items.behaviors.TurbineRotorBehavior;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -35,30 +36,34 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
         MetaTileEntityHolder holder = new MetaTileEntityHolder();
         holder.setMetaTileEntity(GATileEntities.ROTOR_HOLDER[2]);
         holder.getMetaTileEntity().setFrontFacing(EnumFacing.WEST);
+
         ItemStack rotorStack = MetaItems.TURBINE_ROTOR.getStackForm();
-        TurbineRotorBehavior.getInstanceFor(rotorStack).setPartMaterial(rotorStack, Materials.Darmstadtium);
-        ((MetaTileEntityRotorHolderForNuclearCoolant) holder.getMetaTileEntity()).getRotorInventory().setStackInSlot(0, rotorStack);
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+        TurbineRotorBehavior.getInstanceFor(rotorStack)
+                .setPartMaterial(rotorStack, Materials.Darmstadtium);
+
+        ((MetaTileEntityRotorHolderForNuclearCoolant) holder.getMetaTileEntity())
+                .getRotorInventory()
+                .setStackInSlot(0, rotorStack);
+
+        return MultiblockShapeInfo.builder()
                 .aisle("CCCC", "CIOC", "CCCC")
                 .aisle("CCCC", "R##D", "CCCC")
                 .aisle("CCCC", "CSMC", "CCCC")
                 .where('S', turbine, EnumFacing.SOUTH)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('C', turbine.turbineType.casingState)
-                .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('D', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
-                    .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
-                    .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
-                    .build());
-        }
-        return shapeInfos;
+
+                .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder, null))
+
+                .where('D', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+                .where('I', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+                .where('O', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
+
+                .build();
     }
 
     @Override

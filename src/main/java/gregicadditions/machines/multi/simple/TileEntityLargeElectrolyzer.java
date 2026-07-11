@@ -33,7 +33,9 @@ public class TileEntityLargeElectrolyzer extends LargeSimpleRecipeMapMultiblockC
 
 
 	public TileEntityLargeElectrolyzer(ResourceLocation metaTileEntityId) {
-		super(metaTileEntityId, RecipeMaps.ELECTROLYZER_RECIPES, GAConfig.multis.largeElectrolyzer.euPercentage, GAConfig.multis.largeElectrolyzer.durationPercentage, GAConfig.multis.largeElectrolyzer.chancedBoostPercentage, GAConfig.multis.largeElectrolyzer.stack);
+		super(metaTileEntityId, RecipeMaps.ELECTROLYZER_RECIPES,
+				GAConfig.multis.largeElectrolyzer.euPercentage, GAConfig.multis.largeElectrolyzer.durationPercentage,
+				GAConfig.multis.largeElectrolyzer.chancedBoostPercentage, GAConfig.multis.largeElectrolyzer.stack, 1,6);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class TileEntityLargeElectrolyzer extends LargeSimpleRecipeMapMultiblockC
 	protected BlockPattern createStructurePattern() {
 		return FactoryBlockPattern.start()
 				.aisle("XXCXX", "XXCXX", "XXCXX", "XX#XX")
-				.aisle("XXCXX", "XP#MX", "XXCXX", "X###X").setRepeatable(1, 6)
+				.aisle("XXCXX", "XP#MX", "XXCXX", "X###X").setRepeatable(getMinExtent(),getMaxExtent())
 				.aisle("XXXXX", "XXSXX", "XXCXX", "XX#XX")
 				.setAmountAtLeast('L', 12)
 				.where('S', selfPredicate())

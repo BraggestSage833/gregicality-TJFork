@@ -11,6 +11,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -27,25 +28,26 @@ public class LargeMaceratorInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
-		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
-				.aisle("XXX", "XXX","XXX","XXX", "XXX", "XXX")
-				.aisle("XXX", "XMX","X#X","XPX", "X#X", "XXX")
-				.aisle("XSX", "XHX","XEX","XIX", "XOX", "XXX")
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
+		return GAMultiblockShapeInfo.builder(FRONT, UP, LEFT)
+				.aisle("XXX", "XXX", "XXX", "XXX", "XXX", "XXX")
+				.aisle("XXX", "XMX", "X#X", "XPX", "X#X", "XXX")
+				.aisle("XSX", "XHX", "XEX", "XIX", "XOX", "XXX")
+
 				.where('S', GATileEntities.LARGE_MACERATOR, EnumFacing.WEST)
 				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-				.where('X', TileEntityLargeMacerator.casingState);
-		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-		for (int tier = 0; tier < maxTier; tier++) {
-			shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.WEST)
-					.where('I', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-					.where('O', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-					.where('M', GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[Math.max(0, tier - 1)]))
-					.where('P', GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[Math.max(0, tier - 1)]))
-					.build());
-		}
-		return shapeInfos;
+				.where('X', TileEntityLargeMacerator.casingState)
+
+				.where('E',PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+
+				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+
+				.where('O', PlaceholderType.OUTPUT_BUS,
+						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+
+				.where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('P', PlaceholderType.PISTON,GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+				.build();
 	}
 
 	@Override

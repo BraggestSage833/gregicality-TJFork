@@ -9,6 +9,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -29,23 +30,18 @@ public class IndustrialPrimitiveBlastFurnaceInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapes = new ArrayList<>();
-        for (int i = 0; i < 64; i++) {
-            GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
-            builder.aisle("YYY", "YCY", "YYY", "YYY");
-            for (int num = 0; num < 1 + i; num++) {
-                builder.aisle("YYY", "I#Y", "Y#Y", "Y#Y");
-            }
-            builder.aisle("YYY", "YOY", "YYY", "YYY")
-                    .where('Y', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
-                    .where('C', GATileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.NORTH)
-                    .where('O', MetaTileEntities.ITEM_EXPORT_BUS[1], EnumFacing.SOUTH)
-                    .where('I', MetaTileEntities.ITEM_IMPORT_BUS[1], EnumFacing.WEST)
-                    .where('#', Blocks.AIR.getDefaultState());
-            shapes.add(builder.build());
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder();
+        builder.aisle("YYY", "YCY", "YYY", "YYY");
+        for (int num = 0; num < 1 + extent; num++) {
+            builder.aisle("YYY", "I#Y", "Y#Y", "Y#Y");
         }
-        return shapes;
+        return builder.aisle("YYY", "YOY", "YYY", "YYY")
+                .where('Y', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
+                .where('C', GATileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.NORTH)
+                .where('O', MetaTileEntities.ITEM_EXPORT_BUS[1], EnumFacing.SOUTH)
+                .where('I', MetaTileEntities.ITEM_IMPORT_BUS[1], EnumFacing.WEST)
+                .where('#', Blocks.AIR.getDefaultState()).build();
     }
 
     @Override

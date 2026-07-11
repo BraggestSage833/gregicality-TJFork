@@ -11,6 +11,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -28,9 +29,8 @@ public class LargeCombustionEngineInfo extends MultiblockInfoPage {
 	}
 
 	@Override
-	public List<MultiblockShapeInfo> getMatchingShapes() {
-		List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-		GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, DOWN, RIGHT)
+	public MultiblockShapeInfo getMatchingShapes(int extent) {
+		return GAMultiblockShapeInfo.builder(FRONT, DOWN, RIGHT)
 				.aisle("AAA", "ACA", "AAA")
 				.aisle("HHH", "MGH", "HHH")
 				.aisle("HHH", "FGH", "HHH")
@@ -39,14 +39,10 @@ public class LargeCombustionEngineInfo extends MultiblockInfoPage {
 				.where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
 				.where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING))
 				.where('C', GATileEntities.LARGE_COMBUSTION_ENGINE[0], EnumFacing.WEST)
-				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH);
-		int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-		for (int tier = 0; tier < maxTier; tier++) {
-			shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
-					.where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.NORTH)
-					.build());
-		}
-		return shapeInfos;
+				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
+				.where('E', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+				.where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+				.build();
 	}
 
 	@Override

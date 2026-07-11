@@ -53,7 +53,7 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
 
     public MetaTileEntityAdvancedDistillationTower(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap, 100, 100, 100, GAConfig.multis.distillationTower.distillationMultiplier,
-                new RecipeMap<?>[]{RecipeMaps.DISTILLATION_RECIPES, RecipeMaps.DISTILLERY_RECIPES, RecipeMaps.FLUID_HEATER_RECIPES}, false, true, false);
+                new RecipeMap<?>[]{RecipeMaps.DISTILLATION_RECIPES, RecipeMaps.DISTILLERY_RECIPES, RecipeMaps.FLUID_HEATER_RECIPES}, false, true, false,0,11);
 
         this.recipeMapWorkable = new AdvancedDistillationTowerRecipeLogic(this, 100, 100, 100, GAConfig.multis.distillationTower.distillationMultiplier,
                 new RecipeMap<?>[]{RecipeMaps.DISTILLATION_RECIPES, RecipeMaps.DISTILLERY_RECIPES, RecipeMaps.FLUID_HEATER_RECIPES});
@@ -71,7 +71,7 @@ public class MetaTileEntityAdvancedDistillationTower extends MultiRecipeMapMulti
 
         return FactoryBlockPattern.start(RIGHT, FRONT, UP)
                 .aisle("YSY", "YYY", "YYY")
-                .aisle("XXX", "XPX", "XXX").setRepeatable(0, 11)
+                .aisle("XXX", "XPX", "XXX").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
                 .where('Y', statePredicate(getCasingState()).or(abilityPartPredicate(ALLOWED_ABILITIES)).or(multiiPartPredicate()))

@@ -34,7 +34,10 @@ public class TileEntityLargeExtruder extends LargeSimpleRecipeMapMultiblockContr
 
 
 	public TileEntityLargeExtruder(ResourceLocation metaTileEntityId) {
-		super(metaTileEntityId, RecipeMaps.EXTRUDER_RECIPES, GAConfig.multis.largeExtruder.euPercentage, GAConfig.multis.largeExtruder.durationPercentage, GAConfig.multis.largeExtruder.chancedBoostPercentage, GAConfig.multis.largeExtruder.stack);
+		super(metaTileEntityId, RecipeMaps.EXTRUDER_RECIPES,
+				GAConfig.multis.largeExtruder.euPercentage, GAConfig.multis.largeExtruder.durationPercentage,
+				GAConfig.multis.largeExtruder.chancedBoostPercentage, GAConfig.multis.largeExtruder.stack,
+				2,6);
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class TileEntityLargeExtruder extends LargeSimpleRecipeMapMultiblockContr
 	protected BlockPattern createStructurePattern() {
 		return FactoryBlockPattern.start()
 				.aisle("XXXX", "XXXX", "XXX#")
-				.aisle("XXXX", "XCPX", "XXX#").setRepeatable(2, 6)
+				.aisle("XXXX", "XCPX", "XXX#").setRepeatable(getMinExtent(), getMaxExtent())
 				.aisle("XXXX", "XSXX", "XXX#")
 				.setAmountAtLeast('L', 9)
 				.where('S', selfPredicate())

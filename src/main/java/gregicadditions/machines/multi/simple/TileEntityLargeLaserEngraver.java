@@ -31,7 +31,9 @@ import java.util.Collections;
 public class TileEntityLargeLaserEngraver extends LargeSimpleRecipeMapMultiblockController {
 
     public TileEntityLargeLaserEngraver(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.LARGE_ENGRAVER_RECIPES, GAConfig.multis.largeEngraver.euPercentage, GAConfig.multis.largeEngraver.durationPercentage, GAConfig.multis.largeEngraver.chancedBoostPercentage, GAConfig.multis.largeEngraver.stack);
+        super(metaTileEntityId, GARecipeMaps.LARGE_ENGRAVER_RECIPES,
+                GAConfig.multis.largeEngraver.euPercentage, GAConfig.multis.largeEngraver.durationPercentage,
+                GAConfig.multis.largeEngraver.chancedBoostPercentage, GAConfig.multis.largeEngraver.stack);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class TileEntityLargeLaserEngraver extends LargeSimpleRecipeMapMultiblock
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXX", "XXX","XXX","#T#")
-                .aisle("XXX", "GCG","XEX","#T#").setRepeatable(3, 6)
+                .aisle("XXX", "GCG","XEX","#T#").setRepeatable(3,6)
                 .aisle("XXX", "XSX","XXX","#T#")
                 .setAmountAtLeast('L', 18)
                 .where('S', selfPredicate())

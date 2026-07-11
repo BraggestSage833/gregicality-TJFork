@@ -29,8 +29,8 @@ public class FluidDrillingPlantInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        MultiblockShapeInfo multiblockShapeInfo = MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return MultiblockShapeInfo.builder()
                 .aisle("OCC", "#F#", "#F#", "#F#", "###", "###", "###")
                 .aisle("SCE", "FCF", "FCF", "FCF", "#F#", "#F#", "#F#")
                 .aisle("CCC", "#F#", "#F#", "#F#", "###", "###", "###")
@@ -42,7 +42,6 @@ public class FluidDrillingPlantInfo extends MultiblockInfoPage {
                 .where('#', BlockInfo.EMPTY)
                 .build();
 
-        return Lists.newArrayList(multiblockShapeInfo);
     }
 
     @Override

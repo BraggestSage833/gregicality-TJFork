@@ -11,7 +11,10 @@ import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.net.NetworkHandler;
 import gregtech.api.render.scene.WorldSceneRenderer;
+import gregtech.api.util.BlockInfo;
 import gregtech.common.sound.GTSoundEvents;
+import gregtech.integration.jei.multiblock.channel.ChannelState;
+import gregtech.integration.jei.multiblock.channel.StructureChannels;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,10 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class FreedomWrenchBehaviour implements IItemBehaviour {
     private static final String TRANSLATION_KEY_SPIN = "metaitem.freedom_wrench.spin";
@@ -197,7 +197,7 @@ public class FreedomWrenchBehaviour implements IItemBehaviour {
 
         List<BlockPos> renderedBlocks = ObfuscationReflectionHelper.getPrivateValue(WorldSceneRenderer.class, renderer, "renderedBlocks");
 
-        if (renderedBlocks == null) {
+        if (renderedBlocks.isEmpty()) {
             return;
         }
 
