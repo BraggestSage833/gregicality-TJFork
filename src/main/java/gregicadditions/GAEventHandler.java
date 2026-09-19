@@ -5,6 +5,7 @@ import gregicadditions.armor.ArmorUtils;
 import gregicadditions.armor.PowerlessJetpack;
 import gregicadditions.input.Key;
 import gregicadditions.input.Keybinds;
+import gregicadditions.item.GAMetaItem;
 import gregicadditions.item.GAMetaItems;
 import gregicadditions.machines.multi.centralmonitor.MetaTileEntityCentralMonitor;
 import gregicadditions.network.KeysPacket;
@@ -82,7 +83,7 @@ public class GAEventHandler {
             final ItemStack JET = GAMetaItems.IMPELLER_JETPACK.getStackForm();
             final ItemStack ADJET = GAMetaItems.ADVANCED_IMPELLER_JETPACK.getStackForm();
             final ItemStack FLUIDJET = GAMetaItems.SEMIFLUID_JETPACK.getStackForm();
-            if( armor.getItem() instanceof ItemArmor || jet.getItem() instanceof  ItemArmor){
+            if(!(jet.getItem() instanceof GAMetaItem) && !(armor.getItem() instanceof GAMetaItem)){
                 return;
             }
 
