@@ -34,7 +34,9 @@ public class TileEntityLargeWiremill extends LargeSimpleRecipeMapMultiblockContr
 
 
 	public TileEntityLargeWiremill(ResourceLocation metaTileEntityId) {
-		super(metaTileEntityId, RecipeMaps.WIREMILL_RECIPES, GAConfig.multis.largeWiremill.euPercentage, GAConfig.multis.largeWiremill.durationPercentage, GAConfig.multis.largeWiremill.chancedBoostPercentage, GAConfig.multis.largeWiremill.stack);
+		super(metaTileEntityId, RecipeMaps.WIREMILL_RECIPES, GAConfig.multis.largeWiremill.euPercentage,
+				GAConfig.multis.largeWiremill.durationPercentage, GAConfig.multis.largeWiremill.chancedBoostPercentage,
+				GAConfig.multis.largeWiremill.stack,2,6);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class TileEntityLargeWiremill extends LargeSimpleRecipeMapMultiblockContr
 	protected BlockPattern createStructurePattern() {
 		return FactoryBlockPattern.start()
 				.aisle("XXXXX", "XXXXX", "XXXXX")
-				.aisle("XXXXX", "XMGMX", "XXXXX").setRepeatable(2, 6)
+				.aisle("XXXXX", "XMGMX", "XXXXX").setRepeatable(getMinExtent(), getMaxExtent())
 				.aisle("XXX##", "XSX##", "XXX##")
 				.setAmountAtLeast('L', 8)
 				.where('S', selfPredicate())

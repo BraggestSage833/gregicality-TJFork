@@ -10,6 +10,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -26,9 +27,8 @@ public class HyperReactor2Info extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return GAMultiblockShapeInfo.builder()
                 .aisle("#######C#######", "#####CCCCC#####", "#######C#######")
                 .aisle("####CCCCCCC####", "###CC#####CC###", "####CCCCCCC####")
                 .aisle("###CCCCCCCCC###", "##C##CCCCC##C##", "###CCCCCCCCC###")
@@ -48,14 +48,10 @@ public class HyperReactor2Info extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[2], EnumFacing.WEST)
                 .where('C', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CASING))
                 .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE_2))
-                .where('F', MetaBlocks.FRAMES.get(Naquadria).getDefaultState());
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder .where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
-                    .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .build());
-        }
-        return shapeInfos;
+                .where('F', MetaBlocks.FRAMES.get(Naquadria).getDefaultState())
+                .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+                .where('f', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .build();
     }
 
     @Override

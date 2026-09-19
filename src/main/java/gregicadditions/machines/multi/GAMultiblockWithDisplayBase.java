@@ -45,12 +45,17 @@ public abstract class GAMultiblockWithDisplayBase extends MultiblockWithDisplayB
     // Used for data preservation with Maintenance Hatch
     private boolean storedTaped = false;
 
+
     public GAMultiblockWithDisplayBase(ResourceLocation metaTileEntityId) {
-        this(metaTileEntityId, false, true);
+        this(metaTileEntityId, false, true,1,1);
     }
 
-    public GAMultiblockWithDisplayBase(ResourceLocation metaTileEntityId,  boolean hasMuffler, boolean hasMaintenance) {
-        super(metaTileEntityId);
+    public GAMultiblockWithDisplayBase(ResourceLocation metaTileEntityId, int minExtent, int maxExtent) {
+        this(metaTileEntityId, false, true, minExtent, maxExtent);
+    }
+
+    public GAMultiblockWithDisplayBase(ResourceLocation metaTileEntityId,  boolean hasMuffler, boolean hasMaintenance, int minExtent, int maxExtent) {
+        super(metaTileEntityId, minExtent, maxExtent);
         this.hasMuffler = hasMuffler;
         this.hasMaintenance = hasMaintenance;
         this.maintenance_problems = 0b000000;

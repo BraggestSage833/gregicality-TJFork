@@ -37,7 +37,12 @@ public class TileEntityLargeAssembler extends LargeSimpleRecipeMapMultiblockCont
 
 
 	public TileEntityLargeAssembler(ResourceLocation metaTileEntityId) {
-		super(metaTileEntityId, RecipeMaps.ASSEMBLER_RECIPES, GAConfig.multis.largeAssembler.euPercentage, GAConfig.multis.largeAssembler.durationPercentage, GAConfig.multis.largeAssembler.chancedBoostPercentage, GAConfig.multis.largeAssembler.stack);
+		super(metaTileEntityId, RecipeMaps.ASSEMBLER_RECIPES,
+				GAConfig.multis.largeAssembler.euPercentage,
+				GAConfig.multis.largeAssembler.durationPercentage,
+				GAConfig.multis.largeAssembler.chancedBoostPercentage,
+				GAConfig.multis.largeAssembler.stack,
+				0,9);
 	}
 
 	@Override
@@ -50,7 +55,7 @@ public class TileEntityLargeAssembler extends LargeSimpleRecipeMapMultiblockCont
 		return FactoryBlockPattern.start(FRONT, UP, RIGHT)
 				.aisle("XXXX", "XXXX", "XXXX", "XXXX")
 				.aisle("XXXX", "SCRX", "XPPX", "XXXX")
-				.aisle("XXXX", "RCPX", "G#PX", "GGGX").setRepeatable(0, 9)
+				.aisle("XXXX", "RCPX", "G#PX", "GGGX").setRepeatable(getMinExtent(), getMaxExtent())
 				.aisle("XXXX", "XXXX", "XXXX", "XXXX")
 				.setAmountAtLeast('L', 25)
 				.where('S', selfPredicate())

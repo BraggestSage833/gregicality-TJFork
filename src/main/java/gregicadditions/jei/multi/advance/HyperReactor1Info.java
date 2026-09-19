@@ -11,6 +11,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -27,26 +28,22 @@ public class HyperReactor1Info extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder()
-                .aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
-                .aisle("MCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
-                .aisle("SCCCE", "G#H#G", "GHHHG", "G#H#G", "CCCCC")
-                .aisle("FCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
-                .aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
-                .where('S', GATileEntities.HYPER_REACTOR_I, EnumFacing.WEST)
-                .where('M', GATileEntities.MAINTENANCE_HATCH[2], EnumFacing.WEST)
-                .where('C', METAL_CASING_2.getState(MetalCasing2.CasingType.NAQUADRIA))
-                .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS))
-                .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, true), EnumFacing.EAST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .build());
-        }
-        return shapeInfos;
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return GAMultiblockShapeInfo.builder()
+            .aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
+            .aisle("MCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
+            .aisle("SCCCE", "G#H#G", "GHHHG", "G#H#G", "CCCCC")
+            .aisle("FCCCC", "G###G", "G#H#G", "G###G", "CCCCC")
+            .aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC")
+            .where('S', GATileEntities.HYPER_REACTOR_I, EnumFacing.WEST)
+            .where('M', GATileEntities.MAINTENANCE_HATCH[2], EnumFacing.WEST)
+            .where('C', METAL_CASING_2.getState(MetalCasing2.CasingType.NAQUADRIA))
+            .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS))
+            .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE))
+            .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+            .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+            .build();
+
     }
 
     @Override

@@ -45,6 +45,9 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
     private final ResourceLocation CORE_MODEL;
     private ControllerProperty CONTROLLER;
 
+    private MultiblockControllerBase cachedController;
+    private boolean controllerDirty = true;
+
 
     public ReTexturedCasing(ResourceLocation core) {
         super(Material.IRON);
@@ -152,24 +155,52 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
 
     @SideOnly(Side.CLIENT)
     protected MultiblockControllerBase findController(IBlockAccess world, BlockPos pos) {
+        if (!controllerDirty && cachedController != null) {
+            return cachedController;
+        }
+
+        controllerDirty = false;
+
+        if (world == null || pos == null) {
+            return cachedController = null;
+        }
+
         try {
-            if (world == null || pos == null) {
-                return null;
-            }
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
                     for (int z = 0; z < 10; z++) {
-                        for (BlockPos blockPos : new BlockPos[] {pos.add(x, y, z), pos.add(-x, y, z), pos.add(x, -y, z)
-                                , pos.add(x, y, -z), pos.add(-x, -y, z), pos.add(x, -y, -z)
-                                , pos.add(-x, y, -z), pos.add(-x, -y, -z)}) {
-                            TileEntity te = world.getTileEntity(blockPos);
-                            if (te instanceof MetaTileEntityHolder && ((MetaTileEntityHolder) te).getMetaTileEntity() instanceof MultiblockControllerBase) {
-                                MultiblockControllerBase controller = (MultiblockControllerBase) ((MetaTileEntityHolder) te).getMetaTileEntity();
-                                PatternMatchContext result = BlockPatternChecker.checkPatternAt(controller);
-                                if (result != null && result.get("validPos") != null) {
+
+                        int[] sx = { x, -x };
+                        int[] sy = { y, -y };
+                        int[] sz = { z, -z };
+
+                        for (int dx : sx) {
+                            for (int dy : sy) {
+                                for (int dz : sz) {
+
+                                    BlockPos checkPos = pos.add(dx, dy, dz);
+                                    TileEntity te = world.getTileEntity(checkPos);
+
+                                    if (!(te instanceof MetaTileEntityHolder)) {
+                                        continue;
+                                    }
+
+                                    if (!(((MetaTileEntityHolder) te).getMetaTileEntity() instanceof MultiblockControllerBase)) {
+                                        continue;
+                                    }
+
+                                    MultiblockControllerBase controller = (MultiblockControllerBase) ((MetaTileEntityHolder) te).getMetaTileEntity();
+
+                                    PatternMatchContext result = BlockPatternChecker.checkPatternAt(controller);
+
+                                    if (result == null) {
+                                        continue;
+                                    }
+
                                     List<BlockPos> validPos = result.get("validPos");
-                                    if (validPos.contains(pos)) {
-                                        return controller;
+
+                                    if (validPos != null && validPos.contains(pos)) {
+                                        return cachedController = controller;
                                     }
                                 }
                             }
@@ -177,13 +208,16 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
                     }
                 }
             }
-        } catch (Throwable e) {
-            GALog.logger.error(pos);
-            e.printStackTrace();
+        } catch (Throwable t) {
+            GALog.logger.error("Failed to find controller at {}", pos, t);
         }
-        return null;
+
+        return cachedController = null;
     }
 
+    public void markControllerDirty() {
+        controllerDirty = true;
+    }
     @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;

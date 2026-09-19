@@ -41,7 +41,7 @@ public class TileEntityLargeCutting extends MultiRecipeMapMultiblockController {
 
 	public TileEntityLargeCutting(ResourceLocation metaTileEntityId) {
 		super(metaTileEntityId, CUTTER_RECIPES, GAConfig.multis.largeCutting.euPercentage, GAConfig.multis.largeCutting.durationPercentage, GAConfig.multis.largeCutting.chancedBoostPercentage, GAConfig.multis.largeCutting.stack,
-				new RecipeMap<?>[]{CUTTER_RECIPES, LATHE_RECIPES});
+				new RecipeMap<?>[]{CUTTER_RECIPES, LATHE_RECIPES},1,8);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class TileEntityLargeCutting extends MultiRecipeMapMultiblockController {
 	protected BlockPattern createStructurePattern() {
 		return FactoryBlockPattern.start()
 				.aisle("XXXXX", "XXXAX", "##XAX")
-				.aisle("XXXCX", "XXXMX", "##XAX").setRepeatable(1, 8)
+				.aisle("XXXCX", "XXXMX", "##XAX").setRepeatable(getMinExtent(), getMaxExtent())
 				.aisle("XXXXX", "XSXAX", "##XAX")
 				.setAmountAtLeast('L', 12)
 				.where('S', selfPredicate())

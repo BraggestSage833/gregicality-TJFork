@@ -25,27 +25,23 @@ public class SteamOvenInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        shapeInfo.add(MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return MultiblockShapeInfo.builder()
                 .aisle("FFF", "IXX", "###")
                 .aisle("HFF", "S#X", "XXX")
                 .aisle("FFF", "OXX", "###")
                 .where('S', GATileEntities.STEAM_OVEN, EnumFacing.WEST)
-                .where('X', GAConfig.multis.steamMultis.useSteelMultis ?
-                        MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                        MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS))
-                .where('F', GAConfig.multis.steamMultis.useSteelMultis ?
-                        MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
-                        MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX))
+                .where('X', GAConfig.multis.steamMultis.useSteelMultis
+                        ? MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID)
+                        : MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS))
+                .where('F', GAConfig.multis.steamMultis.useSteelMultis
+                        ? MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX)
+                        : MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX))
                 .where('I', GATileEntities.STEAM_INPUT_BUS, EnumFacing.WEST)
                 .where('O', GATileEntities.STEAM_OUTPUT_BUS, EnumFacing.WEST)
                 .where('H', GATileEntities.STEAM_HATCH, EnumFacing.WEST)
                 .where('#', Blocks.AIR.getDefaultState())
-                .build());
-
-        return Lists.newArrayList(shapeInfo);
+                .build();
     }
 
     @Override

@@ -31,7 +31,7 @@ import static gregtech.api.unification.material.Materials.Steel;
 
 public class TileEntityAssemblyLine extends QubitRecipeMapMultiblockController {
     public TileEntityAssemblyLine(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.ASSEMBLY_LINE_RECIPES, true);
+        super(metaTileEntityId, GARecipeMaps.ASSEMBLY_LINE_RECIPES, true,3,15);
         this.recipeMapWorkable = new QubitConsumeRecipeLogic(this);
     }
 
@@ -44,7 +44,7 @@ public class TileEntityAssemblyLine extends QubitRecipeMapMultiblockController {
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start(LEFT, DOWN, BACK)
                 .aisle("#Y#", "GAG", "RTR", "COC")
-                .aisle("#Y#", "GAG", "RTR", "FIF").setRepeatable(3, 15)
+                .aisle("#Y#", "GAG", "RTR", "FIF").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("#Y#", "GSG", "RTR", "FIF")
                 .where('S', selfPredicate())
                 .where('C', statePredicate(getCasingState()))

@@ -37,7 +37,8 @@ public class TileEntityLargeCanningMachine extends MultiRecipeMapMultiblockContr
 
     public TileEntityLargeCanningMachine(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap, GAConfig.multis.largeCanningMachine.euPercentage, GAConfig.multis.largeCanningMachine.durationPercentage, GAConfig.multis.largeCanningMachine.chancedBoostPercentage, GAConfig.multis.largeCanningMachine.stack,
-                new RecipeMap[]{RecipeMaps.CANNER_RECIPES, RecipeMaps.FLUID_CANNER_RECIPES, RecipeMaps.FLUID_SOLIDFICATION_RECIPES});
+                new RecipeMap[]{RecipeMaps.CANNER_RECIPES, RecipeMaps.FLUID_CANNER_RECIPES, RecipeMaps.FLUID_SOLIDFICATION_RECIPES}
+        ,2,8);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class TileEntityLargeCanningMachine extends MultiRecipeMapMultiblockContr
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "XpX", "XXX").setRepeatable(2, 8)
+                .aisle("XXX", "XpX", "XXX").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("PPP", "PSP", "PPP")
                 .setAmountAtLeast('L', 8)
                 .where('S', selfPredicate())

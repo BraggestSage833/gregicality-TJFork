@@ -24,6 +24,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.util.BlockInfo;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -94,7 +95,7 @@ public class AdvancedMonitorPluginBehavior extends ProxyHolderPluginBehavior {
                 newHolder.setMetaTileEntity(holder.getMetaTileEntity().createMetaTileEntity(newHolder));
                 newHolder.getMetaTileEntity().setFrontFacing(holder.getMetaTileEntity().getFrontFacing());
                 BlockPatternChecker.setSpin(newHolder.getMetaTileEntity(), BlockPatternChecker.getSpin(holder.getMetaTileEntity()));
-                renderedBlocks.put(pos.subtract(minPos), new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), newHolder));
+                renderedBlocks.put(pos.subtract(minPos), new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), newHolder,null));
             } else {
                 renderedBlocks.put(pos.subtract(minPos), new BlockInfo(world.getBlockState(pos)));
             }

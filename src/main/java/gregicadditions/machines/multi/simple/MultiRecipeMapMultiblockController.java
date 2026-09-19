@@ -56,15 +56,38 @@ public abstract class MultiRecipeMapMultiblockController extends LargeSimpleReci
     protected RecipeMap<?>[] recipeMaps; // array of possible recipes, specific to each multi
     private int recipeMapIndex; // index of the current selected recipe
 
+
     public MultiRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, RecipeMap<?>[] recipeMaps) {
-        super(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack);
+        super(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack,1,1);
         this.recipeMaps = recipeMaps;
         this.recipeMapWorkable = new MultiRecipeMapMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack, recipeMaps);
         this.recipeMapIndex = 0;
     }
 
-    public MultiRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage, int chancePercentage, int stack, RecipeMap<?>[] recipeMaps, boolean canDistinct, boolean hasMuffler, boolean hasMaintenance) {
-        super(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack, canDistinct, hasMuffler, hasMaintenance);
+
+    public MultiRecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int EUtPercentage,
+                                              int durationPercentage, int chancePercentage, int stack,
+                                              RecipeMap<?>[] recipeMaps, int minExtent, int maxExtent) {
+        super(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack, minExtent,maxExtent);
+        this.recipeMaps = recipeMaps;
+        this.recipeMapWorkable = new MultiRecipeMapMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack, recipeMaps);
+        this.recipeMapIndex = 0;
+    }
+
+
+    public MultiRecipeMapMultiblockController(ResourceLocation metaTileEntityId,
+                                              RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage,
+                                              int chancePercentage, int stack, RecipeMap<?>[] recipeMaps,
+                                              boolean canDistinct, boolean hasMuffler, boolean hasMaintenance) {
+        this(metaTileEntityId,recipeMap,EUtPercentage,durationPercentage,chancePercentage,stack,recipeMaps,canDistinct,hasMuffler,hasMaintenance,1,1);
+    }
+
+    public MultiRecipeMapMultiblockController(ResourceLocation metaTileEntityId,
+                                              RecipeMap<?> recipeMap, int EUtPercentage, int durationPercentage,
+                                              int chancePercentage, int stack, RecipeMap<?>[] recipeMaps,
+                                              boolean canDistinct, boolean hasMuffler, boolean hasMaintenance,
+                                              int minExtent, int maxExtent) {
+        super(metaTileEntityId, recipeMap, EUtPercentage, durationPercentage, chancePercentage, stack, canDistinct, hasMuffler, hasMaintenance, minExtent, maxExtent);
         this.recipeMaps = recipeMaps;
         this.recipeMapWorkable = new MultiRecipeMapMultiblockRecipeLogic(this, EUtPercentage, durationPercentage, chancePercentage, stack, recipeMaps);
         this.recipeMapIndex = 0;

@@ -40,7 +40,7 @@ public class TileEntityLargePackager extends MultiRecipeMapMultiblockController 
 
     public TileEntityLargePackager(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap, GAConfig.multis.largePackager.euPercentage, GAConfig.multis.largePackager.durationPercentage, GAConfig.multis.largePackager.chancedBoostPercentage, GAConfig.multis.largePackager.stack, new RecipeMap<?>[]{
-                RecipeMaps.PACKER_RECIPES, RecipeMaps.UNPACKER_RECIPES});
+                RecipeMaps.PACKER_RECIPES, RecipeMaps.UNPACKER_RECIPES},1,6);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TileEntityLargePackager extends MultiRecipeMapMultiblockController 
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "XCX", "XRX").setRepeatable(1, 6)
+                .aisle("XXX", "XCX", "XRX").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("XXX", "XSX", "XXX")
                 .setAmountAtLeast('L', 9)
                 .where('S', selfPredicate())

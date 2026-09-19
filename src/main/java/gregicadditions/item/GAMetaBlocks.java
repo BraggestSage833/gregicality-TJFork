@@ -485,16 +485,24 @@ public class GAMetaBlocks {
             case 4:
             case 5:
             case 6:
-            case 7: return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.values()[tier - 1]);
+            case 7:
+                return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.values()[tier - 1]);
             case 8:
             case 9:
             case 10:
             case 11:
             case 12:
             case 13:
-            case 14: return GAMetaBlocks.HEATING_COIL.getState(GAHeatingCoil.CoilType.values()[tier - 8]);
-            default: return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL);
+            case 14:
+                return GAMetaBlocks.HEATING_COIL.getState(GAHeatingCoil.CoilType.values()[tier - 8]);
+            default:
+                return MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL);
         }
     }
-
 }
+
+
+
+
+
+

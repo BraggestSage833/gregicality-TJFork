@@ -6,6 +6,7 @@ import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -22,18 +23,13 @@ public class LargeTransformerInfo extends MultiblockInfoPage {
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        GAMultiblockShapeInfo.Builder builder = GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("ISO")
-                .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST);
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('O', GATileEntities.getEnergyHatch(tier, true), EnumFacing.SOUTH)
-                    .where('I', GATileEntities.getEnergyHatch(tier, false), EnumFacing.NORTH)
-                    .build());
-        }
-        return shapeInfos;
+                .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST)
+                .where('O', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.SOUTH)
+                .where('I', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+                .build();
     }
 
     @Override

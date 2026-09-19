@@ -43,7 +43,7 @@ public class TileEntityLargeBenderAndForming extends MultiRecipeMapMultiblockCon
 
     public TileEntityLargeBenderAndForming(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap) {
         super(metaTileEntityId, recipeMap, GAConfig.multis.largeBenderAndForming.euPercentage, GAConfig.multis.largeBenderAndForming.durationPercentage, GAConfig.multis.largeBenderAndForming.chancedBoostPercentage, GAConfig.multis.largeBenderAndForming.stack,
-                new RecipeMap[]{RecipeMaps.BENDER_RECIPES, RecipeMaps.FORMING_PRESS_RECIPES, GARecipeMaps.CLUSTER_MILL_RECIPES}, false, true, true);
+                new RecipeMap[]{RecipeMaps.BENDER_RECIPES, RecipeMaps.FORMING_PRESS_RECIPES, GARecipeMaps.CLUSTER_MILL_RECIPES}, false, true, true,2,8);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TileEntityLargeBenderAndForming extends MultiRecipeMapMultiblockCon
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXXX", "XXXX", "XXIX")
-                .aisle("XXXX", "XPMX", "XXIX").setRepeatable(2, 8)
+                .aisle("XXXX", "XPMX", "XXIX").setRepeatable(getMinExtent(),getMaxExtent())
                 .aisle("XXXX", "XSXX", "XXIX")
                 .setAmountAtLeast('L', 16)
                 .where('S', selfPredicate())

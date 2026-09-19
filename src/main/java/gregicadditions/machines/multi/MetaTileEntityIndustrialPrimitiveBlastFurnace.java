@@ -89,7 +89,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends MultiblockWit
 
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId);
+        super(metaTileEntityId,0 ,MAX_SIZE);
     }
 
     @Override
@@ -392,7 +392,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends MultiblockWit
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("YYY", "YOY", "YYY", "YYY")
-                .aisle("YYY", "I#I", "Y#Y", "Y#Y").setRepeatable(1, MAX_SIZE)
+                .aisle("YYY", "I#I", "Y#Y", "Y#Y").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("YYY", "YXY", "YYY", "YYY")
                 .where('X', selfPredicate())
                 .where('#', isAirPredicate())

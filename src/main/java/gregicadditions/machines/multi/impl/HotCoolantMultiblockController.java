@@ -31,8 +31,14 @@ public abstract class HotCoolantMultiblockController extends MultiblockWithDispl
     protected IEnergyContainer energyContainer;
     protected IMultipleTankHandler importFluidHandler;
 
+
     public HotCoolantMultiblockController(ResourceLocation metaTileEntityId, HotCoolantRecipeMap recipeMap, long maxVoltage) {
-        super(metaTileEntityId);
+        this(metaTileEntityId, recipeMap, maxVoltage, 1,1);
+    }
+
+
+    public HotCoolantMultiblockController(ResourceLocation metaTileEntityId, HotCoolantRecipeMap recipeMap, long maxVoltage, int minExtent, int maxExtent) {
+        super(metaTileEntityId,minExtent,maxExtent);
         this.recipeMap = recipeMap;
         this.workableHandler = createWorkable(maxVoltage);
     }

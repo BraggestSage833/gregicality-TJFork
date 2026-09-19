@@ -4,6 +4,8 @@ import com.blakebr0.mysticalagradditions.MysticalAgradditions;
 import gregicadditions.blocks.factories.GAMetalCasingBlockFactory;
 import gregicadditions.blocks.factories.GAOreBlockFactory;
 import gregicadditions.capabilities.SimpleCapabilityManager;
+import gregicadditions.channels.GAChannelRegistry;
+import gregicadditions.channels.GAPlaceholderRegistry;
 import gregicadditions.covers.CoverBehaviors;
 import gregicadditions.input.Keybinds;
 import gregicadditions.integrations.bees.ForestryCommonProxy;
@@ -122,6 +124,10 @@ public class Gregicality {
 
         GAMetaBlocks.init();
         GAEnums.preInit();
+        GAChannelRegistry.init();
+        GAChannelRegistry.addToChannels();
+        GAPlaceholderRegistry.init();
+
         GATileEntities.init();
         if (GAConfig.GregsConstruct.EnableGregsConstruct && Loader.isModLoaded(GAValues.MODID_TCON))
             TinkersMaterials.preInit();

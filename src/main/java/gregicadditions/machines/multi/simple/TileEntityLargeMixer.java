@@ -32,7 +32,10 @@ public class TileEntityLargeMixer extends LargeSimpleRecipeMapMultiblockControll
 
 
     public TileEntityLargeMixer(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.LARGE_MIXER_RECIPES, GAConfig.multis.largeMixer.euPercentage, GAConfig.multis.largeMixer.durationPercentage, GAConfig.multis.largeMixer.chancedBoostPercentage, GAConfig.multis.largeMixer.stack);
+        super(metaTileEntityId, GARecipeMaps.LARGE_MIXER_RECIPES,
+                GAConfig.multis.largeMixer.euPercentage, GAConfig.multis.largeMixer.durationPercentage,
+                GAConfig.multis.largeMixer.chancedBoostPercentage, GAConfig.multis.largeMixer.stack,
+                2,4);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TileEntityLargeMixer extends LargeSimpleRecipeMapMultiblockControll
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("AXXXA", "AXXXA", "AXXXA")
-                .aisle("XXXXX", "X#M#X", "AXXXA").setRepeatable(2, 4)
+                .aisle("XXXXX", "X#M#X", "AXXXA").setRepeatable(getMinExtent(), getMaxExtent())
                 .aisle("XXXXX", "X#Y#X", "AXXXA")
                 .aisle("AXXXA", "AXSXA", "AXXXA")
                 .setAmountAtLeast('L', 9)

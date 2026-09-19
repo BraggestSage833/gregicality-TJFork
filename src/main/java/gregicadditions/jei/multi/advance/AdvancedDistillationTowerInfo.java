@@ -11,6 +11,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
 
@@ -26,9 +27,8 @@ public class AdvancedDistillationTowerInfo extends MultiblockInfoPage {
 
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder()
+    public MultiblockShapeInfo getMatchingShapes(int extent) {
+        return MultiblockShapeInfo.builder()
                 .aisle("CXX", "XXX", "XXX", "XXX", "XXX", "XXX")
                 .aisle("SFX", "MPX", "XPX", "XPX", "XPX", "XXX")
                 .aisle("IEX", "HXX", "HXX", "HXX", "HXX", "HXX")
@@ -36,17 +36,14 @@ public class AdvancedDistillationTowerInfo extends MultiblockInfoPage {
                 .where('X', MetaTileEntityAdvancedDistillationTower.casingState)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('S', GATileEntities.ADVANCED_DISTILLATION_TOWER, EnumFacing.WEST)
-                .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE));
-        int maxTier = GAConfig.client.disableLayersInJEI ? 1 : 15;
-        for (int tier = 0; tier < maxTier; tier++) {
-            shapeInfos.add(builder.where('E', GATileEntities.getEnergyHatch(tier, false), EnumFacing.SOUTH)
-                    .where('C', MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('I', MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, tier)], EnumFacing.WEST)
-                    .where('F', MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, tier)], EnumFacing.DOWN)
-                    .where('H', MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, tier)], EnumFacing.WEST)
-                    .build());
-        }
-        return shapeInfos;
+                .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
+
+                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.SOUTH)
+                .where('C', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('I', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.DOWN)
+                .where('H', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .build();
     }
 
 
