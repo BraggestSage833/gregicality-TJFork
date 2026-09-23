@@ -10,9 +10,6 @@ import gregicadditions.item.fusion.GACryostatCasing;
 import gregicadditions.item.fusion.GADivertorCasing;
 import gregicadditions.item.fusion.GAFusionCasing;
 import gregicadditions.item.fusion.GAVacuumCasing;
-import gregicadditions.item.metal.NuclearCasing;
-import gregicadditions.machines.GATileEntities;
-import gregtech.api.util.BlockInfo;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.channels.ChannelRegistry;
@@ -65,15 +62,35 @@ public final class GAChannelRegistry {
                 type -> GAMetaBlocks.EMITTER_CASING.getState(type)
         );
 
-        FIELD_GEN.registerVariant(COMPONENT, FieldGenCasing.CasingType.values(),
-                type -> GAMetaBlocks.FIELD_GEN_CASING.getItemVariant(type),
-                type -> GAMetaBlocks.FIELD_GEN_CASING.getState(type)
-        );
+        registerIndicators(StructureChannels.FUSION_COIL,
+               new GAFusionCasing.CasingType[] {
+                       GAFusionCasing.CasingType.ADV_FUSION_COIL_1,
+                       GAFusionCasing.CasingType.ADV_FUSION_COIL_2,
+                       GAFusionCasing.CasingType.ADV_FUSION_COIL_3,
+                       GAFusionCasing.CasingType.ADV_FUSION_COIL_4,
+                       GAFusionCasing.CasingType.ADV_FUSION_COIL_5,
+               },
+                type -> (GAMetaBlocks.FUSION_CASING.getItemVariant(type)));
 
-        PISTON.registerVariant(COMPONENT, PistonCasing.CasingType.values(),
-                type -> GAMetaBlocks.PISTON_CASING.getItemVariant(type),
-                type -> GAMetaBlocks.PISTON_CASING.getState(type)
-        );
+        registerIndicators(StructureChannels.CRYOSTAT_CASING,
+                GACryostatCasing.CasingType.values(),
+                type ->(GAMetaBlocks.CRYOSTAT_CASING.getItemVariant(type)));
+
+        registerIndicators(StructureChannels.VACUUM_CASING,
+                GAVacuumCasing.CasingType.values(),
+                type ->(GAMetaBlocks.VACUUM_CASING.getItemVariant(type)));
+
+        registerIndicators(StructureChannels.DIVERTOR_CASING,
+                GADivertorCasing.CasingType.values(),
+                type ->(GAMetaBlocks.DIVERTOR_CASING.getItemVariant(type)));
+    }
+
+    public static void addToChannels() {
+        int counter = 10;
+        for (GAHeatingCoil.CoilType type : GAHeatingCoil.CoilType.values()) {
+            StructureChannels.COIL.registerIndicator(GAMetaBlocks.HEATING_COIL.getItemVariant(type), counter++);
+        }
+    }
 
         PUMP.registerVariant(COMPONENT, PumpCasing.CasingType.values(),
                 type -> GAMetaBlocks.PUMP_CASING.getItemVariant(type),

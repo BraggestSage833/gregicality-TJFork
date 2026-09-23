@@ -13,6 +13,7 @@ import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -29,10 +30,6 @@ public class FusionReactor4Info extends MultiblockInfoPage {
         return GATileEntities.ADVANCED_FUSION_REACTOR;
     }
 
-
-
-
-    // TODO: FIX ME. Loopissa oli 0-5 + 4 casing. ELI TÄHÄN MENEE JOKO FUSION COIL 1-5. TEE SILLE OMA PAIKKA
     @Override
     public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
