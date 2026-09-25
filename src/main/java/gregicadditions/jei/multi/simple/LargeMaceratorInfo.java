@@ -1,6 +1,7 @@
 package gregicadditions.jei.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.components.PistonCasing;
@@ -8,6 +9,7 @@ import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.simple.TileEntityLargeMacerator;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -38,15 +40,15 @@ public class LargeMaceratorInfo extends MultiblockInfoPage {
 				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 				.where('X', TileEntityLargeMacerator.casingState)
 
-				.where('E',PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+				.where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
 
-				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+				.where('I', ChannelRegistry.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
 
-				.where('O', PlaceholderType.OUTPUT_BUS,
+				.where('O', ChannelRegistry.OUTPUT_BUS,
 						MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
 
-				.where('M', PlaceholderType.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
-				.where('P', PlaceholderType.PISTON,GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
+				.where('M', GAChannelRegistry.MOTOR, GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('P', GAChannelRegistry.PISTON,GAMetaBlocks.PISTON_CASING.getState(PistonCasing.CasingType.values()[0]))
 				.build();
 	}
 

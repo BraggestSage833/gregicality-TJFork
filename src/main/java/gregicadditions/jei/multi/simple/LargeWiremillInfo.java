@@ -1,6 +1,7 @@
 package gregicadditions.jei.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.MotorCasing;
 import gregicadditions.item.metal.MetalCasing1;
@@ -11,6 +12,7 @@ import gregicadditions.machines.multi.simple.TileEntityLargeWiremill;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockTurbineCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -44,14 +46,14 @@ public class LargeWiremillInfo extends MultiblockInfoPage {
 				builder.aisle("IXXXX", "XMGMX", "OXXXX");
 			}
 			return builder.aisle("XHX##", "XSX##", "EXX##")
-					.where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+					.where('E', ChannelRegistry.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
 					.where('S', GATileEntities.LARGE_WIREMILL, EnumFacing.WEST)
 					.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 					.where('X', TileEntityLargeWiremill.casingState)
 					.where('G', MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.TITANIUM_GEARBOX))
-					.where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-					.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
-					.where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+					.where('I', ChannelRegistry.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+					.where('O', ChannelRegistry.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+					.where('M', GAChannelRegistry.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
 					.build();
 
 	}

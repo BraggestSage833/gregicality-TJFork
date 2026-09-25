@@ -8,6 +8,7 @@ import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -40,8 +41,8 @@ public class HyperReactor1Info extends MultiblockInfoPage {
             .where('C', METAL_CASING_2.getState(MetalCasing2.CasingType.NAQUADRIA))
             .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.OSMIRIDIUM_GLASS))
             .where('H', GAMetaBlocks.REACTOR_CASING.getState(GAReactorCasing.CasingType.HYPER_CORE))
-            .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
-            .where('F', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+            .where('E', ChannelRegistry.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+            .where('F', ChannelRegistry.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
             .build();
 
     }

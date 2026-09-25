@@ -9,6 +9,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -40,8 +41,8 @@ public class ExtremeDieselEngineinfo extends MultiblockInfoPage {
                 .where('A', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.EXTREME_ENGINE_INTAKE_CASING))
                 .where('C', GATileEntities.EXTREME_DIESEL_ENGINE, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.NORTH)
-                .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
-                .where('F', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, 0)], EnumFacing.NORTH)
+                .where('E', ChannelRegistry.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+                .where('F', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[Math.min(9, 0)], EnumFacing.NORTH)
                 .build();
     }
 

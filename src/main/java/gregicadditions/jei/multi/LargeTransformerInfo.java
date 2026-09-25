@@ -4,6 +4,7 @@ import gregicadditions.GAConfig;
 import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import gregtech.integration.jei.multiblock.channel.PlaceholderType;
@@ -27,8 +28,8 @@ public class LargeTransformerInfo extends MultiblockInfoPage {
         return GAMultiblockShapeInfo.builder(FRONT, UP, RIGHT)
                 .aisle("ISO")
                 .where('S', GATileEntities.LARGE_TRANSFORMER, EnumFacing.WEST)
-                .where('O', PlaceholderType.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.SOUTH)
-                .where('I', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
+                .where('O', ChannelRegistry.ENERGY_OUTPUT_HATCH, GATileEntities.getEnergyHatch(0, true), EnumFacing.SOUTH)
+                .where('I', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.NORTH)
                 .build();
     }
 

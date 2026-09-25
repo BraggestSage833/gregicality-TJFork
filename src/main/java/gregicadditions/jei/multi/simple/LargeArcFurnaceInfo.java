@@ -2,6 +2,7 @@ package gregicadditions.jei.multi.simple;
 
 import com.google.common.collect.Lists;
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.PumpCasing;
 import gregicadditions.jei.GAMultiblockShapeInfo;
@@ -12,6 +13,7 @@ import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -44,12 +46,12 @@ public class LargeArcFurnaceInfo extends MultiblockInfoPage {
                 .where('C', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL))
                 .where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))
                 .where('P', MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.TITANIUM_PIPE))
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
-                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-                .where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
-                .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-                .where('o', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-                .where('p', PlaceholderType.PUMP,GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+                .where('I', ChannelRegistry.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('i', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                .where('O', ChannelRegistry.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('o', ChannelRegistry.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('p', GAChannelRegistry.PUMP,GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
                 .build();
     }
 

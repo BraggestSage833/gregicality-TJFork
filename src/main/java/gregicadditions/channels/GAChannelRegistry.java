@@ -4,6 +4,7 @@ package gregicadditions.channels;
 import gregicadditions.item.CellCasing;
 import gregicadditions.item.GAHeatingCoil;
 import gregicadditions.item.GAMetaBlocks;
+import gregicadditions.item.GATransparentCasing;
 import gregicadditions.item.components.*;
 import gregicadditions.item.fusion.GACryostatCasing;
 import gregicadditions.item.fusion.GADivertorCasing;
@@ -18,15 +19,13 @@ import gregtech.common.channels.ChannelRegistry;
 import gregtech.integration.jei.multiblock.channel.Channel;
 
 import gregtech.integration.jei.multiblock.channel.PlaceholderType;
-import net.minecraft.block.state.IBlockState;
 
 import java.util.List;
 
-import java.util.function.Function;
 
 public final class GAChannelRegistry {
     public static final Channel COMPONENT = Channel.createDriver("component");
-    public static final Channel FUSION_PARTS = Channel.create("fusion parts");
+    public static final Channel FUSION_PARTS = Channel.createDriver("fusion casing");
 
 
     public static final PlaceholderType MOTOR = PlaceholderType.create("motor");
@@ -51,53 +50,20 @@ public final class GAChannelRegistry {
 
 
     public static void init() {
+        // ---- COMPONENT group: one shared channel, generic registration per type ----
         MOTOR.registerVariant(COMPONENT, MotorCasing.CasingType.values(),
                 type -> GAMetaBlocks.MOTOR_CASING.getItemVariant(type),
                 type -> GAMetaBlocks.MOTOR_CASING.getState(type)
         );
-        registerIndicators(
-                StructureChannels.CONVEYOR,
-                ConveyorCasing.CasingType.values(),
-                type -> GAMetaBlocks.CONVEYOR_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.EMITTER,
-                EmitterCasing.CasingType.values(),
-                type -> GAMetaBlocks.EMITTER_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.FIELD_GEN,
-                FieldGenCasing.CasingType.values(),
-                type -> GAMetaBlocks.FIELD_GEN_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.PISTON,
-                PistonCasing.CasingType.values(),
-                type -> GAMetaBlocks.PISTON_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.PUMP,
-                PumpCasing.CasingType.values(),
-                type -> GAMetaBlocks.PUMP_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.ROBOT_ARM,
-                RobotArmCasing.CasingType.values(),
-                type -> GAMetaBlocks.ROBOT_ARM_CASING.getItemVariant(type)
-        );
-        registerIndicators(
-                StructureChannels.SENSOR,
-                SensorCasing.CasingType.values(),
-                type -> GAMetaBlocks.SENSOR_CASING.getItemVariant(type)
+        CONVEYOR.registerVariant(COMPONENT, ConveyorCasing.CasingType.values(),
+                type -> GAMetaBlocks.CONVEYOR_CASING.getItemVariant(type),
+                type -> GAMetaBlocks.CONVEYOR_CASING.getState(type)
         );
 
-        registerIndicators(
-                StructureChannels.CELL,
-                CellCasing.CellType.values(),
-                type -> GAMetaBlocks.CELL_CASING.getItemVariant(type)
+        EMITTER.registerVariant(COMPONENT, EmitterCasing.CasingType.values(),
+                type -> GAMetaBlocks.EMITTER_CASING.getItemVariant(type),
+                type -> GAMetaBlocks.EMITTER_CASING.getState(type)
         );
-        
-    }
 
         FIELD_GEN.registerVariant(COMPONENT, FieldGenCasing.CasingType.values(),
                 type -> GAMetaBlocks.FIELD_GEN_CASING.getItemVariant(type),
@@ -151,24 +117,51 @@ public final class GAChannelRegistry {
 
 
         Channel cell = Channel.create("cell");
+        int counter = 1;
+        for (CellCasing.CellType type : CellCasing.CellType.values()) {
+            cell.registerIndicator(GAMetaBlocks.CELL_CASING.getItemVariant(type), counter++);
+        }
 
-        CELL.registerVariant(cell, CellCasing.CellType.values(),
-                type -> GAMetaBlocks.CELL_CASING.getItemVariant(type),
-                type -> GAMetaBlocks.CELL_CASING.getState(type));
-
-
-        int counter = Channel.COIL.getIndicatorMaxValue() + 1;
+        counter = Channel.COIL.getIndicatorMaxValue() + 1;
         for (GAHeatingCoil.CoilType type : GAHeatingCoil.CoilType.values()) {
-            StructureChannels.COIL.registerIndicator(GAMetaBlocks.HEATING_COIL.getItemVariant(type), counter++);
+            Channel.COIL.registerIndicator(GAMetaBlocks.HEATING_COIL.getItemVariant(type), counter++);
         }
 
-        counter = 0;
-        var a = ChannelDescription.get("coil").getItems();
-        for (var te : a.entrySet()) {
-            System.out.println(te.getKey().toString() + counter);
-            counter++;
-        }
-    }
+
+        CELL.registerResolver(context -> new BlockInfo(GAMetaBlocks.CELL_CASING.getState(
+                CellCasing.CellType.values()[PlaceholderType.clampIndex(
+                        context.getTier(Channel.VOLTAGE), 3, CellCasing.CellType.values().length)]))
+        );
+
+        NUCLEAR_CASING.registerResolver(context -> new BlockInfo(GAMetaBlocks.NUCLEAR_CASING.getState(
+                NuclearCasing.CasingType.values()[PlaceholderType.clampIndex(
+                        context.getTier(Channel.VOLTAGE), 0, NuclearCasing.CasingType.values().length)]))
+        );
+
+        GLASS.registerResolver(context -> new BlockInfo(GAMetaBlocks.TRANSPARENT_CASING.getState(
+                GATransparentCasing.CasingType.values()[PlaceholderType.clampIndex(
+                        context.getTier(Channel.VOLTAGE), 0, GATransparentCasing.CasingType.values().length)]))
+        );
+
+        MUFFLER.registerResolver(context -> PlaceholderType.mteHolder(
+                GATileEntities.MUFFLER_HATCH[PlaceholderType.clampIndex(
+                        context.getTier(Channel.VOLTAGE), 1, GATileEntities.MUFFLER_HATCH.length)],
+                context.facing));
+
+        FRAMEWORK.registerResolver(context -> new BlockInfo(GAMetaBlocks.getFramework(context.getTier(Channel.VOLTAGE))));
+
+
+        // ---- Overrides of GT-core's own ChannelRegistry entries
+        ChannelRegistry.COIL.registerResolver(context -> new BlockInfo(GAMetaBlocks.getCoils(Math.min(context.getTier(Channel.COIL), 14))));
+
+        ChannelRegistry.ENERGY_INPUT_HATCH.registerResolver(context -> PlaceholderType.mteHolder(
+                GATileEntities.getEnergyHatch(context.getTier(Channel.VOLTAGE), false), context.facing)
+        );
+
+        ChannelRegistry.ENERGY_OUTPUT_HATCH.registerResolver(context -> PlaceholderType.mteHolder(
+                GATileEntities.getEnergyHatch(context.getTier(Channel.VOLTAGE), true), context.facing)
+        );
+
 
         CELL.registerResolver(context -> new BlockInfo(GAMetaBlocks.CELL_CASING.getState(
                 CellCasing.CellType.values()[PlaceholderType.clampIndex(

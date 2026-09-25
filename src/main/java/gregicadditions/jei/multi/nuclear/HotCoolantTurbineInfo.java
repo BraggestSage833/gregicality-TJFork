@@ -9,6 +9,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.BlockInfo;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.items.MetaItems;
 import gregtech.common.items.behaviors.TurbineRotorBehavior;
 import gregtech.common.metatileentities.MetaTileEntities;
@@ -59,9 +60,9 @@ public class HotCoolantTurbineInfo extends MultiblockInfoPage {
 
                 .where('R', new BlockInfo(MetaBlocks.MACHINE.getDefaultState(), holder, null))
 
-                .where('D', PlaceholderType.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
-                .where('I', PlaceholderType.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
-                .where('O', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
+                .where('D', ChannelRegistry.ENERGY_OUTPUT_HATCH,GATileEntities.getEnergyHatch(0, true), EnumFacing.EAST)
+                .where('I', ChannelRegistry.INPUT_HATCH, MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.NORTH)
+                .where('O', ChannelRegistry.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.NORTH)
 
                 .build();
     }

@@ -6,6 +6,7 @@ import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -44,10 +45,10 @@ public class VoidMinerInfo2 extends MultiblockInfoPage {
                 .where('C', METAL_CASING_2.getState(MetalCasing2.CasingType.TRITANIUM))
                 .where('D', METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_813))
                 .where('F', MetaBlocks.FRAMES.get(Seaborgium).getDefaultState())
-                 .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-                .where('O', PlaceholderType.OUTPUT_BUS ,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
-                .where('o', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-                .where('I', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+                 .where('E', ChannelRegistry.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('O', ChannelRegistry.OUTPUT_BUS ,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.WEST)
+                .where('o', ChannelRegistry.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('I', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
                 .build();
 
     }

@@ -1,6 +1,7 @@
 package gregicadditions.jei.multi.simple;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GAMultiblockCasing;
 import gregicadditions.item.components.MotorCasing;
@@ -8,6 +9,7 @@ import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.simple.TileEntityLargeMixer;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -38,14 +40,14 @@ public class LargeMixerInfo extends MultiblockInfoPage {
 				.aisle("#XHX#", "#OSo#", "#XEX#")
 				.where('S', GATileEntities.LARGE_MIXER, EnumFacing.WEST)
 				.where('H', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-				.where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-				.where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
-				.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
-				.where('i', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
-				.where('o', PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH)
+				.where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+				.where('I', ChannelRegistry.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.NORTH)
+				.where('O', ChannelRegistry.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+				.where('i', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
+				.where('o', ChannelRegistry.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH)
 				.where('X', TileEntityLargeMixer.casingState)
 				.where('Y', GAMetaBlocks.MUTLIBLOCK_CASING.getState(GAMultiblockCasing.CasingType.TUNGSTENSTEEL_GEARBOX_CASING))
-				.where('M', PlaceholderType.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
+				.where('M', GAChannelRegistry.MOTOR,GAMetaBlocks.MOTOR_CASING.getState(MotorCasing.CasingType.values()[0]))
 				.build();
 	}
 

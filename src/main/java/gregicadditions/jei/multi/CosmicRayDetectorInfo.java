@@ -2,6 +2,7 @@ package gregicadditions.jei.multi;
 
 import gregicadditions.GAConfig;
 import gregicadditions.GAMaterials;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.components.EmitterCasing;
 import gregicadditions.item.components.FieldGenCasing;
@@ -13,6 +14,7 @@ import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockWireCoil;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -56,12 +58,12 @@ public class CosmicRayDetectorInfo extends MultiblockInfoPage {
                 .where('x', GAMetaBlocks.METAL_CASING_2.getState(MetalCasing2.CasingType.TRITANIUM))
                 .where('C', MetaBlocks.FRAMES.get(GAMaterials.BlackTitanium).getDefaultState())
                 .where('c', MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.SUPERCONDUCTOR))
-                .where('e', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-                .where('f', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, 0)], EnumFacing.WEST)
-                .where('F', PlaceholderType.FIELD_GEN, GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
-                .where('E', PlaceholderType.EMITTER, GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
-                .where('s', PlaceholderType.SENSOR, GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
-                .where('P', PlaceholderType.PUMP, GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
+                .where('e', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('f', ChannelRegistry.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[Math.min(9, 0)], EnumFacing.WEST)
+                .where('F', GAChannelRegistry.FIELD_GEN, GAMetaBlocks.FIELD_GEN_CASING.getState(FieldGenCasing.CasingType.values()[0]))
+                .where('E', GAChannelRegistry.EMITTER, GAMetaBlocks.EMITTER_CASING.getState(EmitterCasing.CasingType.values()[0]))
+                .where('s', GAChannelRegistry.SENSOR, GAMetaBlocks.SENSOR_CASING.getState(SensorCasing.CasingType.values()[0]))
+                .where('P', GAChannelRegistry.PUMP, GAMetaBlocks.PUMP_CASING.getState(PumpCasing.CasingType.values()[0]))
                 .build();
     }
 

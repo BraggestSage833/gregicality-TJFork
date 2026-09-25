@@ -1,11 +1,13 @@
 package gregicadditions.jei.multi;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.item.metal.MetalCasing2;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -37,14 +39,14 @@ public class AlloyBlastFurnaceInfo extends MultiblockInfoPage {
                 .aisle("#OXX#", "#ccc#", "#ccc#", "#XXX#")
                 .where('S', GATileEntities.ALLOY_BLAST_FURNACE, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-                .where('m', PlaceholderType.MUFFLER,GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
+                .where('m', GAChannelRegistry.MUFFLER,GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
                 .where('c', METAL_CASING_2.getState(MetalCasing2.CasingType.STABALLOY))
                 .where('X', METAL_CASING_1.getState(MetalCasing1.CasingType.ZIRCONIUM_CARBIDE))
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-                .where('O', PlaceholderType.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
-                .where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
-                .where('i', PlaceholderType.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.EAST)
-                .where('C', PlaceholderType.COIL)
+                .where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('O', ChannelRegistry.OUTPUT_HATCH, MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.WEST)
+                .where('I', ChannelRegistry.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.WEST)
+                .where('i', ChannelRegistry.INPUT_HATCH, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.EAST)
+                .where('C', ChannelRegistry.COIL)
                 .build();
     }
 

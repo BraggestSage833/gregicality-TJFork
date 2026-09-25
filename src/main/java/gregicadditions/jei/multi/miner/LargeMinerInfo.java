@@ -4,6 +4,7 @@ import gregicadditions.GAConfig;
 import gregicadditions.machines.GATileEntities;
 import gregicadditions.machines.multi.miner.MetaTileEntityLargeMiner;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -41,9 +42,9 @@ public class LargeMinerInfo extends MultiblockInfoPage {
             .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
             .where('P', largeMiner.getCasingState())
             .where('F', largeMiner.getFrameState())
-            .where('E', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
-            .where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.EAST)
-            .where('I', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
+            .where('E', ChannelRegistry.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+            .where('O', ChannelRegistry.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.EAST)
+            .where('I', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.WEST)
             .build();
 
     }

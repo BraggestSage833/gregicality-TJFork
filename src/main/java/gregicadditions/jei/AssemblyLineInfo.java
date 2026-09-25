@@ -10,6 +10,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -56,9 +57,9 @@ public class AssemblyLineInfo extends MultiblockInfoPage {
 				.where('S', GATileEntities.ASSEMBLY_LINE, EnumFacing.WEST)
 				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
 				.where('C', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
-				.where('F', PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
-				.where('O', PlaceholderType.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.DOWN)
-				.where('Y', PlaceholderType.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.UP)
+				.where('F', ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH)
+				.where('O', ChannelRegistry.OUTPUT_BUS,MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.DOWN)
+				.where('Y', ChannelRegistry.ENERGY_INPUT_HATCH,GATileEntities.getEnergyHatch(0, false), EnumFacing.UP)
 				.where('Q', GATileEntities.QBIT_INPUT_HATCH[0], EnumFacing.UP)
 				.where('I', MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.DOWN)
 				.where('G', MetaBlocks.MUTLIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING))

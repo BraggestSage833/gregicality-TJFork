@@ -1,12 +1,14 @@
 package gregicadditions.jei.multi;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.CellCasing;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.GATransparentCasing;
 import gregicadditions.item.metal.MetalCasing1;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import gregtech.integration.jei.multiblock.channel.PlaceholderType;
@@ -36,9 +38,9 @@ public class BatteryTowerInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('C', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.TALONITE))
                 .where('G', GAMetaBlocks.TRANSPARENT_CASING.getState(GATransparentCasing.CasingType.BOROSILICATE_GLASS))
-                .where('E', PlaceholderType.ENERGY_OUTPUT_HATCH ,GATileEntities.getEnergyHatch(0, true), EnumFacing.WEST)
-                .where('e', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
-                .where('R', PlaceholderType.CELL, GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[0]))
+                .where('E', ChannelRegistry.ENERGY_OUTPUT_HATCH ,GATileEntities.getEnergyHatch(0, true), EnumFacing.WEST)
+                .where('e', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('R', GAChannelRegistry.CELL, GAMetaBlocks.CELL_CASING.getState(CellCasing.CellType.values()[0]))
                 .build();
     }
 

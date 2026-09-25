@@ -8,6 +8,7 @@ import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -36,9 +37,9 @@ public class ElectricImplosionInfo extends MultiblockInfoPage {
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.SOUTH)
                 .where('m', GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
                 .where('X', GAMetaBlocks.METAL_CASING_1.getState(MetalCasing1.CasingType.INCOLOY_MA956))
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
-                .where('O', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
-                .where('I', PlaceholderType.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
+                .where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+                .where('O', ChannelRegistry.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
+                .where('I', ChannelRegistry.INPUT_BUS,MetaTileEntities.ITEM_IMPORT_BUS[Math.min(9, 0)], EnumFacing.WEST)
                 .build();
     }
 
