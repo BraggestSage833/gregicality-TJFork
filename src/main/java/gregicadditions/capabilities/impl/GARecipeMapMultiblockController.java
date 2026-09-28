@@ -78,13 +78,16 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
         this(metaTileEntityId, recipeMap, false, true, false, 1,1, minTier);
     }
 
-
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minExtent, int maxExtent) {
         this(metaTileEntityId, recipeMap, false, true, false, minExtent, maxExtent,0);
     }
 
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minExtent, int maxExtent, int minTier) {
         this(metaTileEntityId, recipeMap, false, true, false, minExtent, maxExtent, minTier);
+    }
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, int minExtent, int maxExtent, int minTier, int maxTier) {
+        this(metaTileEntityId, recipeMap, false, true, false, minExtent, maxExtent, minTier, maxTier);
     }
 
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct) {
@@ -96,8 +99,13 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
         this(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct, minExtent, maxExtent, 0);
     }
 
+
     public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct, int minExtent, int maxExtent, int minTier) {
-        super(metaTileEntityId, recipeMap, minExtent, maxExtent, minTier);
+        this(metaTileEntityId, recipeMap, hasMuffler, hasMaintenance, canDistinct, minExtent, maxExtent, minTier,14);
+    }
+
+    public GARecipeMapMultiblockController(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, boolean hasMuffler, boolean hasMaintenance, boolean canDistinct, int minExtent, int maxExtent, int minTier, int maxTier) {
+        super(metaTileEntityId, recipeMap, minExtent, maxExtent, minTier, maxTier);
         this.hasMuffler = hasMuffler;
         this.hasMaintenance = hasMaintenance;
         this.maintenance_problems = 0b000000;

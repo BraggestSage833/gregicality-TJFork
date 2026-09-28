@@ -59,7 +59,7 @@ public class MetaTileEntityVolcanus extends MetaTileEntityElectricBlastFurnace {
     private FluidStack pyrotheum;
 
     public MetaTileEntityVolcanus(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId);
+        super(metaTileEntityId,0,0,0,7);
         this.recipeMapWorkable = new VolcanusRecipeLogic(this, ENERGY_DECREASE_FACTOR, DURATION_DECREASE_FACTOR, 100, 4);
         reinitializeStructurePattern();
     }

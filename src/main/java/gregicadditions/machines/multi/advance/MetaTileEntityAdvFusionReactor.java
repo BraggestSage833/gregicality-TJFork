@@ -67,7 +67,7 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
 
 
     public MetaTileEntityAdvFusionReactor(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GARecipeMaps.ADV_FUSION_RECIPES);
+        super(metaTileEntityId, GARecipeMaps.ADV_FUSION_RECIPES, 16,0,9,13);
         this.recipeMapWorkable = new AdvFusionRecipeLogic(this);
         this.energyContainer = new GAEnergyContainerHandler(this, Integer.MAX_VALUE, 0, 0, 0, 0) {
             @Override
