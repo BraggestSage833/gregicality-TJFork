@@ -5,6 +5,7 @@ import gregicadditions.GAUtility;
 import gregicadditions.capabilities.impl.GAMultiblockRecipeLogic;
 import gregicadditions.capabilities.impl.GARecipeMapMultiblockController;
 import gregicadditions.item.components.*;
+import gregicadditions.machines.multi.CasingLinks;
 import gregicadditions.utils.GALog;
 import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
@@ -46,6 +47,7 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public long maxVoltage = 0;
 
     DecimalFormat formatter = new DecimalFormat("#0.00");
+
 
     /**
      * @deprecated use {@link LargeSimpleRecipeMapMultiblockController#LargeSimpleRecipeMapMultiblockController(ResourceLocation, RecipeMap, int, int, int, int, boolean, boolean, boolean)
@@ -133,13 +135,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> motorPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof MotorCasing)) {
+            if (!(blockState.getBlock() instanceof MotorCasing motorCasing)) {
                 return false;
             } else {
-                MotorCasing motorCasing = (MotorCasing) blockState.getBlock();
                 MotorCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 MotorCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Motor", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -147,13 +152,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> emitterPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof EmitterCasing)) {
+            if (!(blockState.getBlock() instanceof EmitterCasing motorCasing)) {
                 return false;
             } else {
-                EmitterCasing motorCasing = (EmitterCasing) blockState.getBlock();
                 EmitterCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 EmitterCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Emitter", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -161,13 +169,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> conveyorPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof ConveyorCasing)) {
+            if (!(blockState.getBlock() instanceof ConveyorCasing motorCasing)) {
                 return false;
             } else {
-                ConveyorCasing motorCasing = (ConveyorCasing) blockState.getBlock();
                 ConveyorCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 ConveyorCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Conveyor", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -175,13 +186,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> fieldGenPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof FieldGenCasing)) {
+            if (!(blockState.getBlock() instanceof FieldGenCasing motorCasing)) {
                 return false;
             } else {
-                FieldGenCasing motorCasing = (FieldGenCasing) blockState.getBlock();
                 FieldGenCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 FieldGenCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("FieldGen", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -189,13 +203,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> pistonPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof PistonCasing)) {
+            if (!(blockState.getBlock() instanceof PistonCasing motorCasing)) {
                 return false;
             } else {
-                PistonCasing motorCasing = (PistonCasing) blockState.getBlock();
                 PistonCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 PistonCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Piston", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -203,13 +220,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> pumpPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof PumpCasing)) {
+            if (!(blockState.getBlock() instanceof PumpCasing motorCasing)) {
                 return false;
             } else {
-                PumpCasing motorCasing = (PumpCasing) blockState.getBlock();
                 PumpCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 PumpCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Pump", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -217,13 +237,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> robotArmPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof RobotArmCasing)) {
+            if (!(blockState.getBlock() instanceof RobotArmCasing motorCasing)) {
                 return false;
             } else {
-                RobotArmCasing motorCasing = (RobotArmCasing) blockState.getBlock();
                 RobotArmCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 RobotArmCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("RobotArm", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -231,13 +254,16 @@ abstract public class LargeSimpleRecipeMapMultiblockController extends GARecipeM
     public static Predicate<BlockWorldState> sensorPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof SensorCasing)) {
+            if (!(blockState.getBlock() instanceof SensorCasing motorCasing)) {
                 return false;
             } else {
-                SensorCasing motorCasing = (SensorCasing) blockState.getBlock();
                 SensorCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 SensorCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Sensor", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }

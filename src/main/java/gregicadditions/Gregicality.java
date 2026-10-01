@@ -14,6 +14,7 @@ import gregicadditions.integrations.opencomputers.OpenComputersCommonProxy;
 import gregicadditions.integrations.tconstruct.TinkersMaterials;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.machines.GATileEntities;
+import gregicadditions.machines.multi.CasingLinks;
 import gregicadditions.network.IPSaveData;
 import gregicadditions.network.NetworkHandler;
 import gregicadditions.theoneprobe.TheOneProbeCompatibility;
@@ -21,6 +22,7 @@ import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.integration.jei.multiblock.MultiBlockPreviewHooks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -167,7 +169,7 @@ public class Gregicality {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         PumpjackHandler.recalculateChances(true);
-
+        MultiBlockPreviewHooks.addSceneListener(CasingLinks::registerPreview);
     }
 
     @Mod.EventHandler

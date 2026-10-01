@@ -6,12 +6,11 @@ import gregicadditions.GAValues;
 import gregicadditions.capabilities.GregicAdditionsCapabilities;
 import gregicadditions.capabilities.IDistinct;
 import gregicadditions.item.GAHeatingCoil;
+import gregicadditions.machines.multi.CasingLinks;
 import gregicadditions.machines.multi.IMaintenance;
 import gregicadditions.machines.multi.multiblockpart.MetaTileEntityMaintenanceHatch;
 import gregicadditions.machines.multi.multiblockpart.MetaTileEntityMufflerHatch;
-import gregicadditions.machines.multi.simple.LargeSimpleRecipeMapMultiblockController;
 import gregtech.api.capability.IEnergyContainer;
-import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.gui.Widget;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
@@ -30,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -66,6 +66,9 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
 
     private int timeActive;
     private static int minimumMaintenanceTime = GAConfig.GT5U.minimumMaintenanceTime;
+
+    private Set<BlockPos> casingPositions = Collections.emptySet();
+
 
     // Used for data preservation with Maintenance Hatch
     private boolean storedTaped = false;
@@ -183,6 +186,11 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
+
+        Set<BlockPos> positions = context.get("casingPos");
+        casingPositions = positions == null ? Collections.emptySet() : new HashSet<>(positions);
+        CasingLinks.send(this,casingPositions);
+
         if (hasMaintenance) {
             MetaTileEntityMaintenanceHatch maintenanceHatch = getAbilities(GregicAdditionsCapabilities.MAINTENANCE_HATCH).get(0);
             if (maintenanceHatch.getType() == 2 || !GAConfig.GT5U.enableMaintenance) {
@@ -215,6 +223,9 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
                 maintenance.storeMaintenanceData(maintenance_problems, timeActive);
         }
         super.invalidateStructure();
+        casingPositions = Collections.emptySet();
+        CasingLinks.send(this, casingPositions);
+
         if (this.recipeMapWorkable instanceof GAMultiblockRecipeLogic)
             ((GAMultiblockRecipeLogic) this.recipeMapWorkable).invalidate();
     }
@@ -261,6 +272,7 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
         buf.writeByte(maintenance_problems);
         buf.writeInt(timeActive);
         buf.writeBoolean(isDistinct);
+        CasingLinks.write(buf, casingPositions);
     }
 
     @Override
@@ -269,6 +281,7 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
         maintenance_problems = buf.readByte();
         timeActive = buf.readInt();
         isDistinct = buf.readBoolean();
+        CasingLinks.set(this, CasingLinks.read(buf));
     }
 
     @Override
@@ -277,8 +290,10 @@ public abstract class GARecipeMapMultiblockController extends RecipeMapMultibloc
         if (dataId == STORE_TAPED) {
             storedTaped = buf.readBoolean();
         }
+        if (dataId == CasingLinks.DATA_ID ) {
+            CasingLinks.set(this, CasingLinks.read(buf));
+        }
     }
-
 
     @Override
     protected void addDisplayText(List<ITextComponent> textList) {
