@@ -6,12 +6,8 @@ import gregicadditions.blocks.GAMetalCasing;
 import gregicadditions.client.model.IReTexturedModel;
 import gregicadditions.client.model.ReTexturedModel;
 import gregicadditions.client.model.ReTexturedModelLoader;
-import gregicadditions.utils.BlockPatternChecker;
-import gregicadditions.utils.GALog;
-import gregtech.api.metatileentity.MetaTileEntityHolder;
+import gregicadditions.machines.multi.CasingLinks;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.api.multiblock.BlockPattern;
-import gregtech.api.multiblock.PatternMatchContext;
 import gregtech.api.render.ICubeRenderer;
 import gregtech.api.util.GTUtility;
 import gregtech.common.blocks.VariantBlock;
@@ -20,33 +16,32 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+
 
 public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> extends VariantBlock<T> implements IReTexturedModel {
 
-    private final static ResourceLocation FRAME_MODEL = new ResourceLocation("gtadditions","block/casing/frame");
-    private final static ResourceLocation GLASS_MODEL = new ResourceLocation("gtadditions","block/casing/glass");
+    private final static ResourceLocation FRAME_MODEL = new ResourceLocation("gtadditions", "block/casing/frame");
+    private final static ResourceLocation GLASS_MODEL = new ResourceLocation("gtadditions", "block/casing/glass");
     private final ResourceLocation CORE_MODEL;
     private ControllerProperty CONTROLLER;
-
-    private MultiblockControllerBase cachedController;
-    private boolean controllerDirty = true;
 
 
     public ReTexturedCasing(ResourceLocation core) {
@@ -79,37 +74,46 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
             if (controller == null) return null;
             ICubeRenderer texture = controller.getBaseTexture(null);
             if (texture == null) return null;
-            return new ImmutableMap.Builder<String,String>()
+            return new ImmutableMap.Builder<String, String>()
                     .put("1", controller.getBaseTexture(null).getParticleSprite().getIconName())
                     .build();
         }
         return null;
     }
 
+
     @SideOnly(Side.CLIENT)
     @Override
     public List<BakedQuad> reBakedQuad(IBlockState blockState, EnumFacing side, ResourceLocation model, List<BakedQuad> base) {
-        if (blockState instanceof IExtendedBlockState && FRAME_MODEL == model) {
-            MultiblockControllerBase controller = ((IExtendedBlockState) blockState).getValue(CONTROLLER);
-            if(controller != null) {
-                ICubeRenderer texture = controller.getBaseTexture(null);
-                if (texture instanceof GAMetalCasing) {
-                    int color = ((GAMetalCasing) texture).blockState
-                            .getBaseState()
-                            .getValue(((GAMetalCasing) texture).variantProperty)
-                            .materialRGB; // aRGB
-                    int color_casing = 0XFF000000 | ((color & 0X00FF0000) >> 16) | (color & 0X0000FF00) | ((color & 0X000000FF) << 16);
-                    for (BakedQuad quad : base) {
-                        int[] vertexData = quad.getVertexData();
-                        vertexData[3] = color_casing;
-                        vertexData[10] = color_casing;
-                        vertexData[17] = color_casing;
-                        vertexData[24] = color_casing;
-                    }
-                }
-            }
+        if (!(blockState instanceof IExtendedBlockState) || FRAME_MODEL != model) {
+            return base;
         }
-        return base;
+
+        MultiblockControllerBase controller = ((IExtendedBlockState) blockState).getValue(CONTROLLER);
+        if (controller == null) {
+            return base;
+        }
+
+        ICubeRenderer texture = controller.getBaseTexture(null);
+        if (!(texture instanceof GAMetalCasing)) {
+            return base;
+        }
+
+        GAMetalCasing casing = (GAMetalCasing) texture;
+        int color = casing.blockState.getBaseState().getValue(casing.variantProperty).materialRGB;
+        int colorCasing = 0xFF000000 | ((color & 0x00FF0000) >> 16) | (color & 0x0000FF00) | ((color & 0x000000FF) << 16);
+
+        List<BakedQuad> out = new ArrayList<>(base.size());
+        for (BakedQuad quad : base) {
+            int[] data = quad.getVertexData().clone();
+            int stride = quad.getFormat().getIntegerSize();
+            for (int v = 0; v < 4; v++) {
+                data[v * stride + 3] = colorCasing;
+            }
+            out.add(new BakedQuad(data, quad.getTintIndex(), quad.getFace(), quad.getSprite(),
+                    quad.shouldApplyDiffuseLighting(), quad.getFormat()));
+        }
+        return out;
     }
 
     @Override
@@ -128,8 +132,8 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
         if (modelRes == CORE_MODEL && variant instanceof ModelResourceLocation) {
             String[] tierS = ((ModelResourceLocation) variant).getVariant().split("_");
             if (tierS.length > 0) {
-                return model.retexture(new ImmutableMap.Builder<String,String>()
-                        .put("0", "gtadditions:blocks/casing/"+tierS[tierS.length-1])
+                return model.retexture(new ImmutableMap.Builder<String, String>()
+                        .put("0", "gtadditions:blocks/casing/" + tierS[tierS.length - 1])
                         .build());
             }
         }
@@ -154,70 +158,30 @@ public abstract class ReTexturedCasing<T extends Enum<T> & IStringSerializable> 
     }
 
     @SideOnly(Side.CLIENT)
-    protected MultiblockControllerBase findController(IBlockAccess world, BlockPos pos) {
-        if (!controllerDirty && cachedController != null) {
-            return cachedController;
+    protected MultiblockControllerBase findController(IBlockAccess access, BlockPos pos) {
+        if (access == null || pos == null) {
+            return null;
         }
 
-        controllerDirty = false;
-
-        if (world == null || pos == null) {
-            return cachedController = null;
+        MultiblockControllerBase preview = CasingLinks.getPreview(access);
+        if (preview != null)  {
+            return preview; // for JEI
         }
 
-        try {
-            for (int x = 0; x < 10; x++) {
-                for (int y = 0; y < 10; y++) {
-                    for (int z = 0; z < 10; z++) {
-
-                        int[] sx = { x, -x };
-                        int[] sy = { y, -y };
-                        int[] sz = { z, -z };
-
-                        for (int dx : sx) {
-                            for (int dy : sy) {
-                                for (int dz : sz) {
-
-                                    BlockPos checkPos = pos.add(dx, dy, dz);
-                                    TileEntity te = world.getTileEntity(checkPos);
-
-                                    if (!(te instanceof MetaTileEntityHolder)) {
-                                        continue;
-                                    }
-
-                                    if (!(((MetaTileEntityHolder) te).getMetaTileEntity() instanceof MultiblockControllerBase)) {
-                                        continue;
-                                    }
-
-                                    MultiblockControllerBase controller = (MultiblockControllerBase) ((MetaTileEntityHolder) te).getMetaTileEntity();
-
-                                    PatternMatchContext result = BlockPatternChecker.checkPatternAt(controller);
-
-                                    if (result == null) {
-                                        continue;
-                                    }
-
-                                    List<BlockPos> validPos = result.get("validPos");
-
-                                    if (validPos != null && validPos.contains(pos)) {
-                                        return cachedController = controller;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            GALog.logger.error("Failed to find controller at {}", pos, t);
+        if (access instanceof World && access != Minecraft.getMinecraft().world) {
+            return null; // ??? some goofy world
         }
 
-        return cachedController = null;
+        return CasingLinks.get(pos); // real world
     }
 
-    public void markControllerDirty() {
-        controllerDirty = true;
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        CasingLinks.clear();
     }
+
+
     @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;

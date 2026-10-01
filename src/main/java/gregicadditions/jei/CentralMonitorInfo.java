@@ -6,6 +6,7 @@ import gregicadditions.machines.multi.centralmonitor.MetaTileEntityCentralMonito
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
 import gregtech.integration.jei.multiblock.channel.PlaceholderType;
@@ -42,7 +43,7 @@ public class CentralMonitorInfo extends MultiblockInfoPage {
         }
         return builder.aisle(end)
                 .where('S', GATileEntities.CENTRAL_MONITOR, EnumFacing.WEST)
-                .where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
+                .where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.WEST)
                 .where('A', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
                 .where('B', GATileEntities.MONITOR_SCREEN, EnumFacing.WEST)
                 .build();

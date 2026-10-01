@@ -1,10 +1,12 @@
 package gregicadditions.jei.multi.override;
 
 import gregicadditions.GAConfig;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
@@ -31,11 +33,11 @@ public class ImplosionCompressorInfo extends MultiblockInfoPage {
 				.aisle("XXX", "XIX", "XXX")
 				.where('C', GATileEntities.IMPLOSION_COMPRESSOR, EnumFacing.WEST)
 				.where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
-				.where('m', PlaceholderType.MUFFLER ,GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
+				.where('m', GAChannelRegistry.MUFFLER ,GATileEntities.MUFFLER_HATCH[0], EnumFacing.UP)
 				.where('X', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID))
-				.where('E', PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
-				.where('I', PlaceholderType.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.SOUTH)
-				.where('B', PlaceholderType.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
+				.where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+				.where('I', ChannelRegistry.INPUT_BUS, MetaTileEntities.ITEM_IMPORT_BUS[0], EnumFacing.SOUTH)
+				.where('B', ChannelRegistry.OUTPUT_BUS, MetaTileEntities.ITEM_EXPORT_BUS[0], EnumFacing.NORTH)
 				.build();
 	}
 

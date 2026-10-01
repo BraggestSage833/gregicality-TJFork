@@ -6,6 +6,7 @@ import gregicadditions.jei.GAMultiblockShapeInfo;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.common.blocks.BlockWireCoil;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
@@ -37,10 +38,10 @@ public class CrackerUnitInfo extends MultiblockInfoPage {
                 .where('S', GATileEntities.CRACKER, EnumFacing.WEST)
                 .where('M', GATileEntities.MAINTENANCE_HATCH[0], EnumFacing.WEST)
                 .where('X', MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STAINLESS_CLEAN))
-                .where('F',PlaceholderType.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH )
-                .where('H',PlaceholderType.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH )
-                .where('E',PlaceholderType.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
-                .where('C',PlaceholderType.COIL, MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL)).build();
+                .where('F',ChannelRegistry.INPUT_HATCH,MetaTileEntities.FLUID_IMPORT_HATCH[0], EnumFacing.SOUTH )
+                .where('H', ChannelRegistry.OUTPUT_HATCH,MetaTileEntities.FLUID_EXPORT_HATCH[0], EnumFacing.SOUTH )
+                .where('E',ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(0, false), EnumFacing.EAST)
+                .where('C',ChannelRegistry.COIL, MetaBlocks.WIRE_COIL.getState(BlockWireCoil.CoilType.CUPRONICKEL)).build();
     }
 
 

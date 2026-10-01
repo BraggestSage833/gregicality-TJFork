@@ -1,6 +1,7 @@
 package gregicadditions.jei;
 
 import com.google.common.collect.Lists;
+import gregicadditions.channels.GAChannelRegistry;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.item.fusion.GACryostatCasing;
 import gregicadditions.item.fusion.GADivertorCasing;
@@ -8,9 +9,11 @@ import gregicadditions.item.fusion.GAFusionCasing;
 import gregicadditions.item.fusion.GAVacuumCasing;
 import gregicadditions.machines.GATileEntities;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
+import gregtech.common.channels.ChannelRegistry;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.integration.jei.multiblock.MultiblockInfoPage;
 import gregtech.integration.jei.multiblock.MultiblockShapeInfo;
+import gregtech.integration.jei.multiblock.channel.PlaceholderType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -27,10 +30,6 @@ public class FusionReactor4Info extends MultiblockInfoPage {
         return GATileEntities.ADVANCED_FUSION_REACTOR;
     }
 
-
-
-
-    // TODO: FIX ME. Loopissa oli 0-5 + 4 casing. ELI TÄHÄN MENEE JOKO FUSION COIL 1-5. TEE SILLE OMA PAIKKA
     @Override
     public MultiblockShapeInfo getMatchingShapes(int extent) {
         return GAMultiblockShapeInfo.builder()
@@ -51,15 +50,17 @@ public class FusionReactor4Info extends MultiblockInfoPage {
             .aisle("###############", "###############","#####ccCcc#####","#####ccCcc#####","###############","###############")
             .where('S', GATileEntities.ADVANCED_FUSION_REACTOR, EnumFacing.SOUTH)
             .where('#', Blocks.AIR.getDefaultState())
-            .where('C', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.values()[4]))
+
+            .where('C', GAChannelRegistry.FUSION_COIL, GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.values()[4])) //1-4
             .where('X', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.ADV_FUSION_CASING))
             .where('f', MetaTileEntities.FLUID_IMPORT_HATCH[8], EnumFacing.SOUTH)
             .where('F', MetaTileEntities.FLUID_EXPORT_HATCH[8], EnumFacing.SOUTH)
-            .where('E', GATileEntities.ENERGY_INPUT[0], EnumFacing.NORTH)
-            .where('c', GAMetaBlocks.CRYOSTAT_CASING.getState(GACryostatCasing.CasingType.values()[0])) // 1-4
-            .where('v', GAMetaBlocks.VACUUM_CASING.getState(GAVacuumCasing.CasingType.values()[0])) // 1-4
+            .where('E', ChannelRegistry.ENERGY_INPUT_HATCH, GATileEntities.getEnergyHatch(9,false), EnumFacing.NORTH)
+
+            .where('c', GAChannelRegistry.CRYOSTAT_CASING, GAMetaBlocks.CRYOSTAT_CASING.getState(GACryostatCasing.CasingType.values()[0])) // 1-4
+            .where('v', GAChannelRegistry.VACUUM_CASING, GAMetaBlocks.VACUUM_CASING.getState(GAVacuumCasing.CasingType.values()[0])) // 1-4
             .where('b', GAMetaBlocks.FUSION_CASING.getState(GAFusionCasing.CasingType.FUSION_BLANKET))
-            .where('d', GAMetaBlocks.DIVERTOR_CASING.getState(GADivertorCasing.CasingType.values()[0])) // 1-4
+            .where('d', GAChannelRegistry.DIVERTOR_CASING, GAMetaBlocks.DIVERTOR_CASING.getState(GADivertorCasing.CasingType.values()[0])) // 1-4
             .build();
 
     }

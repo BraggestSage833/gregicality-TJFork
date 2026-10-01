@@ -54,8 +54,13 @@ public class MetaTileEntityElectricBlastFurnace extends GARecipeMapMultiblockCon
 			MultiblockAbility.INPUT_ENERGY, GregicAdditionsCapabilities.MAINTENANCE_HATCH
 	};
 
-	public MetaTileEntityElectricBlastFurnace(ResourceLocation metaTileEntityId) {
-		super(metaTileEntityId, RecipeMaps.BLAST_RECIPES, true, true, true);
+	public MetaTileEntityElectricBlastFurnace(ResourceLocation metaTileEntityId)  {
+		this(metaTileEntityId,0,0,0,14);
+	}
+
+
+	public MetaTileEntityElectricBlastFurnace(ResourceLocation metaTileEntityId, int minExtent, int maxExtent, int minTier, int maxTier) {
+		super(metaTileEntityId, RecipeMaps.BLAST_RECIPES, true, true, true,minExtent,maxExtent,minTier, maxTier);
 		this.recipeMapWorkable = new ElectricBlastFurnaceWorkable(this);
 	}
 

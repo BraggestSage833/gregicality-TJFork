@@ -48,7 +48,7 @@ public class MetaTileEntityCryogenicFreezer extends MetaTileEntityVacuumFreezer 
     private FluidStack cryotheum;
 
     public MetaTileEntityCryogenicFreezer(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId);
+        super(metaTileEntityId,0,0,0,7);
         this.recipeMapWorkable = new CryogenicFreezerRecipeLogic(this, ENERGY_DECREASE_FACTOR, DURATION_DECREASE_FACTOR, 100, 4);
         reinitializeStructurePattern();
     }

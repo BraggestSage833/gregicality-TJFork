@@ -32,6 +32,7 @@ import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -42,11 +43,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
+
 
 import static gregicadditions.client.ClientHandler.QUANTUM_CASING;
 import static gregicadditions.item.GAMetaBlocks.METAL_CASING_2;
@@ -99,6 +98,7 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
     private IEnergyContainer energyContainer;
     protected IMultipleTankHandler exportFluidHandler;
     private int amount = 0;
+    private Set<BlockPos> casingPositions = Collections.emptySet();
 
     @Override
     protected BlockPattern createStructurePattern() {
@@ -133,13 +133,16 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
     public static Predicate<BlockWorldState> fieldGenPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof FieldGenCasing)) {
+            if (!(blockState.getBlock() instanceof FieldGenCasing motorCasing)) {
                 return false;
             } else {
-                FieldGenCasing motorCasing = (FieldGenCasing) blockState.getBlock();
                 FieldGenCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 FieldGenCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("FieldGen", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -147,13 +150,16 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
     public static Predicate<BlockWorldState> emitterPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof EmitterCasing)) {
+            if (!(blockState.getBlock() instanceof EmitterCasing motorCasing)) {
                 return false;
             } else {
-                EmitterCasing motorCasing = (EmitterCasing) blockState.getBlock();
                 EmitterCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 EmitterCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Emitter", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
@@ -161,16 +167,20 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
     public static Predicate<BlockWorldState> sensorPredicate() {
         return (blockWorldState) -> {
             IBlockState blockState = blockWorldState.getBlockState();
-            if (!(blockState.getBlock() instanceof SensorCasing)) {
+            if (!(blockState.getBlock() instanceof SensorCasing motorCasing)) {
                 return false;
             } else {
-                SensorCasing motorCasing = (SensorCasing) blockState.getBlock();
                 SensorCasing.CasingType tieredCasingType = motorCasing.getState(blockState);
                 SensorCasing.CasingType currentCasing = blockWorldState.getMatchContext().getOrPut("Sensor", tieredCasingType);
-                return currentCasing.getName().equals(tieredCasingType.getName());
+                boolean matches = currentCasing.getName().equals(tieredCasingType.getName());
+                if (matches) {
+                    CasingLinks.recordCasing(blockWorldState);
+                }
+                return matches;
             }
         };
     }
+
 
     @Override
     protected void addDisplayText(List<ITextComponent> textList) {
@@ -209,6 +219,10 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
         maxVoltage = (long) (Math.pow(4, min) * 8);
         this.initializeAbilities();
         amount = getAmount();
+
+        Set<BlockPos> positions = context.get("casingPos");
+        casingPositions = positions == null ? Collections.emptySet() : new HashSet<>(positions);
+        CasingLinks.send(this,casingPositions);
     }
 
     private int getAmount() {
@@ -261,6 +275,28 @@ public class MetaTileEntityCosmicRayDetector extends MultiblockWithDisplayBase {
         super.invalidateStructure();
         this.maxVoltage = 0;
         this.resetTileAbilities();
+        casingPositions = Collections.emptySet();
+        CasingLinks.send(this, casingPositions);
+    }
+
+    @Override
+    public void writeInitialSyncData(PacketBuffer buffer) {
+        super.writeInitialSyncData(buffer);
+        CasingLinks.write(buffer, casingPositions);
+    }
+
+    @Override
+    public void receiveInitialSyncData(PacketBuffer buffer) {
+        super.receiveInitialSyncData(buffer);
+        CasingLinks.set(this, casingPositions);
+    }
+
+    @Override
+    public void receiveCustomData(int dataId, PacketBuffer buffer) {
+        super.receiveCustomData(dataId, buffer);
+        if (dataId == CasingLinks.DATA_ID) {
+            CasingLinks.set(this, CasingLinks.read(buffer));
+        }
     }
 
     private IBlockState getCasingState() {

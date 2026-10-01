@@ -5,7 +5,6 @@ import gregicadditions.blocks.factories.GAMetalCasingBlockFactory;
 import gregicadditions.blocks.factories.GAOreBlockFactory;
 import gregicadditions.capabilities.SimpleCapabilityManager;
 import gregicadditions.channels.GAChannelRegistry;
-import gregicadditions.channels.GAPlaceholderRegistry;
 import gregicadditions.covers.CoverBehaviors;
 import gregicadditions.input.Keybinds;
 import gregicadditions.integrations.bees.ForestryCommonProxy;
@@ -15,6 +14,7 @@ import gregicadditions.integrations.opencomputers.OpenComputersCommonProxy;
 import gregicadditions.integrations.tconstruct.TinkersMaterials;
 import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.machines.GATileEntities;
+import gregicadditions.machines.multi.CasingLinks;
 import gregicadditions.network.IPSaveData;
 import gregicadditions.network.NetworkHandler;
 import gregicadditions.theoneprobe.TheOneProbeCompatibility;
@@ -22,6 +22,7 @@ import gregicadditions.utils.GALog;
 import gregicadditions.worldgen.PumpjackHandler;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.integration.jei.multiblock.MultiBlockPreviewHooks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -125,8 +126,6 @@ public class Gregicality {
         GAMetaBlocks.init();
         GAEnums.preInit();
         GAChannelRegistry.init();
-        GAChannelRegistry.addToChannels();
-        GAPlaceholderRegistry.init();
 
         GATileEntities.init();
         if (GAConfig.GregsConstruct.EnableGregsConstruct && Loader.isModLoaded(GAValues.MODID_TCON))
@@ -170,7 +169,7 @@ public class Gregicality {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         PumpjackHandler.recalculateChances(true);
-
+        MultiBlockPreviewHooks.addSceneListener(CasingLinks::registerPreview);
     }
 
     @Mod.EventHandler
