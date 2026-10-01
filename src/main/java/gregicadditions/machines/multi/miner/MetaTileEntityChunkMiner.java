@@ -22,6 +22,7 @@ import gregtech.api.render.Textures;
 import gregtech.api.unification.material.Materials;
 import gregtech.common.sound.GTSoundEvents;
 import gregtech.common.sound.MachineSoundManager;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -245,6 +246,18 @@ public class MetaTileEntityChunkMiner extends TieredMetaTileEntity implements Mi
     }
 
 
+    @Override
+    public void onRemoval() {
+        super.onRemoval();
+        if (!getWorld().isRemote) {
+            for (int i = 0; i<containerInventory.getSlots(); i++) {
+                ItemStack stack = containerInventory.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    Block.spawnAsEntity(getWorld(), getPos(),stack.copy());
+                }
+            }
+        }
+    }
 
 
     @Override
