@@ -294,8 +294,8 @@ public class GAMetaBlocks {
     @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
 
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(OPTICAL_FIBER), stack -> OpticalFiberRenderer.MODEL_LOCATION);
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(GA_CABLE), stack -> CableRenderer.MODEL_LOCATION);
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(OPTICAL_FIBER), stack -> OpticalFiberRenderer.INSTANCE.getModelResourceLocation());
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(GA_CABLE), stack -> CableRenderer.INSTANCE.getModelResourceLocation());
         registerItemModel(MUTLIBLOCK_CASING);
         registerItemModel(QUANTUM_CASING);
         registerItemModel(MUTLIBLOCK_CASING2);
@@ -335,13 +335,13 @@ public class GAMetaBlocks {
         ModelLoader.setCustomStateMapper(GA_CABLE, new DefaultStateMapper() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return CableRenderer.MODEL_LOCATION;
+                return CableRenderer.INSTANCE.getModelResourceLocation();
             }
         });
         ModelLoader.setCustomStateMapper(OPTICAL_FIBER, new DefaultStateMapper() {
             @Override
             protected @Nonnull ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return OpticalFiberRenderer.MODEL_LOCATION;
+                return OpticalFiberRenderer.INSTANCE.getModelResourceLocation();
             }
         });
     }

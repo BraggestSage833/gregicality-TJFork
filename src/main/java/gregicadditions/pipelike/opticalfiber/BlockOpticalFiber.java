@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+
 public class BlockOpticalFiber extends BlockSimplePipe<OpticalFiberSize, OpticalFiberProperties, WorldOpticalFiberNet> implements ITileEntityProvider {
 
 
@@ -79,7 +80,7 @@ public class BlockOpticalFiber extends BlockSimplePipe<OpticalFiberSize, Optical
     @Override
     @SideOnly(Side.CLIENT)
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        return OpticalFiberRenderer.BLOCK_RENDER_TYPE;
+        return OpticalFiberRenderer.INSTANCE.getBlockRenderType();
     }
 
     @Override

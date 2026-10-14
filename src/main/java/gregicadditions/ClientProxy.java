@@ -12,16 +12,21 @@ import gregicadditions.item.GAMetaBlocks;
 import gregicadditions.materials.SimpleDustMaterial;
 import gregicadditions.utils.GALog;
 import gregtech.api.unification.OreDictUnifier;
+import gregtech.common.render.CableRenderer;
+import gregtech.common.render.FluidPipeRenderer;
+import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,9 +63,15 @@ public class ClientProxy extends CommonProxy {
         }
         GALog.logger.info(Minecraft.getMinecraft().getFramebuffer().isStencilEnabled());
         Keybinds.initBinds();
-        OpticalFiberRenderer.preInit();
+        OpticalFiberRenderer.INSTANCE.preInit();
         ModelLoaderRegistry.registerLoader(new ReTexturedModelLoader());
         TextureUtils.addIconRegister(GAMetaFluids::registerSprites);
+    }
+
+    @SubscribeEvent
+    public static void textureStitchPre(@NotNull TextureStitchEvent.Pre event) {
+        TextureMap map = event.getMap();
+        OpticalFiberRenderer.INSTANCE.registerIcon(map);
     }
 
 
