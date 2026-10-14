@@ -266,6 +266,7 @@ public class GATileEntities {
     public static MetaTileEntityMEStockingBus ME_STOCKING_BUS;
     public static MetaTileEntityMEStockingBus ME_ADVANCED_STOCKING_BUS;
 
+    public static MetaTileEntityPolymerSynthesizer POLY_SYN;
     public static void init() {
 
         ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus"), 16));
@@ -1197,6 +1198,8 @@ public class GATileEntities {
         CREATIVE_LARGE_MINER = GregTechAPI.registerMetaTileEntity(4243, new MetaTileEntityLargeMiner4(location("miner.void"), Miner.Type.CREATIVE));
         VOLCANUS = GregTechAPI.registerMetaTileEntity(4244, new MetaTileEntityVolcanus(location("volcanus")));
         CRYOGENIC_FREEZER = GregTechAPI.registerMetaTileEntity(4245, new MetaTileEntityCryogenicFreezer(location("cryogenic_freezer")));
+        //reserving 6121 for black hole
+        POLY_SYN = GregTechAPI.registerMetaTileEntity(4203, new MetaTileEntityPolymerSynthesizer(location("polymer.synthesizer")));
 
     }
 

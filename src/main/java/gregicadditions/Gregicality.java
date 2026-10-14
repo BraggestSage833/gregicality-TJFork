@@ -38,7 +38,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.IOException;
 
-@Mod(modid = Gregicality.MODID, name = Gregicality.NAME, version = Gregicality.VERSION,
+@Mod(modid = Gregicality.MODID, name = Gregicality.NAME,
         dependencies = "required-after:gregtech@[1.17.3.721,7.0);" +
                 "after:forestry;" +
                 "after:tconstruct;" +
@@ -55,7 +55,6 @@ import java.io.IOException;
 public class Gregicality {
     public static final String MODID = "gtadditions";
     public static final String NAME = "Gregicality";
-    public static final String VERSION = "@VERSION@";
 
 
     static {
