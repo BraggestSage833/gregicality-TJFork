@@ -86,6 +86,7 @@ public class GARecipeMapCategory implements IRecipeCategory<GARecipeWrapper> {
 
             if (uiWidget instanceof ProgressWidget) {
                 ((ProgressWidget) uiWidget).setUpdateOnClient(true);
+                ((ProgressWidget) uiWidget).setMaxProgress(recipeWrapper.getRecipe().getDuration());
             }
             if (uiWidget instanceof SlotWidget) {
                 SlotWidget slotWidget = (SlotWidget) uiWidget;
