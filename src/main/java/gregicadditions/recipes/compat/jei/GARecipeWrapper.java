@@ -82,7 +82,13 @@ public class GARecipeWrapper implements IRecipeWrapper {
 
         if (!recipe.getOutputs().isEmpty() || !recipe.getChancedOutputs().isEmpty()) {
             List<ItemStack> recipeOutputs = recipe.getOutputs()
-                    .stream().map(ItemStack::copy).collect(Collectors.toList());
+                    .stream().map(ItemStack::copy)
+                    .sorted(Comparator.comparingInt(stack -> {
+                        ChanceEntry chanceEntry = chanceOutput.get(stack);
+                        if (chanceEntry == null)
+                            return 0;
+                        return chanceEntry.getChance();
+                    })).collect(Collectors.toList());
             List<ChanceEntry> chancedOutputs = recipe.getChancedOutputs();
             for (int i = 0; i < chancedOutputs.size(); i++) {
                 ChanceEntry chancedEntry = chancedOutputs.get(i);
@@ -91,13 +97,6 @@ public class GARecipeWrapper implements IRecipeWrapper {
                 recipeOutputs.add(chancedStack);
                 this.chanceEntries.put(i + this.recipeMap.getMaxInputs() + this.recipe.getOutputs().size(), ArrayUtils.addAll(new int[0], chancedEntry.getChance(), chancedEntry.getBoostPerTier()));
             }
-
-            recipeOutputs.sort(Comparator.comparingInt(stack -> {
-                ChanceEntry chanceEntry = chanceOutput.get(stack);
-                if (chanceEntry == null)
-                    return 0;
-                return chanceEntry.getChance();
-            }));
             ingredients.setOutputs(VanillaTypes.ITEM, recipeOutputs);
         }
 
