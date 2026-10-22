@@ -37,9 +37,9 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class GASimpleMachineMetaTileEntity extends GAWorkableTieredMetaTileEntity {
 
-    private boolean hasFrontFacing;
+    private final boolean hasFrontFacing;
 
-    private ItemStackHandler chargerInventory;
+    private final ItemStackHandler chargerInventory;
     private EnumFacing outputFacing;
 
     private boolean autoOutputItems;

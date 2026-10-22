@@ -3,8 +3,10 @@ package gregicadditions.machines.multi.multiblockpart;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import gregtech.api.GTValues;
+import gregtech.api.capability.IInventoryNotifiable;
 import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.NotifiableFluidTank;
+import gregtech.api.capability.impl.NotifiableFluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.TankWidget;
@@ -30,7 +32,7 @@ import java.util.List;
 public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPart implements IMultiblockAbilityPart<IFluidTank> {
 
     protected FluidTankList fluidTanks;
-    private boolean isExportHatch;
+    private final boolean isExportHatch;
     private final int TANK_SIZE;
     private ICubeRenderer hatchTexture = null;
 
@@ -56,9 +58,9 @@ public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPar
     protected void initializeInventory() {
         FluidTank[] fluidsHandlers = new FluidTank[(int) Math.pow(this.getTier(), 2)];
         for (int i = 0; i <fluidsHandlers.length; i++) {
-            fluidsHandlers[i] = new FluidTank(TANK_SIZE);
+            fluidsHandlers[i] = new NotifiableFluidTank(this, TANK_SIZE);
         }
-        this.fluidTanks = new FluidTankList(false, fluidsHandlers);
+        this.fluidTanks = new NotifiableFluidTankList(this, false, fluidsHandlers);
         this.fluidInventory = fluidTanks;
         super.initializeInventory();
     }
@@ -112,12 +114,12 @@ public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPar
 
     @Override
     protected FluidTankList createImportFluidHandler() {
-        return isExportHatch ? new FluidTankList(false) : new FluidTankList(false, fluidTanks);
+        return isExportHatch ? new FluidTankList(false) : new NotifiableFluidTankList(this, false, fluidTanks);
     }
 
     @Override
     protected FluidTankList createExportFluidHandler() {
-        return new FluidTankList(false, fluidTanks);
+        return new NotifiableFluidTankList(this, false, fluidTanks);
     }
 
     @Override
@@ -128,6 +130,24 @@ public class MetaTileEntityMultiFluidHatch extends GAMetaTileEntityMultiblockPar
     @Override
     public void registerAbilities(List<IFluidTank> abilityList) {
         abilityList.addAll(isExportHatch ? this.exportFluids.getFluidTanks() : this.importFluids.getFluidTanks());
+    }
+
+    @Override
+    public void addToMultiBlock(MultiblockControllerBase controllerBase) {
+        super.addToMultiBlock(controllerBase);
+        if (this.importFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.importFluids).setMetaTileEntity(controllerBase);
+        if (this.exportFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(controllerBase);
+    }
+
+    @Override
+    public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
+        super.removeFromMultiBlock(controllerBase);
+        if (this.importFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.importFluids).setMetaTileEntity(this);
+        if (this.exportFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(this);
     }
 
     @Override

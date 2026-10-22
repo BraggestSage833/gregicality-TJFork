@@ -7,10 +7,7 @@ import codechicken.lib.vec.Matrix4;
 import gregicadditions.GAUtility;
 import gregicadditions.GAValues;
 import gregicadditions.capabilities.GARecipeLogicEnergy;
-import gregtech.api.capability.impl.FilteredFluidHandler;
-import gregtech.api.capability.impl.FluidTankList;
-import gregtech.api.capability.impl.ItemHandlerList;
-import gregtech.api.capability.impl.RecipeLogicEnergy;
+import gregtech.api.capability.impl.*;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.render.OrientedOverlayRenderer;
@@ -42,7 +39,7 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
 
     protected final RecipeLogicEnergy workable;
     protected final OrientedOverlayRenderer renderer;
-    protected final ItemStackHandler ghostCircuitInventory = new ItemStackHandler(1);
+    protected final ItemStackHandler ghostCircuitInventory = new NotifiableItemStackHandler(this, 1);
     protected final IItemHandlerModifiable combinedInputInventory;
 
     public GAWorkableTieredMetaTileEntity(ResourceLocation metaTileEntityId, RecipeMap<?> recipeMap, OrientedOverlayRenderer renderer, int tier) {
@@ -77,13 +74,13 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
     @Override
     protected IItemHandlerModifiable createImportItemHandler() {
         if (workable == null) return new ItemStackHandler(0);
-        return new ItemStackHandler(workable.recipeMap.getMaxInputs());
+        return new NotifiableItemStackHandler(this, workable.recipeMap.getMaxInputs());
     }
 
     @Override
     protected IItemHandlerModifiable createExportItemHandler() {
         if (workable == null) return new ItemStackHandler(0);
-        return new ItemStackHandler(workable.recipeMap.getMaxOutputs());
+        return new NotifiableItemStackHandler(this, workable.recipeMap.getMaxOutputs());
     }
 
     @Override
@@ -95,7 +92,7 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
             filteredFluidHandler.setFillPredicate(this::canInputFluid);
             fluidImports[i] = filteredFluidHandler;
         }
-        return new FluidTankList(false, fluidImports);
+        return new NotifiableFluidTankList(this, false, fluidImports);
     }
 
     @Override
@@ -103,9 +100,9 @@ public abstract class GAWorkableTieredMetaTileEntity extends GATieredMetaTileEnt
         if (workable == null) return new FluidTankList(false);
         FluidTank[] fluidExports = new FluidTank[workable.recipeMap.getMaxFluidOutputs()];
         for (int i = 0; i < fluidExports.length; i++) {
-            fluidExports[i] = new FluidTank(getOutputTankCapacity(i));
+            fluidExports[i] = new NotifiableFluidTank(this, getOutputTankCapacity(i));
         }
-        return new FluidTankList(false, fluidExports);
+        return new NotifiableFluidTankList(this, false, fluidExports);
     }
 
     protected boolean canInputFluid(FluidStack inputFluid) {

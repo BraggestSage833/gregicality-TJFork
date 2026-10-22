@@ -4,7 +4,10 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.widgets.WidgetGroupFluidFilter;
+import gregtech.api.capability.IInventoryNotifiable;
 import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.NotifiableFluidTank;
+import gregtech.api.capability.impl.NotifiableFluidTankList;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.*;
@@ -12,6 +15,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.common.covers.filter.FilterTypeRegistry;
@@ -26,7 +30,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -81,7 +84,9 @@ public class MetaTileEntityOutputFilteredHatch extends GAMetaTileEntityMultibloc
                 newFluidFilter.getClass() != currentFluidFilter.getClass()) {
             this.currentFluidFilter = new SimpleFluidFilter();
         }
-
+        MultiblockControllerBase controllerBase = this.getController();
+        if (controllerBase != null)
+            controllerBase.setInventoryNotified(true);
     }
 
     @Override
@@ -158,7 +163,7 @@ public class MetaTileEntityOutputFilteredHatch extends GAMetaTileEntityMultibloc
 
     @Override
     protected FluidTankList createExportFluidHandler() {
-        return new FluidTankList(false, new FluidTank(getInventorySize()) {
+        return new NotifiableFluidTankList(this, false, new NotifiableFluidTank(this, getInventorySize()) {
             @Override
             public boolean canFill() {
                 return super.canFill();
@@ -178,7 +183,6 @@ public class MetaTileEntityOutputFilteredHatch extends GAMetaTileEntityMultibloc
         });
     }
 
-
     @Override
     public MultiblockAbility<IFluidTank> getAbility() {
         return MultiblockAbility.EXPORT_FLUIDS;
@@ -187,6 +191,20 @@ public class MetaTileEntityOutputFilteredHatch extends GAMetaTileEntityMultibloc
     @Override
     public void registerAbilities(List<IFluidTank> abilityList) {
         abilityList.addAll(this.exportFluids.getFluidTanks());
+    }
+
+    @Override
+    public void addToMultiBlock(MultiblockControllerBase controllerBase) {
+        super.addToMultiBlock(controllerBase);
+        if (this.exportFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(controllerBase);
+    }
+
+    @Override
+    public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
+        super.removeFromMultiBlock(controllerBase);
+        if (this.exportFluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(this);
     }
 
     @Override
