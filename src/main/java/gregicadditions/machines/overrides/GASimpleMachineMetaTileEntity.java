@@ -292,7 +292,8 @@ public class GASimpleMachineMetaTileEntity extends GAWorkableTieredMetaTileEntit
                         .setBackgroundTexture(GuiTextures.SLOT, GuiTextures.CHARGER_OVERLAY))
                 .widget(new ImageWidget(79, 42, 18, 18, GuiTextures.INDICATOR_NO_ENERGY)
                         .setPredicate(workable::isHasNotEnoughEnergy))
-                .widget(new GhostCircuitWidget(ghostCircuitInventory, 133, 62))
+                .widget(new GhostCircuitWidget(ghostCircuitInventory, 133, 62)
+                        .setChangeListener(() -> this.setInventoryNotified(true)))
                 .bindPlayerInventory(player.inventory);
 
         int leftButtonStartX = 7;

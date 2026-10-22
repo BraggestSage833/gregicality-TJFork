@@ -4,8 +4,8 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
 import gregicadditions.client.ClientHandler;
-import gregtech.api.capability.impl.FluidTankList;
-import gregtech.api.capability.impl.ItemHandlerList;
+import gregtech.api.capability.IInventoryNotifiable;
+import gregtech.api.capability.impl.*;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.TankWidget;
@@ -14,6 +14,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.multiblock.IMultiAbilityProvider;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
 import gregtech.api.render.SimpleOverlayRenderer;
 import gregtech.api.render.Textures;
 import gregtech.common.gui.widget.GhostCircuitWidget;
@@ -56,16 +57,16 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         super.initializeInventory();
         FluidTank[] tanks = new FluidTank[this.tier];
         for (int i = 0; i < this.tier; i++) {
-            tanks[i] = new FluidTank(8000 * (1 << getTier()));
+            tanks[i] = new NotifiableFluidTank(this, 8000 * (1 << getTier()));
         }
-        this.fluids = new FluidTankList(false, tanks);
+        this.fluids = new NotifiableFluidTankList(this, false, tanks);
         this.fluidInventory = fluids;
         //this.importFluids = new FluidTankList(false, fluids);
         //this.exportFluids = new FluidTankList(false, fluids);
         //this.fluidInventory = new FluidHandlerProxy(fluids, fluids);
-        this.circuitInventory = new ItemStackHandler(1);
-        this.inventory = new ItemStackHandler(tier * tier);
-        this.combinedInventory = new ItemHandlerList(Arrays.asList(this.circuitInventory, this.inventory));
+        this.circuitInventory = new NotifiableItemStackHandler(this, 1);
+        this.inventory = new NotifiableItemStackHandler(this, tier * tier);
+        this.combinedInventory = new NotifiableItemHandlerList(this, Arrays.asList(this.circuitInventory, this.inventory));
         this.itemInventory = inventory;
     }
 
@@ -157,8 +158,26 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         if (ability == MultiblockAbility.IMPORT_FLUIDS) {
             list.addAll(fluids.getFluidTanks());
         }
-
     }
+
+    @Override
+    public void addToMultiBlock(MultiblockControllerBase controllerBase) {
+        super.addToMultiBlock(controllerBase);
+        if (this.combinedInventory instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.combinedInventory).setMetaTileEntity(controllerBase);
+        if (this.fluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.fluids).setMetaTileEntity(controllerBase);
+    }
+
+    @Override
+    public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
+        super.removeFromMultiBlock(controllerBase);
+        if (this.combinedInventory instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.combinedInventory).setMetaTileEntity(this);
+        if (this.fluids instanceof IInventoryNotifiable)
+            ((IInventoryNotifiable) this.fluids).setMetaTileEntity(this);
+    }
+
     @Override
     public void onRemoval() {
         super.onRemoval();
@@ -172,6 +191,7 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
             }
         }
     }
+
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gregtech.universal.tooltip.item_storage_capacity", (tier * tier)));
@@ -179,9 +199,5 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
         tooltip.add(I18n.format("gtadditions.machine.multi_fluid_hatch_universal.tooltip.2", (int) fluids.getTanks()));
         tooltip.add(I18n.format("gregtech.universal.enabled"));
         tooltip.add(I18n.format("gregtech.universal.no_import"));
-
-
-
     }
-
 }
