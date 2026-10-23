@@ -164,18 +164,18 @@ public class TileEntityBuffer extends MetaTileEntityMultiblockPart implements IT
     public void addToMultiBlock(MultiblockControllerBase controllerBase) {
         super.addToMultiBlock(controllerBase);
         if (this.combinedInventory instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.combinedInventory).setMetaTileEntity(controllerBase);
+            ((IInventoryNotifiable) this.combinedInventory).addMetaTileEntityToNotifiable(controllerBase);
         if (this.fluids instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.fluids).setMetaTileEntity(controllerBase);
+            ((IInventoryNotifiable) this.fluids).addMetaTileEntityToNotifiable(controllerBase);
     }
 
     @Override
     public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
         super.removeFromMultiBlock(controllerBase);
         if (this.combinedInventory instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.combinedInventory).setMetaTileEntity(this);
+            ((IInventoryNotifiable) this.combinedInventory).removeMetaTileEntityFromNotifiable(controllerBase);
         if (this.fluids instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.fluids).setMetaTileEntity(this);
+            ((IInventoryNotifiable) this.fluids).removeMetaTileEntityFromNotifiable(controllerBase);
     }
 
     @Override

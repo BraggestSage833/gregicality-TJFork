@@ -197,14 +197,14 @@ public class MetaTileEntityOutputFilteredHatch extends GAMetaTileEntityMultibloc
     public void addToMultiBlock(MultiblockControllerBase controllerBase) {
         super.addToMultiBlock(controllerBase);
         if (this.exportFluids instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(controllerBase);
+            ((IInventoryNotifiable) this.exportFluids).addMetaTileEntityToNotifiable(controllerBase);
     }
 
     @Override
     public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
         super.removeFromMultiBlock(controllerBase);
         if (this.exportFluids instanceof IInventoryNotifiable)
-            ((IInventoryNotifiable) this.exportFluids).setMetaTileEntity(this);
+            ((IInventoryNotifiable) this.exportFluids).removeMetaTileEntityFromNotifiable(controllerBase);
     }
 
     @Override

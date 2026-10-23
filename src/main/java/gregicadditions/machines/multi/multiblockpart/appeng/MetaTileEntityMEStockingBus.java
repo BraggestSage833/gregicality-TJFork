@@ -360,7 +360,7 @@ public class MetaTileEntityMEStockingBus extends MetaTileEntityMEInputBus implem
                         if (extracted != 0) {
                             ItemStack resultStack = this.config.createItemStack();
                             resultStack.setCount(extracted);
-                            this.metaTileEntity.setInventoryNotified(true);
+                            this.notifyMetaTileEntities();
                             return resultStack;
                         }
                     }
