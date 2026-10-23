@@ -226,20 +226,26 @@ public class GAMultiblockRecipeLogic extends MultiblockRecipeLogic {
     }
 
     protected boolean setupAndConsumeRecipeInputs(Recipe recipe, int index) {
+        this.lastRecipe = recipe;
         RecipeMapMultiblockController controller = (RecipeMapMultiblockController) metaTileEntity;
         if (controller.checkRecipe(recipe, false)) {
             int[] resultOverclock = calculateOverclock(recipe.getEUt(), recipe.getDuration());
             long totalEUt = (long) resultOverclock[0] * resultOverclock[1];
             IItemHandlerModifiable importInventory = getInputBuses().get(index);
+            IItemHandlerModifiable exportInventory = getOutputInventory();
             IMultipleTankHandler importFluids = getInputTank();
-            boolean setup = (totalEUt >= 0 ? getEnergyStored() >= (totalEUt > getEnergyCapacity() / 2 ? resultOverclock[0] : totalEUt) :
+            IMultipleTankHandler exportFluids = getOutputTank();
+            if (!(totalEUt >= 0 ? getEnergyStored() >= (totalEUt > getEnergyCapacity() / 2 ? resultOverclock[0] : totalEUt) :
                     (getEnergyStored() - resultOverclock[0] <= getEnergyCapacity())) &&
+                    recipe.matchesFound(true, importInventory, importFluids))
+                return false;
+            boolean canFit = (!this.checkOutputsFitBeforeStarting || (MetaTileEntity.addItemsToItemHandler(exportInventory, true, recipe.getAllItemOutputs(exportInventory.getSlots())) &&
+                    MetaTileEntity.addFluidsToFluidHandler(exportFluids, true, recipe.getFluidOutputs()))) &&
                     recipe.matchesFound(true, importInventory, importFluids);
-
-            if (setup) {
-                controller.checkRecipe(recipe, true);
-                return true;
-            }
+            if (!canFit) {
+                this.lastRecipe = null; // prevent back stuffing lag
+            } else controller.checkRecipe(recipe, true);
+            return canFit;
         }
         return false;
     }
