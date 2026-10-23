@@ -47,6 +47,7 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
     private final int tier;
     private EnergyContainerList inputEnergyContainers;
     private long heat = 0; // defined in TileEntityFusionReactor but serialized in FusionRecipeLogic
+    private Recipe recipeHold;
 
     public TileEntityFusionReactor(ResourceLocation metaTileEntityId, int tier) {
         super(metaTileEntityId, RecipeMaps.FUSION_RECIPES);
@@ -218,7 +219,13 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
         }
     }
 
+    @Override
+    public boolean isInventoryNotified() {
+        return super.isInventoryNotified() || this.recipeHold != null;
+    }
+
     private class FusionRecipeLogic extends GAMultiblockRecipeLogic {
+
         public FusionRecipeLogic(TileEntityFusionReactor tileEntity) {
             super(tileEntity);
             this.allowOverclocking = false;
@@ -240,6 +247,7 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
 
         @Override
         protected boolean setupAndConsumeRecipeInputs(Recipe recipe) {
+            recipeHold = recipe;
             long heatDiff = recipe.getRecipePropertyStorage().getRecipePropertyValue(FusionEUToStartProperty.getInstance(), 0L) - heat;
             if (heatDiff <= 0) {
                 return super.setupAndConsumeRecipeInputs(recipe);
@@ -250,6 +258,13 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
             energyContainer.removeEnergy(heatDiff);
             heat += heatDiff;
             return true;
+        }
+
+
+        @Override
+        protected void completeRecipe() {
+            super.completeRecipe();
+            recipeHold = null;
         }
 
         @Override

@@ -64,7 +64,7 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
 
     private EnergyContainerList inputEnergyContainers;
     private long heat = 0;
-
+    private Recipe recipeHold;
 
     public MetaTileEntityAdvFusionReactor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GARecipeMaps.ADV_FUSION_RECIPES, 16,0,9,13);
@@ -286,6 +286,11 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
         return ClientHandler.FUSION_REACTOR_OVERLAY;
     }
 
+    @Override
+    public boolean isInventoryNotified() {
+        return super.isInventoryNotified() || this.recipeHold != null;
+    }
+
     public class AdvFusionRecipeLogic extends GAMultiblockRecipeLogic {
 
 
@@ -294,7 +299,6 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
         }
 
         @Override
-
         public void updateWorkable() {
             super.updateWorkable();
             if (!isActive && heat > 0) {
@@ -340,6 +344,7 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
 
         @Override
         protected boolean setupAndConsumeRecipeInputs(Recipe recipe) {
+            recipeHold = recipe;
             long heatDiff = (long) recipe.getProperty("eu_to_start") - heat;
             if (heatDiff <= 0) {
                 return super.setupAndConsumeRecipeInputs(recipe);
@@ -350,6 +355,12 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
             energyContainer.removeEnergy(heatDiff);
             heat += heatDiff;
             return true;
+        }
+
+        @Override
+        protected void completeRecipe() {
+            super.completeRecipe();
+            recipeHold = null;
         }
 
         @Override
