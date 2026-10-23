@@ -340,6 +340,7 @@ public class MetaTileEntityAdvFusionReactor extends RecipeMapMultiblockControlle
 
         @Override
         protected boolean setupAndConsumeRecipeInputs(Recipe recipe) {
+            this.lastRecipe = recipe;
             long heatDiff = (long) recipe.getProperty("eu_to_start") - heat;
             if (heatDiff <= 0) {
                 return super.setupAndConsumeRecipeInputs(recipe);

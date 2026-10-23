@@ -240,6 +240,7 @@ public class TileEntityFusionReactor extends RecipeMapMultiblockController {
 
         @Override
         protected boolean setupAndConsumeRecipeInputs(Recipe recipe) {
+            this.lastRecipe = recipe;
             long heatDiff = recipe.getRecipePropertyStorage().getRecipePropertyValue(FusionEUToStartProperty.getInstance(), 0L) - heat;
             if (heatDiff <= 0) {
                 return super.setupAndConsumeRecipeInputs(recipe);
