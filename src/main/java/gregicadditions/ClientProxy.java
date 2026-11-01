@@ -76,12 +76,6 @@ public class ClientProxy extends CommonProxy {
         OpticalFiberRenderer.INSTANCE.registerIcon(map);
     }
 
-    @SubscribeEvent
-    public static void textureStitchPre(@NotNull TextureStitchEvent.Pre event) {
-        TextureMap map = event.getMap();
-        OpticalFiberRenderer.INSTANCE.registerIcon(map);
-    }
-
 
     @Override
     public void onLoad() throws IOException {
