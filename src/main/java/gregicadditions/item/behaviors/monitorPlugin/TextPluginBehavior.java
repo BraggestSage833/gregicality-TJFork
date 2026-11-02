@@ -5,6 +5,7 @@ import gregicadditions.widgets.WidgetARGB;
 import gregicadditions.widgets.monitor.WidgetPluginConfig;
 import gregtech.api.gui.IUIHolder;
 import gregtech.api.gui.widgets.TextFieldWidget;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -77,9 +78,34 @@ public class TextPluginBehavior extends MonitorPluginBaseBehavior {
     @SideOnly(Side.CLIENT)
     @Override
     public void renderPlugin(float partialTicks, RayTraceResult rayTraceResult) {
+        if (texts == null || screen == null) {
+            return;
+        }
+
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if (player != null && player.getDistanceSq(screen.getPos()) > 128*8) {
+            return;
+        }
+
         for (int i = 0; i < texts.length; i++) {
+            if (isBlank(texts[i])) {
+                continue;
+            }
             RenderHelper.renderText(-0.5f, -0.4625f + i / 16f, 0.002f, 1/128f, colors[i], texts[i], false);
         }
+    }
+
+    private static boolean isBlank(String text) {
+        if (text == null) {
+            return true;
+        }
+        for (int i = 0; i <text.length(); i++) {
+            if (text.charAt(i) > ' ') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

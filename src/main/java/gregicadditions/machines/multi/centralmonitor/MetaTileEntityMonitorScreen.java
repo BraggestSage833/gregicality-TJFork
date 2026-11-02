@@ -29,6 +29,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -74,6 +75,14 @@ public class MetaTileEntityMonitorScreen extends MetaTileEntityMultiblockPart {
     public int frameColor = 0XFF00FF00;
     private ItemStackHandler inventory;
 
+
+
+    private TileEntity cacheTe;
+    private ItemStack cachedItemStack = ItemStack.EMPTY;
+    private String cahcheName = "";
+    private long cacheAt;
+
+
     public MetaTileEntityMonitorScreen(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, 1);
     }
@@ -114,6 +123,28 @@ public class MetaTileEntityMonitorScreen extends MetaTileEntityMultiblockPart {
         this.frameColor = color;
         writeCustomData(1, this::writeSync);
         markDirty();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void refreshTargetInfo(TileEntity te) {
+        long now = te.getWorld().getTotalWorldTime();
+        if (te == cacheTe && now - cacheAt < 20) {
+            return;
+        }
+
+        cacheTe = te;
+        cacheAt = now;
+        if (te instanceof MetaTileEntityHolder) {
+            cachedItemStack = ((MetaTileEntityHolder) te).getMetaTileEntity().getStackForm();
+        } else {
+            BlockPos pos = te.getPos();
+            cachedItemStack = te.getBlockType().getPickBlock(te.getWorld().getBlockState(pos),
+                    new RayTraceResult(new Vec3d(0.5, 0.5, 0.5), coverTMP.getCoveredFacing(), pos),
+                    te.getWorld(), pos, Minecraft.getMinecraft().player
+            );
+        }
+
+        cahcheName = cachedItemStack.getDisplayName();
     }
 
     public CoverDigitalInterface getCoverFromPosSide(Tuple<BlockPos, EnumFacing> posFacing) {
@@ -316,31 +347,29 @@ public class MetaTileEntityMonitorScreen extends MetaTileEntityMultiblockPart {
 
                 TileEntity te = coverTMP.getCoveredTE();
                 if (te != null) {
-                    ItemStack itemStack;
-                    if (te instanceof MetaTileEntityHolder) {
-                        itemStack = ((MetaTileEntityHolder) te).getMetaTileEntity().getStackForm();
-                    } else {
-                        BlockPos pos = te.getPos();
-                        itemStack = te.getBlockType().getPickBlock(te.getWorld().getBlockState(pos), new RayTraceResult(new Vec3d(0.5, 0.5, 0.5), coverTMP.getCoveredFacing(), pos), te.getWorld(), pos, Minecraft.getMinecraft().player);
+                    refreshTargetInfo(te);
+                    Entity view = Minecraft.getMinecraft().getRenderViewEntity();
+                    double distSq = view == null ? 0 : view.getDistanceSq(getPos());
+                    if (distSq < 576) { // TODO:  maybe play with these numbers. dunno when it's actually good to stop rendering these. :p
+                        RenderHelper.renderItemOverLay(-2.6f, -2.65f, 0.003f, 1 / 100f, cachedItemStack);
+                        if (distSq < 144) {
+                            RenderHelper.renderText(0, -3.5f / 16, 0, 1.0f / 200, 0XFFFFFFFF, cahcheName, true);
+                        }
                     }
-                    String name = itemStack.getDisplayName();
-                    // render machine
-                    RenderHelper.renderItemOverLay(-2.6f, -2.65f, 0.003f,1/100f, itemStack);
-                    // render name
-                    RenderHelper.renderText(0, -3.5f/16, 0, 1.0f / 200, 0XFFFFFFFF, name, true);
                 }
 
             }
             // render frame
-            RenderHelper.renderRect(-7f/16, -7f/16, 14f/16, 0.01f,0.003f, frameColor);
-            RenderHelper.renderRect(-7f/16, -4f/16 - 0.01f, 14f/16, 0.01f,0.003f, frameColor);
-            RenderHelper.renderRect(-7f/16, -7f/16 + 0.01f, 0.01f, 3f/16 - 0.02f,0.003f, frameColor);
-            RenderHelper.renderRect(7f/16 - 0.01f, -7f/16 + 0.01f, 0.01f, 3f/16 - 0.02f,0.003f, frameColor);
-
-            RenderHelper.renderRect(-7f/16, -3f/16, 14f/16, 0.01f,0.003f, frameColor);
-            RenderHelper.renderRect(-7f/16, 7f/16 - 0.01f, 14f/16, 0.01f,0.003f, frameColor);
-            RenderHelper.renderRect(-7f/16, -3f/16 + 0.01f, 0.01f, 10f/16 - 0.02f,0.003f, frameColor);
-            RenderHelper.renderRect(7f/16 - 0.01f, -3f/16 + 0.01f, 0.01f, 10f/16 - 0.02f,0.003f, frameColor);
+            RenderHelper.beginRectBatch();
+            RenderHelper.addRect(-7f/16, -7f/16, 14f/16, 0.01f, 0.003f, frameColor);
+            RenderHelper.addRect(-7f/16, -4f/16 - 0.01f, 14f/16, 0.01f, 0.003f, frameColor);
+            RenderHelper.addRect(-7f/16, -7f/16 + 0.01f, 0.01f, 3f/16 - 0.02f, 0.003f, frameColor);
+            RenderHelper.addRect(7f/16 - 0.01f, -7f/16 + 0.01f, 0.01f, 3f/16 - 0.02f, 0.003f, frameColor);
+            RenderHelper.addRect(-7f/16, -3f/16, 14f/16, 0.01f, 0.003f, frameColor);
+            RenderHelper.addRect(-7f/16, 7f/16 - 0.01f, 14f/16, 0.01f, 0.003f, frameColor);
+            RenderHelper.addRect(-7f/16, -3f/16 + 0.01f, 0.01f, 10f/16 - 0.02f, 0.003f, frameColor);
+            RenderHelper.addRect(7f/16 - 0.01f, -3f/16 + 0.01f, 0.01f, 10f/16 - 0.02f, 0.003f, frameColor);
+            RenderHelper.endRectBatch();
         }
     }
 

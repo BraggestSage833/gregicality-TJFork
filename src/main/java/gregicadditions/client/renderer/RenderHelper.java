@@ -64,40 +64,56 @@ public class RenderHelper {
         renderGradientRect(x, y, width, height, z, color, color, false);
     }
 
-    public static void renderGradientRect(float x, float y, float width, float height, float z, int startColor, int endColor, boolean horizontal) {
-        float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
-        float startRed = (float) (startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
-        float startBlue = (float) (startColor & 255) / 255.0F;
-        float endAlpha = (float) (endColor >> 24 & 255) / 255.0F;
-        float endRed = (float) (endColor >> 16 & 255) / 255.0F;
-        float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
-        float endBlue = (float) (endColor & 255) / 255.0F;
+    public static void beginRectBatch() {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+    }
+
+    public static void addRect(float x, float y, float z, float width, float height, int color) {
+        addGradientRect(x, y, z, width, height, color, color, false);
+    }
+
+    public static void addGradientRect(float x, float y, float z, float width, float height, int startColor, int endColor, boolean horizontal) {
+        float sa = (startColor >> 24 & 255) / 255.0F;
+        float sr = (startColor >> 16 & 255) / 255.0F;
+        float sg = (startColor >> 8 & 255) / 255.0F;
+        float sb = (startColor & 255) / 255.0F;
+
+        float ea = (endColor >> 24 & 255) / 255.0F;
+        float er = (endColor >> 16 & 255) / 255.0F;
+        float eg = (endColor >> 8 & 255) / 255.0F;
+        float eb = (endColor & 255) / 255.0F;
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         if (horizontal) {
-            buffer.pos(x + width, y, z).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-            buffer.pos(x, y, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-            buffer.pos(x, y + height, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-            buffer.pos(x + width, y + height, z).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-            tessellator.draw();
+            buffer.pos(x + width, y, z).color(er, eg, eb, ea).endVertex();
+            buffer.pos(x, y, z).color(sr, sg, sb, sa).endVertex();
+            buffer.pos(x, y + height, z).color(sr, sg, sb, sa).endVertex();
+            buffer.pos(x + width, y + height, z).color(er, eg, eb, ea).endVertex();
         } else {
-            buffer.pos(x + width, y, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-            buffer.pos(x, y, z).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-            buffer.pos(x, y + height, z).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-            buffer.pos(x + width, y + height, z).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-            tessellator.draw();
+            buffer.pos(x + width, y, z).color(sr, sg, sb, sa).endVertex();
+            buffer.pos(x, y, z).color(sr, sg, sb, sa).endVertex();
+            buffer.pos(x, y + height, z).color(er, eg, eb, ea).endVertex();
+            buffer.pos(x + width, y + height, z).color(er, eg, eb, ea).endVertex();
         }
+    }
+
+    public static void endRectBatch() {
+        Tessellator.getInstance().draw();
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+
+    public static void renderGradientRect(float x, float y, float width, float height, float z, int startColor, int endColor, boolean horizontal) {
+       beginRectBatch();
+       addGradientRect(x,y,z, width, height, startColor, endColor, horizontal);
+       endRectBatch();
     }
 
     public static void renderTextureArea(TextureArea textureArea, float x, float y, float width, float height, float z) {
@@ -116,7 +132,7 @@ public class RenderHelper {
         tessellator.draw();
     }
 
-    public static void renderSlot(Slot slot, FontRenderer fr) {
+    public static void renderSlot(Slot slot, FontRenderer fontRenderer) {
         ItemStack stack = slot.getStack();
         if (!stack.isEmpty() && slot.isEnabled()) {
             net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
@@ -134,7 +150,7 @@ public class RenderHelper {
                     String s = text == null ? String.valueOf(stack.getCount()) : text;
                     GlStateManager.disableLighting();
                     GlStateManager.disableBlend();
-                    fr.drawStringWithShadow(s, (float)(17 - fr.getStringWidth(s)), (float)9, 16777215);
+                    fontRenderer.drawStringWithShadow(s, (float) (17 - fontRenderer.getStringWidth(s)), (float) 9, 16777215);
                     GlStateManager.enableLighting();
                     GlStateManager.enableBlend();
                 }
@@ -189,6 +205,10 @@ public class RenderHelper {
     }
 
     public static void renderItemOverLay(float x, float y, float z, float scale, ItemStack itemStack) {
+        if (ItemIconCache.tryDrawCached(itemStack, x * 16 * scale, y * 16 * scale, 16 * scale, 0.015f)) {
+            return;
+        }
+
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 0.0001f);
@@ -200,14 +220,19 @@ public class RenderHelper {
     }
 
     public static void renderText(float x, float y, float z, float scale, int color, final String renderedText, boolean centered) {
+        if (renderedText == null || renderedText.isEmpty()) {
+            return;
+        }
+
         GlStateManager.pushMatrix();
-        final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-        final int width = fr.getStringWidth( renderedText );
+        final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        //final int width = fr.getStringWidth( renderedText );
+        final int width = centered ? fontRenderer.getStringWidth(renderedText) : 0;
         GlStateManager.translate(x, y - scale * 4, z);
         GlStateManager.scale(scale, scale, scale);
         GlStateManager.translate(-0.5f * (centered? 1:0)*width, 0.0f, 0.5f );
 
-        fr.drawString(renderedText, 0, 0, color);
+        fontRenderer.drawString(renderedText, 0, 0, color);
         GlStateManager.popMatrix();
     }
 

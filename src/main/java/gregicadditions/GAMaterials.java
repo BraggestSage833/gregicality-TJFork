@@ -1626,6 +1626,11 @@ public class GAMaterials implements IMaterialHandler {
 
         // Double Plates
         Lead.addFlag(GENERATE_DOUBLE_PLATE);
+        Americium.addFlag(GENERATE_DOUBLE_PLATE);
+        Tin.addFlag(GENERATE_DOUBLE_PLATE);
+        Cupronickel.addFlag(GENERATE_DOUBLE_PLATE);
+        Electrum.addFlag(GENERATE_DOUBLE_PLATE);
+        PolyvinylChloride.addFlag(GENERATE_DOUBLE_PLATE);
 
         // Rounds
         Aluminium.addFlag(GENERATE_ROUND);

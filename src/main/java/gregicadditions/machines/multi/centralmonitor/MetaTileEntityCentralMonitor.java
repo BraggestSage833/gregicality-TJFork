@@ -39,6 +39,7 @@ import gregtech.common.pipelike.cable.tile.TileEntityCable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -83,6 +84,8 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
     private EnergyContainerList inputEnergy;
     // persistent data
     public int height = 3;
+
+    private static final double MAX_SCREEN_DIST_SQ = 32 * 32;
 
     public MetaTileEntityCentralMonitor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId,3, MAX_WIDTH);
@@ -421,11 +424,36 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
         return true;
     }
 
+
+    private static Frustum cameraFrustum(double camX, double camY, double camZ) {
+        Frustum frustum = new Frustum();
+        frustum.setPosition(camX, camY, camZ);
+        return frustum;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void renderMetaTileEntityDynamic(double x, double y, double z, float partialTicks) {
-        if (!this.isStructureFormed()) return;
+        if (!this.isStructureFormed()) {
+            return;
+        }
+
+        double reach = 32 + Math.hypot(width, height);
+        if (x * x + y * y + z * z > reach * reach) {
+            return;
+        }
+
+        EnumFacing face = getFrontFacing();
+        double along = -(x + 0.5) * face.getXOffset() - (y + 0.5) * face.getYOffset() - (z + 0.5) * face.getZOffset();
+        if (along < -1.0) {
+            return;
+        }
+
         EnumFacing spin = BlockPatternChecker.getSpin(this);
+        final BlockPos controllerPos = getPos();
+
+        final Frustum frustum = isActive ? cameraFrustum(controllerPos.getX() - x,controllerPos.getY()- y, controllerPos.getZ() - z ) : null;
+
         RenderHelper.useStencil(()->{
             GlStateManager.pushMatrix();
             RenderHelper.moveToFace(x, y, z, this.frontFacing);
@@ -451,9 +479,23 @@ public class MetaTileEntityCentralMonitor extends MultiblockWithDisplayBase impl
                             size++;
                             if (screen.isActive()) {
                                 BlockPos pos = screen.getPos();
-                                BlockPos pos2 = this.getPos();
+                                double dx = x + pos.getX() - controllerPos.getX();
+                                double dy = y + pos.getY() - controllerPos.getY();
+                                double dz = z + pos.getZ() - controllerPos.getZ();
+
+                                double cx = dx + 0.5, cy = dy + 0.5, cz = dz + 0.5;
+                                if (cx * cx + cy * cy + cz * cz > MAX_SCREEN_DIST_SQ) {
+                                    continue;
+                                }
+
+                                double r = screen.scale + 1;
+                                double wx = pos.getX() + 0.5, wy = pos.getY() + 0.5, wz = pos.getZ() + 0.5;
+                                if (!frustum.isBoxInFrustum(wx - r, wy - r, wz - r, wx + r, wy + r, wz + r)) {
+                                    continue;
+                                }
+
                                 GlStateManager.pushMatrix();
-                                RenderHelper.moveToFace(x + pos.getX() - pos2.getX(), y + pos.getY() - pos2.getY(), z + pos.getZ() - pos2.getZ(), this.frontFacing);
+                                RenderHelper.moveToFace(dx, dy, dz, this.frontFacing);
                                 RenderHelper.rotateToFace(this.frontFacing, spin);
                                 screen.renderScreen(partialTicks, rayTraceResult);
                                 GlStateManager.popMatrix();

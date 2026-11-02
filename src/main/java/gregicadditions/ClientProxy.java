@@ -4,6 +4,7 @@ import codechicken.lib.texture.TextureUtils;
 import gregicadditions.blocks.GABlockOre;
 import gregicadditions.blocks.GAMetalCasing;
 import gregicadditions.client.model.ReTexturedModelLoader;
+import gregicadditions.client.renderer.ItemIconCache;
 import gregicadditions.client.renderer.OpticalFiberRenderer;
 import gregicadditions.fluid.GAMetaFluids;
 import gregicadditions.input.Keybinds;
@@ -66,6 +67,7 @@ public class ClientProxy extends CommonProxy {
         OpticalFiberRenderer.INSTANCE.preInit();
         ModelLoaderRegistry.registerLoader(new ReTexturedModelLoader());
         TextureUtils.addIconRegister(GAMetaFluids::registerSprites);
+        ItemIconCache.init();
     }
 
     @SubscribeEvent

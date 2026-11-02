@@ -20,6 +20,7 @@ import gregtech.api.unification.material.type.*;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.MaterialStack;
 import gregtech.api.unification.stack.UnificationEntry;
+import gregtech.api.util.GTUtility;
 import gregtech.common.items.MetaItems;
 import gregtech.common.items.behaviors.TurbineRotorBehavior;
 import net.minecraft.init.Blocks;
@@ -112,6 +113,7 @@ public class RecipeHandler {
         pipeSmall.addProcessingHandler(IngotMaterial.class, RecipeHandler::processSmallPipe);
         pipeMedium.addProcessingHandler(IngotMaterial.class, RecipeHandler::processMediumPipe);
         pipeLarge.addProcessingHandler(IngotMaterial.class, RecipeHandler::processLargePipe);
+        pipeItemHuge.addProcessingHandler(IngotMaterial.class, RecipeHandler::processHugePipe);
 
         dust.addProcessingHandler(FluidMaterial.class, RecipeHandler::registerPlasmaCondenserRecipes);
         ingot.addProcessingHandler(IngotMaterial.class, RecipeHandler::registerStellarForgeRecipes);
@@ -260,6 +262,8 @@ public class RecipeHandler {
                     .notConsumable(MetaItems.SHAPE_MOLD_INGOT.getStackForm())
                     .output(ingot, material, 9)
                     .buildAndRegister();
+
+
     }
 
     /**
@@ -830,6 +834,18 @@ public class RecipeHandler {
             ModHandler.addShapedRecipe(String.format("pipe_ga_large_%s", material.toString()), OreDictUnifier.get(pipeLarge, material),
                     "PhP", "P P", "PwP",
                     'P', new UnificationEntry(plateOrCurved, material));
+    }
+
+    private static void processHugePipe(OrePrefix prefix, IngotMaterial material) {
+        if (material.itemPipeProperties == null) {
+            return;
+        }
+
+        ItemStack pipeStack = OreDictUnifier.get(prefix, material);
+        ModHandler.addShapedRecipe(String.format("huge_%s_pipe", material.toString()),
+                GTUtility.copyAmount(1, pipeStack), "XXX", "f h", "XXX",
+                'X', new UnificationEntry(plateDouble, material)
+        );
     }
 
     /**
