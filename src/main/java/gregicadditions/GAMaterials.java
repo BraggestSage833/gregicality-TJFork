@@ -1494,6 +1494,7 @@ public class GAMaterials implements IMaterialHandler {
         EnrichedNaquadahAlloy.setFluidPipeProperties(2200, 25000, true);
         TantalumHafniumSeaborgiumCarbide.setFluidPipeProperties(2400, 500000, true);
         Neutronium.setFluidPipeProperties(2800, 1000000, true);
+        Potin.setFluidPipeProperties(80,2000, true);
 
         // Cables
         MVSuperconductorBase.setCableProperties(128, 4, 2);
