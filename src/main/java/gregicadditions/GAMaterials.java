@@ -1484,10 +1484,10 @@ public class GAMaterials implements IMaterialHandler {
 
         // Pipes
         Polytetrafluoroethylene.setFluidPipeProperties(450, 900, true);
-        NiobiumTitanium.setFluidPipeProperties(450, 2900, true);
-        Polybenzimidazole.setFluidPipeProperties(450, 900, true);
-        Enderium.setFluidPipeProperties(650, 1500, true);
-        Naquadah.setFluidPipeProperties(1000, 19000, true);
+        NiobiumTitanium.setFluidPipeProperties(700, 2900, true);
+        Polybenzimidazole.setFluidPipeProperties(1400, 900, true);
+        Enderium.setFluidPipeProperties(1200, 1500, true);
+        Naquadah.setFluidPipeProperties(800, 19000, true);
         Ultimet.setFluidPipeProperties(1500, 12000, true);
         Zeron100.setFluidPipeProperties(1750, 15000, true);
         Lafium.setFluidPipeProperties(2000, 23000, true);
