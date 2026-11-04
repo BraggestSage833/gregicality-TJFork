@@ -267,6 +267,8 @@ public class GATileEntities {
     public static MetaTileEntityMEStockingBus ME_ADVANCED_STOCKING_BUS;
 
     public static MetaTileEntityPolymerSynthesizer POLY_SYN;
+
+    public static SimpleGeneratorMetaTileEntity DIESEL_GENERATOR_EV;
     public static void init() {
 
         ME_STOCKING_BUS = GregTechAPI.registerMetaTileEntity(1104, new MetaTileEntityMEStockingBus(gregtechId("me_stocking_bus"), 16));
@@ -1200,7 +1202,7 @@ public class GATileEntities {
         CRYOGENIC_FREEZER = GregTechAPI.registerMetaTileEntity(4245, new MetaTileEntityCryogenicFreezer(location("cryogenic_freezer")));
         //reserving 6121 for black hole
         POLY_SYN = GregTechAPI.registerMetaTileEntity(4203, new MetaTileEntityPolymerSynthesizer(location("polymer.synthesizer")));
-
+       DIESEL_GENERATOR_EV = GregTechAPI.registerMetaTileEntity(4204, new SimpleGeneratorWithLossMetaTileEntity(gregtechId("diesel_generator.ev"), RecipeMaps.DIESEL_GENERATOR_FUELS, Textures.DIESEL_GENERATOR_OVERLAY, 4, 60));
     }
 
     public static MetaTileEntity getEnergyHatch(int tier, boolean isOutput) {

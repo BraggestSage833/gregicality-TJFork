@@ -12,6 +12,8 @@ import gregicadditions.recipes.GARecipeMaps;
 import gregtech.api.GTValues;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.unification.OreDictUnifier;
+import gregtech.api.unification.material.MarkerMaterials;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.ConfigHolder;
@@ -255,5 +257,7 @@ public class MachineCraftingRecipes {
                 .input(pipeLarge, NiobiumTitanium, 5)
                 .outputs(GATileEntities.BUFFER[2].getStackForm())
                 .buildAndRegister();
+        ModHandler.addShapedRecipe("diesel_generator_ev", GATileEntities.DIESEL_GENERATOR_EV.getStackForm(), "PCP", "EME", "GWG", 'M', MetaTileEntities.HULL[GTValues.EV].getStackForm(), 'P', MetaItems.ELECTRIC_PISTON_EV, 'E', MetaItems.ELECTRIC_MOTOR_EV, 'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.Extreme), 'W', new UnificationEntry(OrePrefix.cableGtSingle, Aluminium), 'G', new UnificationEntry(OrePrefix.gear, Titanium));
+
     }
 }
